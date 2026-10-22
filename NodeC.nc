@@ -25,9 +25,13 @@ implementation {
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
 
-    components new SimpleSendC(AM_PACK);
-    Node.Sender -> SimpleSendC;
-
     components CommandHandlerC;
     Node.CommandHandler -> CommandHandlerC;
+
+    components FloodingC;
+    Node.Flooding -> FloodingC.Flooding;
+
+    components NeighborDiscoveryC;
+    Node.NeighborDiscovery -> NeighborDiscoveryC.NeighborDiscovery;
+
 }

@@ -1,0 +1,7 @@
+#include "../../includes/packet.h"
+
+interface NeighborDiscovery{
+    command void start();
+    command void receive(pack msg);
+    command void print();
+}
