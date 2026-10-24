@@ -6,7 +6,7 @@ module FloodingP{
     uses interface SimpleSend as Sender;
 }
 
-implementation{ +
+implementation{
     enum{
         FLOOD_HISTORY_SIZE = 32
     };

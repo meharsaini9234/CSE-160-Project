@@ -23,6 +23,8 @@ module Node {
 
    uses interface Flooding;
    uses interface NeighborDiscovery;
+
+   uses interface IP;
 }
 
 implementation {
@@ -65,31 +67,27 @@ implementation {
    event void AMControl.stopDone(error_t err) {}
 
 
-   event message_t* Receive.receive(
-      message_t* msg,
-      void* payload,
-      uint8_t len
-   ) {
+   event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
+    if(len == sizeof(pack)){
+      pack* myMsg = (pack*) payload;
 
-      dbg(GENERAL_CHANNEL, "Packet Received\n");
-
-      if (len == sizeof(pack)) {
-
-         pack* myMsg = (pack*) payload;
-
-         if(myMsg -> protocol == PROTOCOL_CMD && myMsg -> payload[0] == 'N' && myMsg -> payload[1] == 'D'){
-            call NeighborDiscovery.receive(*myMsg);
-         }
-         else{
-            call Flooding.receive(*myMsg);
-         }
-
-         return msg;
+      if(myMsg->protocol == PROTOCOL_CMD && myMsg->payload[0] == 'N' && myMsg->payload[1] == 'D'){
+         call NeighborDiscovery.receive(*myMsg);
       }
 
-      dbg(GENERAL_CHANNEL,
-          "Unknown Packet Type %d\n",
-          len);
+      else if(myMsg->protocol == PROTOCOL_PING || myMsg->protocol == PROTOCOL_PINGREPLY){
+         call IP.receive(*myMsg);
+      }
+
+        // DV stuff
+      else if(myMsg->protocol == PROTOCOL_DV){
+
+      }
+
+      else{
+            
+      }
+   }
 
       return msg;
    }
@@ -106,14 +104,23 @@ implementation {
          &sendPackage,
          TOS_NODE_ID,
          destination,
-         0,
+         MAX_TTL,
          PROTOCOL_PING,
          0,
          payload,
          PACKET_MAX_PAYLOAD_SIZE
       );
 
-      call Flooding.send(sendPackage);
+      call IP.send(sendPackage);
+   }
+
+   event void IP.delivered(pack msg){
+      if(msg.protocol == PROTOCOL_PING){
+         dbg(ROUTING_CHANNEL, "Node %u received PING from %u\n", TOS_NODE_ID, msg.src);
+      }
+    else if(msg.protocol == PROTOCOL_PINGREPLY){
+        dbg(ROUTING_CHANNEL, "Node %u received PING REPLY from %u\n", TOS_NODE_ID, msg.src);
+      }
    }
 
 

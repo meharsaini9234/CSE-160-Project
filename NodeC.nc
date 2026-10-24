@@ -34,4 +34,7 @@ implementation {
     components NeighborDiscoveryC;
     Node.NeighborDiscovery -> NeighborDiscoveryC.NeighborDiscovery;
 
+    components IPC;
+    Node.IP -> IPC.IP;
+
 }
