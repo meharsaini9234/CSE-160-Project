@@ -131,4 +131,17 @@ implementation{
             dbg(NEIGHBOR_CHANNEL, "Neighbor: %d\n", neighbors[i]);
         }
     }
+    command uint8_t NeighborDiscovery.getNeighborCount(){
+        return neighborCount; //return how many neighbors currently stored
+    }
+
+    command uint16_t NeighborDiscovery.getNeighbor(uint8_t index){
+        //make sure the index exists in neighbor array
+        if(index >= neighborCount){
+            return 0;
+        }
+
+        //return node ID at this position 
+        return neighbors[index];
+    }
 }
