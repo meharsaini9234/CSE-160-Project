@@ -5,13 +5,16 @@ module DistanceVectorP {
     provides interface RoutingTable;
 
     uses interface NeighborDiscovery;
+    uses interface Timer<TMilli> as RoutingTimer;
 }
 
 implementation{
 
     enum{
         MAX_ROUTES = 32, //allocate space for 32 routing entries
-        ROUTE_INFINITY = 16 //route  with cost 16 considered unreachable
+        ROUTE_INFINITY = 16, //route  with cost 16 considered unreachable
+        ROUTING_PERIOD = 3000, //timer fires every 3 seconds
+        ROUTE_TIMEOUT = 4 //learned route expires after 12 seconds  
     };
 
     typedef struct{
@@ -60,6 +63,82 @@ implementation{
         }
         return FALSE;
     }
+    void markRoutesUnreachable(uint16_t neighbor){
+        uint8_t i;
+
+        for(i=0; i < routeCount; i++){
+            // Never invalidate own route
+            if(routingTable[i].destination == TOS_NODE_ID){
+                continue;
+            }
+            //check whether this route uses the failed neighbor
+            if(routingTable[i].nextHop == neighbor && routingTable[i].valid){
+                routingTable[i].cost = ROUTE_INFINITY;
+                routingTable[i].valid = FALSE;
+
+                dbg(ROUTING_CHANNEL,
+                "Node %d invalidated route to %d through %d\n",TOS_NODE_ID,
+                routingTable[i].destination,neighbor);
+            }
+        }
+    }
+
+    void checkFailedNeighbors(){
+        uint8_t i;
+
+        for(i = 0; i < routeCount; i++){
+            uint16_t nextHop = routingTable[i].nextHop;
+
+            //Skip own route
+            if(routingTable[i].destination == TOS_NODE_ID){
+                continue;
+            }
+
+            //skip already invalid routes
+            if(!routingTable[i].valid){
+                continue;
+            }
+            //if the next hop is no longer active, invalidate its routes
+            if(!isActiveNeighbor(nextHop)){
+                markRoutesUnreachable(nextHop);
+            }
+            }
+
+        
+    }
+
+    void ageRoutes(){
+        uint8_t i; 
+
+        for(i=0; i< routeCount; i++){
+
+            //never age own route own root should never expire
+            if(routingTable[i].destination == TOS_NODE_ID){
+                continue; 
+            }
+            //skip invalid routes for now
+            if(!routingTable[i].valid){
+                continue;
+            }
+            //direct neighbors maintained by nd because they have cost 1 and nd is responnsible for detecting if still reachable
+            if(routingTable[i].destination == routingTable[i].nextHop && isActiveNeighbor(routingTable[i].destination)){
+                continue;
+            }
+            //increase age of learned routes, counts how long we've gone without recieving new routing info
+            routingTable[i].routeAge++;
+
+            //Expire routes that havent been refreshed 
+            if(routingTable[i].routeAge >= ROUTE_TIMEOUT){
+                routingTable[i].cost = ROUTE_INFINITY;
+                routingTable[i].valid = FALSE;
+
+                dbg(ROUTING_CHANNEL,
+                "Node %d route to %d expired\n",
+                TOS_NODE_ID,
+                routingTable[i].destination);
+            }
+        }
+    }
 
     command bool RoutingTable.getRoute( //used for packet forwarding
         uint16_t destination, 
@@ -102,24 +181,30 @@ implementation{
     }
 
     command void RoutingTable.start() {
-        uint8_t i;
+    uint8_t i;
 
-        //clear all routing table entries
-        for(i=0; i<MAX_ROUTES; i++){
-            routingTable[i].valid = FALSE;
-            routingTable[i].routeAge = 0;
-        }
-
-        routeCount = 1;
-
-        routingTable[0].destination = TOS_NODE_ID;
-        routingTable[0].nextHop = TOS_NODE_ID;
-        routingTable[0].cost = 0;
-        routingTable[0].valid = TRUE; 
-        routingTable[0].routeAge = 0;
-
-        dbg(GENERAL_CHANNEL, "Node %d initialized its routing table\n", TOS_NODE_ID);
+    // Clear all routing table entries
+    for(i = 0; i < MAX_ROUTES; i++){
+        routingTable[i].valid = FALSE;
+        routingTable[i].routeAge = 0;
     }
+
+    routeCount = 1;
+
+    // Initialize route to ourselves
+    routingTable[0].destination = TOS_NODE_ID;
+    routingTable[0].nextHop = TOS_NODE_ID;
+    routingTable[0].cost = 0;
+    routingTable[0].valid = TRUE;
+    routingTable[0].routeAge = 0;
+
+    // Start the timer once
+    call RoutingTimer.startPeriodic(ROUTING_PERIOD);
+
+    dbg(GENERAL_CHANNEL,
+        "Node %d initialized its routing table\n",
+        TOS_NODE_ID);
+}
 
     command void RoutingTable.updateDirectNeighbor(uint16_t neighbor){
         int8_t routeIndex;
@@ -179,7 +264,6 @@ implementation{
     }
     //keep a direct neighbor's route at cost 1
     if(isActiveNeighbor(destination)){
-        RoutingTable.updateDirectNeighbor(destination);
         return;
     }
     // Calculate cost through this neighbor
@@ -221,4 +305,8 @@ implementation{
         routingTable[routeIndex].routeAge = 0;
     }
 }
+    event void RoutingTimer.fired(){
+        checkFailedNeighbors();
+        ageRoutes();
+    }
 }

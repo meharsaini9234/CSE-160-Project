@@ -23,6 +23,7 @@ module Node {
 
    uses interface Flooding;
    uses interface NeighborDiscovery;
+   uses interface RoutingTable;
 }
 
 implementation {
@@ -54,6 +55,7 @@ implementation {
       if (err == SUCCESS) {
          dbg(GENERAL_CHANNEL, "Radio On\n");
          call NeighborDiscovery.start();
+         call RoutingTable.start(); //initialize routing table
       }
       else {
          // Retry until successful
@@ -121,7 +123,9 @@ implementation {
       call NeighborDiscovery.print();
    }
 
-   event void CommandHandler.printRouteTable() {}
+   event void CommandHandler.printRouteTable() {
+      call RoutingTable.printTable();
+   }
 
    event void CommandHandler.printLinkState() {}
 

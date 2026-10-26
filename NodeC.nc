@@ -34,4 +34,7 @@ implementation {
     components NeighborDiscoveryC;
     Node.NeighborDiscovery -> NeighborDiscoveryC.NeighborDiscovery;
 
+    components DistanceVectorC;
+    Node.RoutingTable -> DistanceVectorC.RoutingTable;
+
 }
