@@ -1,5 +1,6 @@
 configuration DistanceVectorC {
     provides interface RoutingTable;
+    provides interface Routing;
 }
 
 implementation {
@@ -8,6 +9,7 @@ implementation {
     components new TimerMilliC() as RoutingTimerC;
 
     RoutingTable = DistanceVectorP.RoutingTable;
+    Routing = DistanceVectorP.Routing;
 
     DistanceVectorP.NeighborDiscovery ->
         NeighborDiscoveryC.NeighborDiscovery;

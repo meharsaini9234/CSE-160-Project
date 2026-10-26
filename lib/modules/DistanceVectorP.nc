@@ -3,6 +3,7 @@
 
 module DistanceVectorP {
     provides interface RoutingTable;
+    provides interface Routing;
 
     uses interface NeighborDiscovery;
     uses interface Timer<TMilli> as RoutingTimer;
@@ -162,6 +163,26 @@ implementation{
 
         return TRUE; //found a valid route and provided next hop and cost
     }
+    command bool Routing.getRoute(
+        uint16_t destination,
+        uint16_t* nextHop,
+        uint8_t* cost
+    ){
+        int8_t routeIndex = findRoute(destination);
+
+    if(routeIndex < 0)
+        return FALSE;
+
+    if(!routingTable[routeIndex].valid ||
+       routingTable[routeIndex].cost >= ROUTE_INFINITY)
+        return FALSE;
+
+        *nextHop = routingTable[routeIndex].nextHop;
+        *cost = routingTable[routeIndex].cost;
+
+        return TRUE;
+}
+
 
     command void RoutingTable.printTable(){
         uint8_t i; //loop counter
