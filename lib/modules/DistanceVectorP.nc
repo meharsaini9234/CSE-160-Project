@@ -4,9 +4,11 @@
 module DistanceVectorP {
     provides interface RoutingTable;
     provides interface Routing;
+    provides interface DVRecieve;
 
     uses interface NeighborDiscovery;
     uses interface Timer<TMilli> as RoutingTimer;
+    uses interface SimpleSend as Sender;
 }
 
 implementation{
@@ -15,7 +17,10 @@ implementation{
         MAX_ROUTES = 32, //allocate space for 32 routing entries
         ROUTE_INFINITY = 16, //route  with cost 16 considered unreachable
         ROUTING_PERIOD = 3000, //timer fires every 3 seconds
-        ROUTE_TIMEOUT = 4 //learned route expires after 12 seconds  
+        ROUTE_TIMEOUT = 4, //learned route expires after 12 seconds 
+
+        DV_HEADER_SIZE = 2,   //one packet can advertise up to six routes
+        DV_ENTRY_SIZE = 3
     };
 
     typedef struct{
@@ -28,6 +33,7 @@ implementation{
 
     routeEntry routingTable[MAX_ROUTES]; //routing table array that can hold 32 routeEntry structures
     uint8_t routeCount = 0; //how many entries in use
+    uint16_t dvSequenceNumber = 0;
 
     int8_t findRoute(uint16_t destination){ //function accepts dest node id
         uint8_t i;
@@ -50,6 +56,87 @@ implementation{
         //add one hop because we must first reach the neighbor
         return advertisedCost + 1;
     }
+    void buildDVPacket(pack* packet, uint16_t neighbor){
+        uint8_t i;
+        uint16_t count = 0;
+        uint8_t offset;
+        uint8_t advertisedCost;
+
+        //Set the packet header
+        packet->src = TOS_NODE_ID;
+        packet->dest = neighbor;
+        packet->seq = dvSequenceNumber++;
+        packet->TTL = 1;
+        packet->protocol = PROTOCOL_DV;
+
+        //Clear the payload
+        for(i=0; i < PACKET_MAX_PAYLOAD_SIZE; i++){
+            packet->payload[i] = 0;
+        }
+
+        //Byte 0 identifies our DV advertisement format
+        packet->payload[0] = 1;
+
+        //add routing entries, up to the packet capacity
+        for(i=0; i < routeCount && count < 6; i++){
+            offset = DV_HEADER_SIZE + count * DV_ENTRY_SIZE;
+
+            advertisedCost = routingTable[i].valid
+                ? routingTable[i].cost
+                : ROUTE_INFINITY;
+            
+            //poison reverse: dont tell neighbor that we can reach a destination through that same neighbor
+            if(routingTable[i].nextHop == neighbor && routingTable[i].destination != TOS_NODE_ID){
+                advertisedCost = ROUTE_INFINITY;
+            }
+
+            // Encode destination using two bytes
+            packet->payload[offset] =
+                (routingTable[i].destination >> 8) & 0xFF;
+
+            packet->payload[offset + 1] =
+                routingTable[i].destination & 0xFF;
+
+            // Encode route cost
+            packet->payload[offset + 2] = advertisedCost;
+
+            count++;
+        }
+
+        //Byte 1 tells the reciever how many routes are included
+        packet->payload[1] = count;
+    }
+    //helper function for constructing and transmiting advertisements
+        void sendDistanceVector(){
+        uint8_t neighborCount;
+        uint8_t neighborIndex;
+        uint16_t neighbor;
+        pack dvPacket;
+        error_t result;
+
+        neighborCount = call NeighborDiscovery.getNeighborCount();
+
+        for(neighborIndex = 0; neighborIndex < neighborCount; neighborIndex++){
+        neighbor = call NeighborDiscovery.getNeighbor(neighborIndex);
+
+            // Build an advertisement specifically for this neighbor
+            buildDVPacket(&dvPacket, neighbor);
+
+            // Queue the packet for transmission
+            result = call Sender.send(dvPacket, neighbor);
+
+            if(result == SUCCESS){
+            dbg(ROUTING_CHANNEL,
+                "Node %d queued DV advertisement to %d\n",
+                TOS_NODE_ID, neighbor);
+            }
+            else{
+                dbg(ROUTING_CHANNEL,
+                    "Node %d failed to queue DV advertisement to %d\n",
+                    TOS_NODE_ID, neighbor);
+        }
+    }
+}
 
     bool isActiveNeighbor(uint16_t neighbor){
         uint8_t i;
@@ -227,7 +314,7 @@ implementation{
         TOS_NODE_ID);
 }
 
-    command void RoutingTable.updateDirectNeighbor(uint16_t neighbor){
+    void updateDirectNeighborInternal(uint16_t neighbor){
         int8_t routeIndex;
 
         if(neighbor == TOS_NODE_ID){ //do not add self as neighbor
@@ -267,7 +354,11 @@ implementation{
         dbg(GENERAL_CHANNEL, "Node %d updated direct neighbor %d\n", TOS_NODE_ID, neighbor);
     }
 
-    command void RoutingTable.updateFromNeighbor(
+    command void RoutingTable.updateDirectNeighbor(uint16_t neighbor){
+        updateDirectNeighborInternal(neighbor);
+    }
+
+   void updateFromNeighborInternal(
     uint16_t neighbor,
     uint16_t destination,
     uint8_t advertisedCost
@@ -326,8 +417,86 @@ implementation{
         routingTable[routeIndex].routeAge = 0;
     }
 }
+    command void RoutingTable.updateFromNeighbor(
+    uint16_t neighbor,
+    uint16_t destination,
+    uint8_t advertisedCost
+){
+    updateFromNeighborInternal(neighbor, destination, advertisedCost);
+}
+
+    command void DVRecieve.recieve(pack msg){
+        uint8_t count;
+        uint8_t i;
+        uint8_t offset;
+        uint16_t destination;
+        uint8_t advertisedCost;
+
+        //only process dv packets addressed to this node
+        if(msg.protocol != PROTOCOL_DV || msg.dest != TOS_NODE_ID||msg.TTL == 0){
+            return;
+        } 
+        //ignore advertisements from unknown neighbors
+        if(!isActiveNeighbor(msg.src)){
+        return;
+        }
+        //Check the advertisement format
+        if(msg.payload[0] != 1){
+            return;
+        }
+        //Read how many routing entries are in this packet
+        count = msg.payload[1];
+
+        //20 byte payload can hold at most 6 entries
+        if(count > 6){
+            return;
+        }
+
+        for(i = 0; i < count; i++){
+            offset = DV_HEADER_SIZE + i * DV_ENTRY_SIZE;
+
+            destination = ((uint16_t)msg.payload[offset] << 8) | msg.payload[offset+1];
+
+            //read advertised route cost
+            advertisedCost = msg.payload[offset + 2];
+
+            if(advertisedCost >ROUTE_INFINITY){
+                continue;
+            }
+
+            //apply bellman-ford update
+            updateFromNeighborInternal(
+                msg.src,
+                destination,
+                advertisedCost
+            );
+        }
+        dbg(ROUTING_CHANNEL, "Node %d processed %d DV entries from neighbor %d\n", TOS_NODE_ID, count, msg.src);
+
+    }
+
+
+    
     event void RoutingTimer.fired(){
+        uint8_t i;
+        uint8_t count;
+        uint16_t neighbor;
+
+        //Get the number of discovered neighbors
+        count = call NeighborDiscovery.getNeighborCount();
+
+        //Add or refresh direct-neighbor routes
+        for(i=0; i < count; i++){
+            neighbor = call NeighborDiscovery.getNeighbor(i);
+            updateDirectNeighborInternal(neighbor);
+        }
+
+        //invalidate route through failed neighbors 
         checkFailedNeighbors();
+
+        //age learned routes
         ageRoutes();
+        //prepare advertisements every routing period
+        sendDistanceVector();
     }
 }

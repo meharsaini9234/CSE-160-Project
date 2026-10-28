@@ -25,6 +25,7 @@ module Node {
 uses interface NeighborDiscovery;
 uses interface RoutingTable;
 uses interface IP;
+uses interface DVRecieve;
 }
 
 implementation {
@@ -82,11 +83,10 @@ implementation {
 
         // DV stuff
       else if(myMsg->protocol == PROTOCOL_DV){
-
+         call DVRecieve.recieve(*myMsg);
       }
 
-      else{
-            
+      else{      
       }
    }
 

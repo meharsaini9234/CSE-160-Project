@@ -36,6 +36,7 @@ implementation {
 
 components DistanceVectorC;
     Node.RoutingTable -> DistanceVectorC.RoutingTable;
+    Node.DVRecieve -> DistanceVectorC.DVRecieve;
 
     components IPC;
     Node.IP -> IPC.IP;
