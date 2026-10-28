@@ -56,60 +56,54 @@ implementation{
         //add one hop because we must first reach the neighbor
         return advertisedCost + 1;
     }
-    void buildDVPacket(pack* packet, uint16_t neighbor){
+    uint8_t buildDVPacket(pack* packet, uint16_t neighbor, uint8_t startIndex){
         uint8_t i;
-        uint16_t count = 0;
+        uint8_t count = 0;
         uint8_t offset;
         uint8_t advertisedCost;
+        uint8_t maxEntries = (PACKET_MAX_PAYLOAD_SIZE - DV_HEADER_SIZE) / DV_ENTRY_SIZE;
 
-        //Set the packet header
         packet->src = TOS_NODE_ID;
         packet->dest = neighbor;
         packet->seq = dvSequenceNumber++;
         packet->TTL = 1;
         packet->protocol = PROTOCOL_DV;
 
-        //Clear the payload
-        for(i=0; i < PACKET_MAX_PAYLOAD_SIZE; i++){
+        for(i = 0; i < PACKET_MAX_PAYLOAD_SIZE; i++){
             packet->payload[i] = 0;
         }
 
-        //Byte 0 identifies our DV advertisement format
         packet->payload[0] = 1;
 
-        //add routing entries, up to the packet capacity
-        for(i=0; i < routeCount && count < 6; i++){
-            offset = DV_HEADER_SIZE + count * DV_ENTRY_SIZE;
+        for(i = startIndex; i < routeCount && count < maxEntries; i++){
+        offset = DV_HEADER_SIZE + count * DV_ENTRY_SIZE;
 
             advertisedCost = routingTable[i].valid
-                ? routingTable[i].cost
-                : ROUTE_INFINITY;
-            
-            //poison reverse: dont tell neighbor that we can reach a destination through that same neighbor
-            if(routingTable[i].nextHop == neighbor && routingTable[i].destination != TOS_NODE_ID){
+            ? routingTable[i].cost
+            : ROUTE_INFINITY;
+
+            if(routingTable[i].nextHop == neighbor &&
+                routingTable[i].destination != TOS_NODE_ID){
                 advertisedCost = ROUTE_INFINITY;
-            }
+        }
 
-            // Encode destination using two bytes
-            packet->payload[offset] =
-                (routingTable[i].destination >> 8) & 0xFF;
-
-            packet->payload[offset + 1] =
-                routingTable[i].destination & 0xFF;
-
-            // Encode route cost
+            packet->payload[offset] = (routingTable[i].destination >> 8) & 0xFF;
+            packet->payload[offset + 1] = routingTable[i].destination & 0xFF;
             packet->payload[offset + 2] = advertisedCost;
 
             count++;
         }
 
-        //Byte 1 tells the reciever how many routes are included
         packet->payload[1] = count;
+
+        return count;
     }
     //helper function for constructing and transmiting advertisements
-        void sendDistanceVector(){
+    void sendDistanceVector(){
         uint8_t neighborCount;
-        uint8_t neighborIndex;
+        int8_t neighborIndex;
+        uint8_t startIndex;
+        uint8_t entriesAdded;
         uint16_t neighbor;
         pack dvPacket;
         error_t result;
@@ -117,27 +111,33 @@ implementation{
         neighborCount = call NeighborDiscovery.getNeighborCount();
 
         for(neighborIndex = 0; neighborIndex < neighborCount; neighborIndex++){
-        neighbor = call NeighborDiscovery.getNeighbor(neighborIndex);
+            neighbor = call NeighborDiscovery.getNeighbor(neighborIndex);
+            startIndex = 0;
 
-            // Build an advertisement specifically for this neighbor
-            buildDVPacket(&dvPacket, neighbor);
+            while(startIndex < routeCount){
+                entriesAdded = buildDVPacket(&dvPacket, neighbor, startIndex);
 
-            // Queue the packet for transmission
-            result = call Sender.send(dvPacket, neighbor);
-
-            if(result == SUCCESS){
-            dbg(ROUTING_CHANNEL,
-                "Node %d queued DV advertisement to %d\n",
-                TOS_NODE_ID, neighbor);
+                if(entriesAdded == 0){
+                    break;
             }
-            else{
-                dbg(ROUTING_CHANNEL,
-                    "Node %d failed to queue DV advertisement to %d\n",
-                    TOS_NODE_ID, neighbor);
+
+                result = call Sender.send(dvPacket, neighbor);
+
+                if(result == SUCCESS){
+                    dbg(ROUTING_CHANNEL,
+                        "Node %d queued DV packet to %d with %d entries\n",
+                        TOS_NODE_ID, neighbor, entriesAdded);
+                }
+                else{
+                    dbg(ROUTING_CHANNEL,
+                        "Node %d failed to queue DV packet to %d\n",
+                        TOS_NODE_ID, neighbor);
+                    }
+
+                    startIndex += entriesAdded;
+            }
         }
     }
-}
-
     bool isActiveNeighbor(uint16_t neighbor){
         uint8_t i;
         uint8_t count;
@@ -145,10 +145,11 @@ implementation{
         count = call NeighborDiscovery.getNeighborCount();
 
         for(i = 0; i < count; i++){
-            if(call NeighborDiscovery.getNeighbor(i)==neighbor){
+            if(call NeighborDiscovery.getNeighbor(i) == neighbor){
                 return TRUE;
             }
         }
+
         return FALSE;
     }
     void markRoutesUnreachable(uint16_t neighbor){
