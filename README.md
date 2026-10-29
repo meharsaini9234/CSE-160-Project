@@ -1,6 +1,7 @@
 # Introduction
-This skeleton code is the basis for the CSE160 network project. Additional documentation
-on what is expected will be provided as the school year continues.
+This project is part of CSE 160 and builds on the original TinyOS network skeleton code. For Project 2, we implemented Distance Vector routing to allow nodes to communicate across multiple hops.
+
+Our implementation includes bidirectional neighbor discovery, routing tables, periodic Distance Vector advertisements, poison reverse, route expiration, IP forwarding, and ping requests and replies.
 
 # General Information
 ## Data Structures
@@ -12,6 +13,10 @@ structures.
 
 * **List** - The list is design to have pushfront, pushback capabilities. For the most part,
 you can stick with an array or even a QueueC (FIFO) which are more robust.
+
+* **Routing Table** - Stores information about reachable destinations. Each entry contains a destination, next hop, hop count, validity flag, and route age. The routing table supports up to 32 entries.
+
+* **Neighbor Table** = Stores discovered neighbors and tracks whether communication has been confirmed in both directions.
 
 ## General Libraries
 /lib/interfaces
@@ -25,6 +30,10 @@ possibly rewire it.
 * **Transport** - There is only the interface of Transport included. The actual
 implementation of the Transport layer is left to the student as an exercise. For
 CSE160 this will be Project 3 so don't worry about it now.
+* **NeighborDiscovery** - Identifies directly connected neighbors using a HELLO, ACK, and CONFIRM handshake.
+* **RoutingTable** - Maintains routing information, including destinations, next hops, costs, and route validity.
+* **Routing** - Provides routing information to the IP module for forwarding packets.
+* **IP** - Sends and forwards packets using the routing table and handles ping requests and replies.
 
 ## Noise
 /noise/
@@ -32,7 +41,8 @@ CSE160 this will be Project 3 so don't worry about it now.
 This is the "noise" of the network. A heavy noised network will cause issues with
 packet loss.
 
-* **no_noise.txt** - There should be no packet loss using this model.
+* **no_noise.txt** - Provides a low-loss environment for testing basic routing functionality.
+* **lossy_noise.txt** - Simulates network conditions where packets may be lost.
 
 ## Topography
 /topo/
@@ -43,7 +53,12 @@ since additional ones will be added when grading.
 
 * **long_line.topo** - this topography is a line of 19 motes that have bidirectional
 links.
-* **example.topo** - A slightly more complex connection
+* **example.topo** - A slightly more complex connection.
+* **dv_line4.topo** - A four-node line topology.
+* **dv_alternate.topo** - A five-node topology used to test alternative routes.
+* **dv_poison.topo** - Used to test poison reverse.
+* **dv_capacity.topo** - Used to test routing tables and advertisements containing more than six routes.
+* **dv_loss.topo** - Used to test routing under packet-loss conditions.
 
 Each line has three values, the source node, the destination node, and the gain.
 For now you can keep the gain constant for all of your topographies. A line written
@@ -86,3 +101,37 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+
+* **Test 1 - Line Topology**
+```
+python tests/test1_line.py
+```
+* **Test 2 — Alternate Path**
+```
+python tests/test2_alternate.py
+```
+* **Test 3 — Network Partition**
+```
+python tests/test3_partition.py
+```
+* **Test 4 — Poison Reverse**
+```
+python tests/test4_poison.py
+```
+* **Test 5 — Routing Table Capacity**
+```
+python tests/test5_capacity.py
+```
+* **Test 6 — Packet Loss and TTL**
+```
+python tests/test6_loss.py
+python tests/test6_ttl.py
+```
+
+# Test Results
+* **Test 1** - Successfully routed a ping from node 1 to node 4 across three hops and received a reply.
+* **Test 2** - Successfully changed the route from cost 2 to cost 3 after a link failure and restored the shorter route when the link recovered.
+* **Test 3** - Includes network partition and recovery testing.
+* **Test 4** - Includes poison reverse testing with advertised route costs.
+* **Test 5** - Includes routing table capacity and multi-packet advertisement testing.
+* **Test 6** - The packet-loss simulation recorded packet-loss events, and all three ping requests successfully received replies. The TTL simulation successfully forwarded a ping across three hops.
