@@ -90,7 +90,9 @@ implementation{
             packet->payload[offset] = (routingTable[i].destination >> 8) & 0xFF;
             packet->payload[offset + 1] = routingTable[i].destination & 0xFF;
             packet->payload[offset + 2] = advertisedCost;
-
+            dbg(ROUTING_CHANNEL,
+                "POISON_TEST sender=%d receiver=%d dest=%d advertisedCost=%d\n",
+                TOS_NODE_ID, neighbor, routingTable[i].destination, advertisedCost);
             count++;
         }
 
