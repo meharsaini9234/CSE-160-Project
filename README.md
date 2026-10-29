@@ -134,4 +134,4 @@ python tests/test6_ttl.py
 * **Test 3** - Includes network partition and recovery testing.
 * **Test 4** - Includes poison reverse testing with advertised route costs.
 * **Test 5** - Includes routing table capacity and multi-packet advertisement testing.
-* **Test 6** - The packet-loss simulation recorded packet-loss events, and all three ping requests successfully received replies. The TTL simulation successfully forwarded a ping across three hops.
+* **Test 6** - The packet-loss simulation recorded packet-loss events, and all three ping requests successfully received replies. The TTL simulation sent a ping from node 1 to node 4 with TTL 2 on a three-hop path; node 2 forwarded it with TTL 1 and node 3 dropped it as expired, so no reply was returned and the packet did not circulate.
