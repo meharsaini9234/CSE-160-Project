@@ -20,7 +20,7 @@ def main():
     s.runTime(100)
 
     print "\n========== PING NODE 1 TO NODE 4 WITH TTL 2 =========="
-    s.ping(1, 4, "TTL test")
+    s.pingTTL(1, 4, 2, "TTL test")
     s.runTime(30)
 
     print "\n========== TEST 6 TTL COMPLETE =========="

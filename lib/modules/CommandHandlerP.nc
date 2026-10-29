@@ -77,6 +77,10 @@ implementation{
                 dbg(COMMAND_CHANNEL, "Command Type: Client\n");
                 signal CommandHandler.setTestServer();
                 break;
+            case CMD_PING_TTL:
+                dbg(COMMAND_CHANNEL, "Command Type: Ping with TTL\n");
+                signal CommandHandler.pingTTL(buff[0], buff[1], &buff[2]);
+                break;
 
             default:
                 dbg(COMMAND_CHANNEL, "CMD_ERROR: \"%d\" does not match any known commands.\n", msg->id);

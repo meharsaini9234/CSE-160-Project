@@ -87,7 +87,8 @@ implementation {
          call DVRecieve.recieve(*myMsg);
       }
 
-      else{      
+      else{   
+         call Flooding.receive(*myMsg);   
       }
    }
 
@@ -115,7 +116,26 @@ implementation {
 
       call IP.send(sendPackage);
    }
+   event void CommandHandler.pingTTL(
+      uint16_t destination,
+      uint8_t ttl, 
+      uint8_t *payload
+   ){
+      dbg(GENERAL_CHANNEL, "PING EVENT with TTL %u\n", ttl);
 
+      makePack(
+         &sendPackage,
+         TOS_NODE_ID,
+         destination,
+         ttl,
+         PROTOCOL_PING,
+         pingSequence++,
+         payload,
+         PACKET_MAX_PAYLOAD_SIZE
+      );
+
+      call IP.send(sendPackage);
+   }
    event void IP.delivered(pack msg){
       if(msg.protocol == PROTOCOL_PING){
          dbg(ROUTING_CHANNEL, "Node %u received PING from %u\n", TOS_NODE_ID, msg.src);

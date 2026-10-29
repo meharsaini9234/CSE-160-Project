@@ -9,4 +9,5 @@ interface CommandHandler{
    event void setTestClient();
    event void setAppServer();
    event void setAppClient();
+   event void pingTTL(uint16_t destination, uint8_t ttl, uint8_t * payload);
 }
