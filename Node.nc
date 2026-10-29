@@ -31,6 +31,7 @@ uses interface DVRecieve;
 implementation {
 
    pack sendPackage;
+   uint16_t pingSequence = 0;
 
    // Prototypes
    void makePack(
@@ -107,7 +108,7 @@ implementation {
          destination,
          MAX_TTL,
          PROTOCOL_PING,
-         0,
+         pingSequence++,
          payload,
          PACKET_MAX_PAYLOAD_SIZE
       );
