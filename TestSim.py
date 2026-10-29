@@ -13,6 +13,7 @@ class TestSim:
     CMD_PING = 0
     CMD_NEIGHBOR_DUMP = 1
     CMD_ROUTE_DUMP=3
+    CMD_PING_TTL = 7
 
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
@@ -118,6 +119,10 @@ class TestSim:
 
     def ping(self, source, dest, msg):
         self.sendCMD(self.CMD_PING, source, "{0}{1}".format(chr(dest),msg));
+    
+    def pingTTL(self, source, dest, ttl, msg):
+        self.sendCMD(self.CMD_PING_TTL, source, "{0}{1}{2}".format(chr(dest), chr(ttl), msg));
+
 
     def neighborDMP(self, destination):
         self.sendCMD(self.CMD_NEIGHBOR_DUMP, destination, "neighbor command");
