@@ -130,19 +130,34 @@ class TestSim:
         self.t.addChannel(channelName, out);
 
 def main():
-    s = TestSim();
-    s.runTime(10);
-    s.loadTopo("long_line.topo");
-    s.loadNoise("no_noise.txt");
-    s.bootAll();
-    s.addChannel(s.COMMAND_CHANNEL);
-    s.addChannel(s.GENERAL_CHANNEL);
+    s = TestSim()
 
-    s.runTime(20);
-    s.ping(1, 2, "Hello, World");
-    s.runTime(10);
-    s.ping(1, 3, "Hi!");
-    s.runTime(20);
+    # Load our four-node line topology
+    s.loadTopo("dv_line4.topo")
+    s.loadNoise("no_noise.txt")
+
+    # Boot all four nodes
+    s.bootAll()
+
+    # Enable debugging output
+    s.addChannel(s.COMMAND_CHANNEL)
+    s.addChannel(s.GENERAL_CHANNEL)
+    s.addChannel(s.NEIGHBOR_CHANNEL)
+    s.addChannel(s.ROUTING_CHANNEL)
+
+    # Give neighbor discovery and distance vector time to run
+    s.runTime(100)
+
+    # Print routing tables for Node 1 and Node 4
+    s.routeDMP(1)
+    s.runTime(5)
+
+    s.routeDMP(4)
+    s.runTime(5)
+
+    # Test multi-hop communication
+    s.ping(1, 4, "Hello Node 4!")
+    s.runTime(30)
 
 if __name__ == '__main__':
     main()

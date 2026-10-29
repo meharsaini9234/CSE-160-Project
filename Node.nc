@@ -22,9 +22,10 @@ module Node {
    uses interface CommandHandler;
 
    uses interface Flooding;
-   uses interface NeighborDiscovery;
-
-   uses interface IP;
+uses interface NeighborDiscovery;
+uses interface RoutingTable;
+uses interface IP;
+uses interface DVRecieve;
 }
 
 implementation {
@@ -57,6 +58,7 @@ implementation {
       if (err == SUCCESS) {
          dbg(GENERAL_CHANNEL, "Radio On\n");
          call NeighborDiscovery.start();
+         call RoutingTable.start(); //initialize routing table
       }
       else {
          // Retry until successful
@@ -82,11 +84,10 @@ implementation {
 
         // DV stuff
       else if(myMsg->protocol == PROTOCOL_DV){
-
+         call DVRecieve.recieve(*myMsg);
       }
 
-      else{
-            
+      else{      
       }
    }
 
@@ -129,7 +130,9 @@ implementation {
       call NeighborDiscovery.print();
    }
 
-   event void CommandHandler.printRouteTable() {}
+   event void CommandHandler.printRouteTable() {
+      call RoutingTable.printTable();
+   }
 
    event void CommandHandler.printLinkState() {}
 
