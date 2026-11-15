@@ -64,17 +64,7 @@ implementation{
     uint16_t networkPacketId = 0;
 
     task void consumeTask();
-
-    void transmit(
-        connection_t* c,
-        uint8_t flags,
-        uint16_t seq,
-        uint16_t ack,
-        uint8_t* data,
-        uint8_t length,
-        bool remember
-    );
-
+    void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length, bool remember);
     void sendAck(connection_t* c);
     void sendNextData(connection_t* c);
     void sendFin(connection_t* c);
@@ -615,4 +605,4 @@ implementation{
             resendPending(c);
         }
     }
-}git branch backup-project3
+}

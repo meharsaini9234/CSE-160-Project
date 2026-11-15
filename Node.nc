@@ -80,7 +80,7 @@ implementation {
          call NeighborDiscovery.receive(*myMsg);
       }
 
-      else if(myMsg->protocol == PROTOCOL_PING || myMsg->protocol == PROTOCOL_PINGREPLY || PROTOCOL_TCP){
+      else if(myMsg->protocol == PROTOCOL_PING || myMsg->protocol == PROTOCOL_PINGREPLY || myMsg->protocol == PROTOCOL_TCP){
          call IP.receive(*myMsg);
       }
 
@@ -167,7 +167,7 @@ implementation {
 
    event void CommandHandler.setTestClient() {
       dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node 4 port 20\n", TOS_NODE_ID);
-      call MidTransport.listen(20);
+      call MidTransport.listen(4, 10, 20);
    }
 
    event void CommandHandler.setAppServer() {}
