@@ -22,10 +22,12 @@ module Node {
    uses interface CommandHandler;
 
    uses interface Flooding;
-uses interface NeighborDiscovery;
-uses interface RoutingTable;
-uses interface IP;
-uses interface DVRecieve;
+   uses interface NeighborDiscovery;
+   uses interface RoutingTable;
+   uses interface IP;
+   uses interface DVRecieve;
+   
+   uses interface MidTransport;
 }
 
 implementation {
@@ -78,7 +80,7 @@ implementation {
          call NeighborDiscovery.receive(*myMsg);
       }
 
-      else if(myMsg->protocol == PROTOCOL_PING || myMsg->protocol == PROTOCOL_PINGREPLY){
+      else if(myMsg->protocol == PROTOCOL_PING || myMsg->protocol == PROTOCOL_PINGREPLY || PROTOCOL_TCP){
          call IP.receive(*myMsg);
       }
 
@@ -158,9 +160,15 @@ implementation {
 
    event void CommandHandler.printDistanceVector() {}
 
-   event void CommandHandler.setTestServer() {}
+   event void CommandHandler.setTestServer() {
+      dbg(TRANSPORT_CHANNEL, "Node %u starting TCP server on port 20\n", TOS_NODE_ID);
+      call MidTransport.listen(20);
+   }
 
-   event void CommandHandler.setTestClient() {}
+   event void CommandHandler.setTestClient() {
+      dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node 4 port 20\n", TOS_NODE_ID);
+      call MidTransport.listen(20);
+   }
 
    event void CommandHandler.setAppServer() {}
 
