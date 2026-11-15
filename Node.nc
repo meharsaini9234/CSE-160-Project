@@ -167,7 +167,7 @@ implementation {
 
    event void CommandHandler.setTestClient() {
       dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node 4 port 20\n", TOS_NODE_ID);
-      call MidTransport.listen(4, 10, 20);
+      call MidTransport.connect(4, 10, 20);
    }
 
    event void CommandHandler.setAppServer() {}

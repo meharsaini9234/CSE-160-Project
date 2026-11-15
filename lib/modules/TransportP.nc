@@ -3,6 +3,7 @@
 #include "../../includes/transportPacket.h"
 #include "../../includes/channels.h"
 #include <Timer.h>
+#include <string.h>
 
 module TransportP{
     provides interface MidTransport;
@@ -71,7 +72,7 @@ implementation{
     void handleSegment(pack* packet, tcp_segment_t* seg);
 
     void startTimer(){
-        if (!timerStarted){
+        if(!timerStarted){
             timerStarted = TRUE;
             call RetryTimer.startPeriodic(TCP_TIMER_MS);
         }
@@ -300,177 +301,93 @@ implementation{
             return;
         }
 
-        // ---------------------------
-        // Client receives SYN-ACK
-        // ---------------------------
-
-        if (seg->flags == (TCP_SYN | TCP_ACK)) {
-
-            if (c->state == ST_SYN_SENT &&
-                seg->ack == c->sndNext &&
-                seg->length == 0) {
-
+        if(seg->flags == (TCP_SYN | TCP_ACK)){
+            if(c->state == ST_SYN_SENT && seg->ack == c->sndNext && seg->length == 0){
                 c->rcvNext = seg->seq + 1;
                 c->sndUna = seg->ack;
                 c->waiting = FALSE;
-
                 c->state = ST_ESTABLISHED;
 
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u ESTABLISHED client peer=%u\n",
-                    TOS_NODE_ID,
-                    packet->src
-                );
+                dbg(TRANSPORT_CHANNEL, "node=%u ESTABLISHED client peer=%u\n", TOS_NODE_ID, packet->src);
 
                 sendAck(c);
                 sendNextData(c);
             }
-            else if (c->state == ST_ESTABLISHED &&
-                     seg->seq + 1 == c->rcvNext &&
-                     seg->ack == c->sndUna) {
-
-                // Final handshake ACK may have been lost.
+            else if(c->state == ST_ESTABLISHED && seg->seq + 1 == c->rcvNext && seg->ack == c->sndUna){
                 sendAck(c);
             }
 
             return;
         }
 
-        // ---------------------------
-        // Duplicate SYN
-        // ---------------------------
-
-        if (seg->flags == TCP_SYN) {
-            if (c->state == ST_SYN_RCVD &&
-                seg->seq + 1 == c->rcvNext) {
+        if(seg->flags == TCP_SYN){
+            if (c->state == ST_SYN_RCVD && seg->seq + 1 == c->rcvNext){
                 resendPending(c);
             }
 
             return;
         }
 
-        // ---------------------------
-        // Server receives final ACK
-        // ---------------------------
-
-        if (c->state == ST_SYN_RCVD) {
-            if (seg->flags == TCP_ACK &&
-                seg->ack == c->sndNext &&
-                seg->length == 0) {
-
+        if(c->state == ST_SYN_RCVD){
+            if (seg->flags == TCP_ACK && seg->ack == c->sndNext && seg->length == 0){
                 c->sndUna = seg->ack;
                 c->waiting = FALSE;
                 c->state = ST_ESTABLISHED;
-
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u ESTABLISHED server peer=%u\n",
-                    TOS_NODE_ID,
-                    packet->src
-                );
+                dbg(TRANSPORT_CHANNEL, "node=%u ESTABLISHED server peer=%u\n", TOS_NODE_ID, packet->src);
             }
-
             return;
         }
 
-        // ---------------------------
-        // Receive application DATA
-        // ---------------------------
-
-        if (seg->flags == TCP_DATA) {
-
-            if (c->state != ST_ESTABLISHED &&
-                c->state != ST_CLOSE_WAIT) {
+        if(seg->flags == TCP_DATA){
+            if(c->state != ST_ESTABLISHED && c->state != ST_CLOSE_WAIT){
                 return;
             }
 
-            if (seg->length == 0) {
+            if(seg->length == 0){
                 return;
             }
 
-            if (seg->seq == c->rcvNext &&
-                seg->length <=
-                    TCP_BUFFER_SIZE - c->recvLength) {
-
-                for (i = 0; i < seg->length; i++) {
-                    c->recvBuffer[c->recvLength + i] =
-                        seg->data[i];
+            if(seg->seq == c->rcvNext && seg->length <= TCP_BUFFER_SIZE - c->recvLength){
+                for (i = 0; i < seg->length; i++){
+                    c->recvBuffer[c->recvLength + i] = seg->data[i];
                 }
-
                 c->recvLength += seg->length;
                 c->rcvNext += seg->length;
 
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u DATA_RECEIVED peer=%u "
-                    "seq=%u len=%u nextExpected=%u\n",
-                    TOS_NODE_ID,
-                    packet->src,
-                    seg->seq,
-                    seg->length,
-                    c->rcvNext
-                );
-
+                dbg(TRANSPORT_CHANNEL, "node=%u DATA_RECEIVED peer=%u seq=%u len=%u nextExpected=%u\n", TOS_NODE_ID, packet->src, seg->seq, seg->length, c->rcvNext);
                 post consumeTask();
             }
-            else {
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u DUPLICATE_OR_OUT_OF_ORDER "
-                    "seq=%u expected=%u\n",
-                    TOS_NODE_ID,
-                    seg->seq,
-                    c->rcvNext
-                );
+            else{
+                dbg(TRANSPORT_CHANNEL, "node=%u DUPLICATE_OR_OUT_OF_ORDER seq=%u expected=%u\n", TOS_NODE_ID, seg->seq, c->rcvNext);
             }
-
-            // Cumulative ACK, including duplicate data.
             sendAck(c);
             return;
         }
 
-        // ---------------------------
-        // Process ACK
-        // ---------------------------
-
-        if (seg->flags == TCP_ACK) {
-
-            if (!c->waiting) {
+        if(seg->flags == TCP_ACK){
+            if(!c->waiting){
                 return;
             }
 
-            if (seg->ack != c->sndNext ||
-                seg->ack <= c->sndUna) {
+            if(seg->ack != c->sndNext || seg->ack <= c->sndUna){
                 return;
             }
 
-            if (c->pendingFlags == TCP_DATA &&
-                c->state == ST_ESTABLISHED) {
-
+            if(c->pendingFlags == TCP_DATA && c->state == ST_ESTABLISHED){
                 c->sndUna = seg->ack;
                 c->dataOffset += c->pendingLength;
                 c->waiting = FALSE;
 
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u DATA_ACKNOWLEDGED "
-                    "bytes=%u ack=%u\n",
-                    TOS_NODE_ID,
-                    c->dataOffset,
-                    seg->ack
-                );
-
+                dbg(TRANSPORT_CHANNEL, "node=%u DATA_ACKNOWLEDGED bytes=%u ack=%u\n", TOS_NODE_ID, c->dataOffset, seg->ack);
                 sendNextData(c);
             }
-            else if (c->pendingFlags == TCP_FIN) {
-
+            else if(c->pendingFlags == TCP_FIN){
                 c->sndUna = seg->ack;
                 c->waiting = FALSE;
 
-                if (c->state == ST_FIN_WAIT_1) {
+                if(c->state == ST_FIN_WAIT_1){
                     c->state = ST_FIN_WAIT_2;
-
-                    dbg(TRANSPORT_CHANNEL,
-                        "node=%u FIN_WAIT_2 peer=%u\n",
-                        TOS_NODE_ID,
-                        packet->src
-                    );
+                    dbg(TRANSPORT_CHANNEL, "node=%u FIN_WAIT_2 peer=%u\n", TOS_NODE_ID, packet->src);
                 }
                 else if (c->state == ST_LAST_ACK) {
                     enterLinger(c);
@@ -480,40 +397,24 @@ implementation{
             return;
         }
 
-        // ---------------------------
-        // Receive FIN
-        // ---------------------------
-
-        if (seg->flags == TCP_FIN) {
-
-            if (seg->seq == c->rcvNext) {
+        if(seg->flags == TCP_FIN){
+            if(seg->seq == c->rcvNext){
                 c->rcvNext++;
-
                 sendAck(c);
+                
+                dbg(TRANSPORT_CHANNEL, "node=%u FIN_RECEIVED peer=%u\n", TOS_NODE_ID, packet->src);
 
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u FIN_RECEIVED peer=%u\n",
-                    TOS_NODE_ID,
-                    packet->src
-                );
-
-                if (c->state == ST_ESTABLISHED) {
+                if(c->state == ST_ESTABLISHED){
                     c->state = ST_CLOSE_WAIT;
-
-                    // This test server has no outgoing
-                    // application data to drain.
                     sendFin(c);
                 }
-                else if (c->state == ST_FIN_WAIT_2) {
+                else if(c->state == ST_FIN_WAIT_2){
                     enterLinger(c);
                 }
             }
-            else {
-                // ACK repeated FINs, but do not consume
-                // another sequence number.
+            else{
                 sendAck(c);
             }
-
             return;
         }
     }
