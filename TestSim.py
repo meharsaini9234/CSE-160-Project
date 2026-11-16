@@ -14,6 +14,8 @@ class TestSim:
     CMD_NEIGHBOR_DUMP = 1
     CMD_ROUTE_DUMP=3
     CMD_PING_TTL = 7
+    CMD_TEST_CLIENT = 4
+    CMD_TEST_SERVER = 5
 
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
@@ -133,6 +135,20 @@ class TestSim:
     def addChannel(self, channelName, out=sys.stdout):
         print 'Adding Channel', channelName;
         self.t.addChannel(channelName, out);
+
+    def cmdTestServer(self, serverAddress):
+        self.sendCMD(
+            self.CMD_TEST_SERVER,
+            serverAddress,
+            ""
+        )
+
+    def cmdTestClient(self, clientAddress):
+        self.sendCMD(
+            self.CMD_TEST_CLIENT,
+            clientAddress,
+            ""
+        )
 
 def main():
     s = TestSim()
