@@ -27,7 +27,7 @@ implementation{
     };
 
     typedef struct connection{
-        bool used;
+        uint8_t used;
         uint8_t state;
 
         uint16_t remoteAddress;
@@ -44,7 +44,7 @@ implementation{
         uint8_t recvBuffer[TCP_BUFFER_SIZE];
         uint8_t recvLength;
 
-        bool waiting;
+        uint8_t waiting;
         uint8_t pendingFlags;
         uint16_t pendingSeq;
         uint16_t pendingAck;
@@ -58,14 +58,14 @@ implementation{
 
     connection_t connections[TCP_MAX_CONNECTIONS];
 
-    bool listening = FALSE;
+    uint8_t listening = 0;
     uint8_t listeningPort = 0;
 
-    bool timerStarted = FALSE;
+    uint8_t timerStarted = 0;
     uint16_t networkPacketId = 0;
 
     task void consumeTask();
-    void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length, bool remember);
+    void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length, uint8_t remember);
     void sendAck(connection_t* c);
     void sendNextData(connection_t* c);
     void sendFin(connection_t* c);
@@ -108,7 +108,7 @@ implementation{
         return NULL;
     }
 
-    void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length,bool remember){
+    void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length,uint8_t remember){
         pack packet;
         tcp_segment_t seg;
         uint8_t i;

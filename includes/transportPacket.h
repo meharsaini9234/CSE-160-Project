@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "packet.h"
+#include <stdbool.h>
 
 enum{
     TCP_HEADER_SIZE = 9,
@@ -56,7 +57,7 @@ void tcpEncode(pack* packet, tcp_segment_t* seg){
     }
 }
 
-bool tcpDecode(pack* packet, tcp_segment_t* seg){
+uint8_t tcpDecode(pack* packet, tcp_segment_t* seg){
     uint8_t i;
 
     seg->srcPort = packet->payload[0];
@@ -71,14 +72,14 @@ bool tcpDecode(pack* packet, tcp_segment_t* seg){
     seg->length = packet->payload[8];
 
     if(seg->length > TCP_MAX_DATA){
-        return false;
+        return 0;
     }
 
     for(i = 0; i < seg->length; i++){
         seg->data[i] = packet->payload[TCP_HEADER_SIZE + i];
     }
 
-    return true;
+    return 1;
 }
 
 #endif
