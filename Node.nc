@@ -35,6 +35,18 @@ implementation {
    pack sendPackage;
    uint16_t pingSequence = 0;
 
+   uint8_t testActive = FALSE;
+   uint8_t testEstablished = FALSE;
+
+   uint16_t testRemoteAddress = 0;
+   uint8_t testLocalPort = 0;
+   uint8_t testRemotePort = 0;
+
+   uint16_t testTransferBytes = 0;
+   uint16_t testAccepted = 0;
+
+   task void produceTestData();
+
    // Prototypes
    void makePack(
       pack *Package,
@@ -165,9 +177,94 @@ implementation {
       call MidTransport.listen(listenPort);
    }
 
-   event void CommandHandler.setTestClient(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort, uint16_t transferBytes) {
-      dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node %u srcPort=%u destPort=%u bytes=%u\n", TOS_NODE_ID, serverAddress, srcPort, destPort, transferBytes);
+   event void CommandHandler.setTestClient(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort, uint16_t transferBytes){
+      if(testActive) {
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_BUSY\n", TOS_NODE_ID);
+         return;
+      }
+      testActive = TRUE;
+      testEstablished = FALSE;   
+      testRemoteAddress = serverAddress;
+      testLocalPort = srcPort;
+      testRemotePort = destPort; 
+      testTransferBytes = transferBytes;
+      testAccepted = 0; 
+      dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node %u srcPort=%u destPort=%u bytes=%u\n", TOS_NODE_ID, serverAddress, srcPort, destPort, transferBytes); 
       call MidTransport.connect(serverAddress, srcPort, destPort, transferBytes);
+   }
+
+   event void MidTransport.connected(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
+      if(!testActive || remoteAddress != testRemoteAddress || localPort != testLocalPort || remotePort != testRemotePort){
+         return;
+      }
+      testEstablished = TRUE;
+      dbg(TRANSPORT_CHANNEL, "node=%u APP_CONNECTED peer=%u\n", TOS_NODE_ID, remoteAddress);
+      post produceTestData();
+   }
+
+   event void MidTransport.writeReady(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
+      if(!testActive || !testEstablished || remoteAddress != testRemoteAddress || localPort != testLocalPort || remotePort != testRemotePort){
+         return;
+      }
+
+      if(testAccepted < testTransferBytes){
+         post produceTestData();
+      }
+   }
+
+   
+   task void produceTestData(){
+      uint8_t buffer[11];
+      uint8_t requested;
+      uint8_t accepted;
+      uint8_t i;
+      uint8_t batch;
+      uint16_t remaining;
+      uint8_t bufferFull = FALSE;
+
+      if(!testActive || !testEstablished){
+         return;
+      }
+
+      for(batch = 0; batch < 8; batch++){
+         if(testAccepted >= testTransferBytes){
+            break;
+          }
+
+         remaining = testTransferBytes - testAccepted;
+
+         requested = remaining > sizeof(buffer) ? sizeof(buffer) : (uint8_t)remaining;
+
+         for(i = 0; i < requested; i++){
+            buffer[i] = (uint8_t)((testAccepted + i) % 256);
+         }
+
+         accepted = call MidTransport.write(testRemoteAddress, testLocalPort, testRemotePort, buffer, requested);
+
+         if(accepted == 0){
+            bufferFull = TRUE;
+            break;
+         }
+
+         testAccepted += accepted;
+
+         dbg(TRANSPORT_CHANNEL,"node=%u APP_WRITE accepted=%u total=%u\n", TOS_NODE_ID, accepted, testAccepted);
+
+         if(accepted < requested){
+            bufferFull = TRUE;
+            break;
+         }
+      }
+
+      if(testAccepted == testTransferBytes){
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_ALL_BYTES_ACCEPTED total=%u\n", TOS_NODE_ID, testAccepted);
+         testActive = FALSE;
+         return;
+      }
+
+      if(!bufferFull){
+          post produceTestData();
+      }
    }
 
    event void CommandHandler.setClientClose(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort){

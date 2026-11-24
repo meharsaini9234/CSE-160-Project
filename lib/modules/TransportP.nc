@@ -188,21 +188,6 @@ implementation{
         transmit(c, TCP_ACK, c->sndNext, c->rcvNext, NULL, 0, FALSE);
     }
 
-    void fillSendBuffer(connection_t* c){
-        uint16_t offset;
-
-        while(c->sendEnd < c->transferBytes && 
-        (c->sendEnd - c->sendBase) < TCP_BUFFER_SIZE){
-        
-        offset = c->sendEnd;
-
-        c->sendBuffer[offset % TCP_BUFFER_SIZE] = 
-            (uint8_t)(offset % 256);
-        
-        c->sendEnd++;
-        }
-    }
-
     void retransmitData(connection_t* c){
         uint8_t buffer[TCP_MAX_DATA];
         uint8_t i;
@@ -254,12 +239,8 @@ implementation{
             return;
         }
 
-        fillSendBuffer(c);
-
-        if(c->sendBase >= c->transferBytes){
-            if(c->closeRequested && c->sendNextOffset == c->sendBase){
-                sendFin(c);
-            }
+        if(c->closeRequested && c->sendEnd == c->transferBytes && c->sendBase == c->sendEnd && c->sendNextOffset == c->sendEnd){
+            sendFin(c);
             return;
         }
 
@@ -381,6 +362,49 @@ implementation{
         transmit(c, TCP_SYN, 100, 0, NULL, 0, TRUE);
     }
 
+    command uint8_t MidTransport.write(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint8_t* data, uint8_t length){
+        connection_t* c;
+        uint16_t available;
+        uint16_t remaining;
+        uint8_t accepted;
+        uint8_t i;
+
+        c = findConnection(remoteAddress, localPort, remotePort);
+
+        if(c == NULL || c->state != ST_ESTABLISHED || !c->isClient || c->closeRequested || data == NULL || length == 0){
+            return 0;
+        }
+
+        if(c->sendEnd >= c->transferBytes) {
+            return 0;
+        }
+
+        available = TCP_BUFFER_SIZE - (c->sendEnd - c->sendBase);
+        remaining = c->transferBytes - c->sendEnd;
+        accepted = length;
+
+        if(accepted > available){
+            accepted = (uint8_t)available;
+        }
+
+        if(accepted > remaining){
+            accepted = (uint8_t)remaining;
+        }
+
+        for(i = 0; i < accepted; i++){ 
+            c->sendBuffer[(c->sendEnd + i) % TCP_BUFFER_SIZE] = data[i];
+        }
+
+        c->sendEnd += accepted;
+
+        if(accepted > 0){
+            dbg(TRANSPORT_CHANNEL, "node=%u TRANSPORT_WRITE accepted=%u queuedTotal=%u\n", TOS_NODE_ID, accepted, c->sendEnd);
+            sendNextData(c);
+        }
+
+        return accepted;
+    }
+
     command void MidTransport.close(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
         connection_t* c;
         c = findConnection(remoteAddress, localPort, remotePort);
@@ -443,7 +467,7 @@ implementation{
                 dbg(TRANSPORT_CHANNEL, "node=%u ESTABLISHED client peer=%u\n", TOS_NODE_ID, packet->src);
 
                 sendAck(c);
-                sendNextData(c);
+                signal MidTransport.connected(c->remoteAddress, c->localPort, c->remotePort);
             }
             else if(c->state == ST_ESTABLISHED && seg->seq + 1 == c->rcvNext && seg->ack == c->sndUna){
                 sendAck(c);
@@ -534,11 +558,8 @@ implementation{
                 c->dataElapsed = 0;
                 c->dataRetries = 0;
 
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u DATA_ACKNOWLEDGED bytes=%u ack=%u\n",
-                    TOS_NODE_ID, c->dataOffset, seg->ack);
-
-                fillSendBuffer(c);
+                dbg(TRANSPORT_CHANNEL,"node=%u DATA_ACKNOWLEDGED bytes=%u ack=%u\n", TOS_NODE_ID, c->dataOffset, seg->ack);
+                signal MidTransport.writeReady(c->remoteAddress, c->localPort, c->remotePort);
                 }
 
                 // Resume sending even if the ACK number

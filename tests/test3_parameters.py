@@ -28,7 +28,7 @@ def main():
 
     # Node 1 sends 300 bytes:
     # source port 15 -> destination port 25
-    s.cmdTestClient(1, 4, 15, 25, 300)
+    s.cmdTestClient(1, 4, 15, 25, 1024)
 
     # Allow the entire transfer
     s.runTime(500)
