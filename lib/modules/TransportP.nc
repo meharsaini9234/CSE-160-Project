@@ -58,6 +58,7 @@ implementation{
         uint16_t pendingAck;
         uint8_t pendingLength;
         uint8_t pendingData[TCP_MAX_DATA];
+        uint8_t closeRequested;
 
         uint8_t retries;
         uint8_t elapsed;
@@ -202,108 +203,106 @@ implementation{
     }
 
     void retransmitData(connection_t* c){
-    uint8_t buffer[TCP_MAX_DATA];
-    uint8_t i;
-    uint8_t length;
-    uint16_t offset;
-    uint16_t remaining;
+        uint8_t buffer[TCP_MAX_DATA];
+        uint8_t i;
+        uint8_t length;
+        uint16_t offset;
+        uint16_t remaining;
 
-    // Start retransmitting from the first unacknowledged byte
-    offset = c->sendBase;
+        // Start retransmitting from the first unacknowledged byte
+        offset = c->sendBase;
 
-    while(offset < c->sendNextOffset){
-        remaining = c->sendNextOffset - offset;
+        while(offset < c->sendNextOffset){
+            remaining = c->sendNextOffset - offset;
 
-        length = remaining > TCP_MAX_DATA ?
-                 TCP_MAX_DATA : (uint8_t)remaining;
+            length = remaining > TCP_MAX_DATA ?
+                     TCP_MAX_DATA : (uint8_t)remaining;
 
-        for(i = 0; i < length; i++){
-            buffer[i] = c->sendBuffer[
-                (offset + i) % TCP_BUFFER_SIZE
-            ];
+            for(i = 0; i < length; i++){
+                buffer[i] = c->sendBuffer[
+                    (offset + i) % TCP_BUFFER_SIZE
+                ];
+            }
+
+            transmit(c, TCP_DATA,
+                     (uint16_t)(c->dataStartSeq + offset),
+                     c->rcvNext,
+                     buffer, length, FALSE);
+
+            dbg(TRANSPORT_CHANNEL,
+                "node=%u GBN_RETRANSMIT offset=%u len=%u\n",
+                TOS_NODE_ID, offset, length);
+
+            offset += length;
         }
-
-        transmit(c, TCP_DATA,
-                 (uint16_t)(c->dataStartSeq + offset),
-                 c->rcvNext,
-                 buffer, length, FALSE);
-
-        dbg(TRANSPORT_CHANNEL,
-            "node=%u GBN_RETRANSMIT offset=%u len=%u\n",
-            TOS_NODE_ID, offset, length);
-
-        offset += length;
-    }
-}
-
-void sendNextData(connection_t* c){
-    uint8_t buffer[TCP_MAX_DATA];
-    uint8_t length;
-    uint8_t i;
-    uint16_t remaining;
-    uint16_t bytesInFlight;
-    uint16_t allowedWindow;
-
-    if(c->state != ST_ESTABLISHED || c->localPort != 10){
-        return;
     }
 
-    if(c->waiting){
-        return;
+    void sendNextData(connection_t* c){
+        uint8_t buffer[TCP_MAX_DATA];
+        uint8_t length;
+        uint8_t i;
+        uint16_t remaining;
+        uint16_t bytesInFlight;
+        uint16_t allowedWindow;
+
+        if(c->state != ST_ESTABLISHED || c->localPort != 10){
+            return;
+        }
+
+        if(c->waiting){
+            return;
+        }
+
+        fillSendBuffer(c);
+
+        if(c->sendBase >= c->transferBytes){
+            if(c->closeRequested && c->sendNextOffset == c->sendBase){
+                sendFin(c);
+            }
+            return;
+        }
+
+        allowedWindow = TCP_SEND_WINDOW;
+
+        if(c->peerWindow < allowedWindow){
+            allowedWindow = c->peerWindow;
+        }
+
+        while(c->sendNextOffset < c->sendEnd){
+            bytesInFlight = c->sendNextOffset - c->sendBase;
+
+            if(bytesInFlight >= allowedWindow){
+                break;
+            }
+
+            remaining = c->sendEnd - c->sendNextOffset;
+
+            if(remaining > allowedWindow - bytesInFlight){
+                remaining = allowedWindow - bytesInFlight;
+            }
+
+            length = remaining > TCP_MAX_DATA ?
+                     TCP_MAX_DATA : (uint8_t)remaining;
+
+            if(length == 0){
+                break;
+            }
+
+            for(i = 0; i < length; i++){
+                buffer[i] = c->sendBuffer[
+                    (c->sendNextOffset + i) % TCP_BUFFER_SIZE
+                ];
+            }
+
+            transmit(c, TCP_DATA,
+                     (uint16_t)(c->dataStartSeq + c->sendNextOffset),
+                     c->rcvNext,
+                     buffer, length, FALSE);
+
+            c->sendNextOffset += length;
+            c->sndNext += length;
+        }
     }
-
-    fillSendBuffer(c);
-
-    // Close only after all data has been acknowledged
-    if(c->sendBase >= c->transferBytes){
-        if(c->sendNextOffset == c->sendBase){
-            sendFin(c);
-        }
-        return;
-    }
-
-    allowedWindow = TCP_SEND_WINDOW;
-
-    if(c->peerWindow < allowedWindow){
-        allowedWindow = c->peerWindow;
-    }
-
-    // Send multiple segments while space remains in the window
-    while(c->sendNextOffset < c->sendEnd){
-        bytesInFlight = c->sendNextOffset - c->sendBase;
-
-        if(bytesInFlight >= allowedWindow){
-            break;
-        }
-
-        remaining = c->sendEnd - c->sendNextOffset;
-
-        if(remaining > allowedWindow - bytesInFlight){
-            remaining = allowedWindow - bytesInFlight;
-        }
-
-        length = remaining > TCP_MAX_DATA ?
-                 TCP_MAX_DATA : (uint8_t)remaining;
-
-        if(length == 0){
-            break;
-        }
-
-        for(i = 0; i < length; i++){
-            buffer[i] = c->sendBuffer[
-                (c->sendNextOffset + i) % TCP_BUFFER_SIZE
-            ];
-        }
-
-        transmit(c, TCP_DATA,
-                 (uint16_t)(c->dataStartSeq + c->sendNextOffset),
-                 c->rcvNext,
-                 buffer, length, FALSE);
-
-        c->sendNextOffset += length;
-        c->sndNext += length;
-    }
-}
 
     void sendFin(connection_t* c){
         uint16_t seq;
@@ -380,13 +379,31 @@ void sendNextData(connection_t* c){
         transmit(c, TCP_SYN, 100, 0, NULL, 0, TRUE);
     }
 
+    command void MidTransport.close(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
+        connection_t* c;
+        c = findConnection(remoteAddress, localPort, remotePort);
+
+        if(c == NULL){
+            dbg(TRANSPORT_CHANNEL, "node=%u CLOSE_FAILED no connection\n", TOS_NODE_ID);
+            return;
+        }
+
+        if(c->state != ST_ESTABLISHED){
+            return;
+        }
+
+        c->closeRequested = TRUE;
+
+        dbg(TRANSPORT_CHANNEL, "node=%u CLOSE_REQUESTED peer=%u\n", TOS_NODE_ID,remoteAddress);
+
+        sendNextData(c);
+    } 
+
     void handleSegment(pack* packet, tcp_segment_t* seg){
         connection_t* c;
         uint8_t i;
 
         c = findConnection(packet->src, seg->destPort, seg->srcPort);
-
-       
 
         if(c == NULL){
             if(seg->flags != TCP_SYN || !listening || seg->destPort != listeningPort || seg->length != 0){
@@ -450,19 +467,14 @@ void sendNextData(connection_t* c){
             }
             return;
         }
-
             // Respond to a window probe with the current receive window
-    if(seg->flags == TCP_PROBE){
-     if(c->state == ST_ESTABLISHED){
-            dbg(TRANSPORT_CHANNEL,
-                "node=%u WINDOW_PROBE_RECEIVED wnd=%u\n",
-                TOS_NODE_ID,
-                TCP_BUFFER_SIZE - c->recvLength);
-
-            sendAck(c);
+        if(seg->flags == TCP_PROBE){
+            if(c->state == ST_ESTABLISHED){
+                dbg(TRANSPORT_CHANNEL,"node=%u WINDOW_PROBE_RECEIVED wnd=%u\n", TOS_NODE_ID,TCP_BUFFER_SIZE - c->recvLength);
+                sendAck(c);
+            }
+            return;
         }
-        return;
-}
 
         if(seg->flags == TCP_DATA){
             if(c->state != ST_ESTABLISHED && c->state != ST_CLOSE_WAIT){
@@ -493,84 +505,75 @@ void sendNextData(connection_t* c){
         }
 
         if(seg->flags == TCP_ACK){
-    uint16_t ackedOffset;
+            uint16_t ackedOffset;
 
-    // DATA ACK and advertised window handling
-    if(c->state == ST_ESTABLISHED){
+            // DATA ACK and advertised window handling
+            if(c->state == ST_ESTABLISHED){
+                // Reject ACKs outside the transmitted range
+                if(seg->ack < c->sndUna || seg->ack > c->sndNext){
+                    return;
+                }
 
-        // Reject ACKs outside the transmitted range
-        if(seg->ack < c->sndUna ||
-           seg->ack > c->sndNext){
+                ackedOffset = (uint16_t)(seg->ack - c->dataStartSeq);
+
+                if(ackedOffset > c->sendNextOffset){
+                    return;
+                }
+
+                c->peerWindow = seg->window;
+
+                // Advance the sliding window
+                if(ackedOffset > c->sendBase){
+
+                c->sendBase = ackedOffset;
+                c->dataOffset = ackedOffset;
+                c->sndUna = seg->ack;
+
+                c->dataElapsed = 0;
+                c->dataRetries = 0;
+
+                dbg(TRANSPORT_CHANNEL,
+                    "node=%u DATA_ACKNOWLEDGED bytes=%u ack=%u\n",
+                    TOS_NODE_ID, c->dataOffset, seg->ack);
+
+                fillSendBuffer(c);
+                }
+
+                // Resume sending even if the ACK number
+                // has not changed but the window has reopened
+                sendNextData(c);
+
+                return;
+            }
+
+            // Existing control-packet ACK handling (FIN)
+            if(!c->waiting){
+                return;
+            }
+
+            if(seg->ack != c->sndNext || seg->ack <= c->sndUna){
+                return;
+            }
+
+            if(c->pendingFlags == TCP_FIN){
+                c->sndUna = seg->ack;
+                c->waiting = FALSE;
+
+                if(c->state == ST_FIN_WAIT_1){
+                    c->state = ST_FIN_WAIT_2;
+                    dbg(TRANSPORT_CHANNEL, "node=%u FIN_WAIT_2 peer=%u\n", TOS_NODE_ID, packet->src);
+                }
+                else if(c->state == ST_LAST_ACK){
+                    enterLinger(c);
+                }
+            }
             return;
         }
-
-        ackedOffset =
-            (uint16_t)(seg->ack - c->dataStartSeq);
-
-        if(ackedOffset > c->sendNextOffset){
-            return;
-        }
-
-        c->peerWindow = seg->window;
-
-        // Advance the sliding window
-        if(ackedOffset > c->sendBase){
-
-            c->sendBase = ackedOffset;
-            c->dataOffset = ackedOffset;
-            c->sndUna = seg->ack;
-
-            c->dataElapsed = 0;
-            c->dataRetries = 0;
-
-            dbg(TRANSPORT_CHANNEL,
-                "node=%u DATA_ACKNOWLEDGED bytes=%u ack=%u\n",
-                TOS_NODE_ID, c->dataOffset, seg->ack);
-
-            fillSendBuffer(c);
-        }
-
-        // Resume sending even if the ACK number
-        // has not changed but the window has reopened
-        sendNextData(c);
-
-        return;
-    }
-
-    // Existing control-packet ACK handling (FIN)
-    if(!c->waiting){
-        return;
-    }
-
-    if(seg->ack != c->sndNext ||
-       seg->ack <= c->sndUna){
-        return;
-    }
-
-    if(c->pendingFlags == TCP_FIN){
-        c->sndUna = seg->ack;
-        c->waiting = FALSE;
-
-        if(c->state == ST_FIN_WAIT_1){
-            c->state = ST_FIN_WAIT_2;
-
-            dbg(TRANSPORT_CHANNEL,
-                "node=%u FIN_WAIT_2 peer=%u\n",
-                TOS_NODE_ID, packet->src);
-        }
-        else if(c->state == ST_LAST_ACK){
-            enterLinger(c);
-        }
-    }
-
-    return;
-}
 
         if(seg->flags == TCP_FIN){
             if(seg->seq == c->rcvNext){
                 c->rcvNext++;
                 sendAck(c);
-                
                 dbg(TRANSPORT_CHANNEL, "node=%u FIN_RECEIVED peer=%u\n", TOS_NODE_ID, packet->src);
 
                 if(c->state == ST_ESTABLISHED){
@@ -604,7 +607,6 @@ void sendNextData(connection_t* c){
         handleSegment(&packet, &seg);
     }
 
-
     task void consumeTask(){
         uint8_t i;
         uint8_t j;
@@ -636,107 +638,86 @@ void sendNextData(connection_t* c){
     }
 
     event void RetryTimer.fired(){
-    uint8_t i;
-    #ifdef TEST_ZERO_WINDOW
-        testConsumeTicks++;
+        uint8_t i;
+        #ifdef TEST_ZERO_WINDOW
+            testConsumeTicks++;
 
-        if(testConsumeTicks >= 80){
-            testConsumeTicks = 0;
-            post consumeTask();
-        }
-    #endif
-
-    for(i = 0; i < TCP_MAX_CONNECTIONS; i++){
-        connection_t* c = &connections[i];
-
-        if(!c->used){
-            continue;
-        }
-
-        // Keep existing connection cleanup behavior
-        if(c->state == ST_LINGER){
-            c->lingerTicks++;
-
-            if(c->lingerTicks >= TCP_LINGER_TICKS &&
-               c->recvLength == 0){
-
-                dbg(TRANSPORT_CHANNEL,
-                    "node=%u CONNECTION_CLOSED peer=%u\n",
-                    TOS_NODE_ID, c->remoteAddress);
-
-                clearConnection(c);
+            if(testConsumeTicks >= 80){
+                testConsumeTicks = 0;
+                post consumeTask();
             }
-            continue;
-        }
+        #endif
+
+        for(i = 0; i < TCP_MAX_CONNECTIONS; i++){
+            connection_t* c = &connections[i];
+
+            if(!c->used){
+                continue;
+            }
+
+            // Keep existing connection cleanup behavior
+            if(c->state == ST_LINGER){
+                c->lingerTicks++;
+                if(c->lingerTicks >= TCP_LINGER_TICKS && c->recvLength == 0){
+                    dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_CLOSED peer=%u\n", TOS_NODE_ID, c->remoteAddress);
+                    clearConnection(c);
+                }
+                continue;
+            }
 
             // Recover from a lost window reopening update
-    if(c->state == ST_ESTABLISHED &&
-    c->peerWindow == 0 &&
-    c->sendBase < c->transferBytes &&
-    c->sendNextOffset == c->sendBase){
+            if(c->state == ST_ESTABLISHED && c->peerWindow == 0 && c->sendBase < c->transferBytes && c->sendNextOffset == c->sendBase){
+                c->dataElapsed++;
 
-        c->dataElapsed++;
-
-        if(c->dataElapsed >= TCP_RTO_TICKS){
-            c->dataElapsed = 0;
-
-            dbg(TRANSPORT_CHANNEL,
-                "node=%u WINDOW_PROBE_SENT peer=%u\n",
-                TOS_NODE_ID, c->remoteAddress);
-
-            transmit(c, TCP_PROBE,
-                    c->sndNext, c->rcvNext,
-                    NULL, 0, FALSE);
-        }
-    }
-
-        // DATA retransmission using Go-Back-N
-        if(c->state == ST_ESTABLISHED &&
-           c->sendNextOffset > c->sendBase){
-
-            c->dataElapsed++;
-
-            if(c->dataElapsed >= TCP_RTO_TICKS){
-                c->dataElapsed = 0;
-
-                if(c->dataRetries >= TCP_MAX_RETRIES){
-                    dbg(TRANSPORT_CHANNEL,
-                        "node=%u CONNECTION_FAILED peer=%u DATA retry limit reached\n",
-                        TOS_NODE_ID, c->remoteAddress);
-
-                    clearConnection(c);
-                    continue;
+                if(c->dataElapsed >= TCP_RTO_TICKS){
+                    c->dataElapsed = 0;
+                    dbg(TRANSPORT_CHANNEL, "node=%u WINDOW_PROBE_SENT peer=%u\n", TOS_NODE_ID, c->remoteAddress);
+                    transmit(c, TCP_PROBE, c->sndNext, c->rcvNext, NULL, 0, FALSE);
                 }
-
-                c->dataRetries++;
-                retransmitData(c);
             }
+
+            // DATA retransmission using Go-Back-N
+            if(c->state == ST_ESTABLISHED && c->sendNextOffset > c->sendBase){
+                c->dataElapsed++;
+
+                if(c->dataElapsed >= TCP_RTO_TICKS){
+                    c->dataElapsed = 0;
+
+                    if(c->dataRetries >= TCP_MAX_RETRIES){
+                        dbg(TRANSPORT_CHANNEL,
+                            "node=%u CONNECTION_FAILED peer=%u DATA retry limit reached\n",
+                            TOS_NODE_ID, c->remoteAddress);
+
+                        clearConnection(c);
+                        continue;
+                    }
+
+                    c->dataRetries++;
+                    retransmitData(c);
+                }
+            }
+
+            // Existing SYN, SYN-ACK, and FIN retransmission
+            if(!c->waiting){
+                continue;
+            }
+
+            c->elapsed++;
+
+            if(c->elapsed < TCP_RTO_TICKS){
+                continue;
+            }
+
+            c->elapsed = 0;
+
+            if(c->retries >= TCP_MAX_RETRIES){
+                dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_FAILED peer=%u retry limit reached\n", TOS_NODE_ID, c->remoteAddress);
+                clearConnection(c);
+                continue;
+            }
+
+            c->retries++;
+            resendPending(c);
         }
-
-        // Existing SYN, SYN-ACK, and FIN retransmission
-        if(!c->waiting){
-            continue;
-        }
-
-        c->elapsed++;
-
-        if(c->elapsed < TCP_RTO_TICKS){
-            continue;
-        }
-
-        c->elapsed = 0;
-
-        if(c->retries >= TCP_MAX_RETRIES){
-            dbg(TRANSPORT_CHANNEL,
-                "node=%u CONNECTION_FAILED peer=%u retry limit reached\n",
-                TOS_NODE_ID, c->remoteAddress);
-
-            clearConnection(c);
-            continue;
-        }
-
-        c->retries++;
-        resendPending(c);
     }
-}
 }

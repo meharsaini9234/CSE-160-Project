@@ -7,6 +7,7 @@ interface CommandHandler{
    event void printDistanceVector();
    event void setTestServer();
    event void setTestClient();
+   event void setClientClose(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort);
    event void setAppServer();
    event void setAppClient();
    event void pingTTL(uint16_t destination, uint8_t ttl, uint8_t * payload);

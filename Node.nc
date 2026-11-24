@@ -170,6 +170,11 @@ implementation {
       call MidTransport.connect(4, 10, 20, 1024);
    }
 
+   event void CommandHandler.setClientClose(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort){
+      dbg(TRANSPORT_CHANNEL, "Node %u requesting TCP close with Node %u\n", TOS_NODE_ID,serverAddress);
+      call MidTransport.close(serverAddress, srcPort, destPort);
+   }
+
    event void CommandHandler.setAppServer() {}
 
    event void CommandHandler.setAppClient() {}

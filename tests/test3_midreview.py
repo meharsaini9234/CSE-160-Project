@@ -54,7 +54,7 @@ def main():
     # -----------------------------------
     # 5. Run handshake, data, teardown
     # -----------------------------------
-    s.runTime(200)
+    s.runTime(500)
 
 
 if __name__ == "__main__":

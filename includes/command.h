@@ -18,7 +18,8 @@ enum{
 	CMD_TEST_SERVER=5,
 	CMD_KILL=6,
 	CMD_ERROR=9,
-	CMD_PING_TTL = 7
+	CMD_PING_TTL = 7,
+	CMD_CLIENT_CLOSE = 8
 };
 
 enum{

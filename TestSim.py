@@ -16,6 +16,7 @@ class TestSim:
     CMD_PING_TTL = 7
     CMD_TEST_CLIENT = 4
     CMD_TEST_SERVER = 5
+    CMD_CLIENT_CLOSE = 8
 
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
@@ -148,6 +149,20 @@ class TestSim:
             self.CMD_TEST_CLIENT,
             clientAddress,
             ""
+        )
+
+    def cmdClientClose(self, clientAddress,serverAddress, srcPort, destPort):
+        payload = "{0}{1}{2}{3}".format(
+            chr((serverAddress >> 8) & 0xFF),
+            chr(serverAddress & 0xFF),
+            chr(srcPort),
+            chr(destPort)
+        )
+
+        self.sendCMD(
+            self.CMD_CLIENT_CLOSE,
+            clientAddress,
+            payload
         )
 
 def main():

@@ -77,6 +77,10 @@ implementation{
                 dbg(COMMAND_CHANNEL, "Command Type: Client\n");
                 signal CommandHandler.setTestServer();
                 break;
+            case CMD_CLIENT_CLOSE:
+                dbg(COMMAND_CHANNEL, "Command Type: Client Close\n");
+                signal CommandHandler.setClientClose(((uint16_t)buff[0] << 8) | buff[1], buff[2], buff[3]);
+                break;
             case CMD_PING_TTL:
                 dbg(COMMAND_CHANNEL, "Command Type: Ping with TTL\n");
                 signal CommandHandler.pingTTL(buff[0], buff[1], &buff[2]);

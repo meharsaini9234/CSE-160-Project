@@ -7,6 +7,12 @@ INCLUDE+=-Ilib/interfaces -Ilib/modules
 CFLAGS += -DTOSH_DATA_LENGTH=28
 CFLAGS+=$(INCLUDE)
 
+#########Packet loss test##############
+#CFLAGS += -DTEST_DROP_TCP_DATA
+
+#########Flow control test#############
+#CFLAGS += -DTEST_ZERO_WINDOW
+
 include $(TINYOS_ROOT_DIR)/Makefile.include
 
 CommandMsg.py: CommandMsg.h
