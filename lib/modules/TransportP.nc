@@ -29,6 +29,7 @@ implementation{
     typedef struct connection{
         uint8_t used;
         uint8_t state;
+        uint8_t isClient;
 
         uint16_t remoteAddress;
         uint8_t localPort;
@@ -245,7 +246,7 @@ implementation{
         uint16_t bytesInFlight;
         uint16_t allowedWindow;
 
-        if(c->state != ST_ESTABLISHED || c->localPort != 10){
+        if(c->state != ST_ESTABLISHED || !c->isClient){
             return;
         }
 
@@ -362,6 +363,7 @@ implementation{
             return;
         }
 
+        c->isClient = TRUE;
         c->remoteAddress = remoteAddress;
         c->localPort = localPort;
         c->remotePort = remotePort;

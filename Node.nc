@@ -160,14 +160,14 @@ implementation {
 
    event void CommandHandler.printDistanceVector() {}
 
-   event void CommandHandler.setTestServer() {
-      dbg(TRANSPORT_CHANNEL, "Node %u starting TCP server on port 20\n", TOS_NODE_ID);
-      call MidTransport.listen(20);
+   event void CommandHandler.setTestServer(uint8_t listenPort) {
+      dbg(TRANSPORT_CHANNEL, "Node %u starting TCP server on port %u\n", TOS_NODE_ID, listenPort);
+      call MidTransport.listen(listenPort);
    }
 
-   event void CommandHandler.setTestClient() {
-      dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node 4 port 20\n", TOS_NODE_ID);
-      call MidTransport.connect(4, 10, 20, 1024);
+   event void CommandHandler.setTestClient(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort, uint16_t transferBytes) {
+      dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node %u srcPort=%u destPort=%u bytes=%u\n", TOS_NODE_ID, serverAddress, srcPort, destPort, transferBytes);
+      call MidTransport.connect(serverAddress, srcPort, destPort, transferBytes);
    }
 
    event void CommandHandler.setClientClose(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort){

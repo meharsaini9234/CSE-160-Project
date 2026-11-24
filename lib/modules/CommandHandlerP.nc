@@ -69,18 +69,20 @@ implementation{
                 break;
 
             case CMD_TEST_CLIENT:
-                dbg(COMMAND_CHANNEL, "Command Type: Client\n");
-                signal CommandHandler.setTestClient();
+                dbg(COMMAND_CHANNEL, "Command Type: Test Client\n");
+                signal CommandHandler.setTestClient(((uint16_t)buff[0] << 8) | buff[1], buff[2], buff[3], ((uint16_t)buff[4] << 8) | buff[5]);
                 break;
 
             case CMD_TEST_SERVER:
-                dbg(COMMAND_CHANNEL, "Command Type: Client\n");
-                signal CommandHandler.setTestServer();
+                dbg(COMMAND_CHANNEL, "Command Type: Test Server\n");
+                signal CommandHandler.setTestServer(buff[0]);
                 break;
+
             case CMD_CLIENT_CLOSE:
                 dbg(COMMAND_CHANNEL, "Command Type: Client Close\n");
                 signal CommandHandler.setClientClose(((uint16_t)buff[0] << 8) | buff[1], buff[2], buff[3]);
                 break;
+
             case CMD_PING_TTL:
                 dbg(COMMAND_CHANNEL, "Command Type: Ping with TTL\n");
                 signal CommandHandler.pingTTL(buff[0], buff[1], &buff[2]);

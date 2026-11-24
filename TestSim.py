@@ -137,33 +137,32 @@ class TestSim:
         print 'Adding Channel', channelName;
         self.t.addChannel(channelName, out);
 
-    def cmdTestServer(self, serverAddress):
-        self.sendCMD(
-            self.CMD_TEST_SERVER,
-            serverAddress,
-            ""
-        )
+    def cmdTestServer(self, serverAddress, listenPort=20):
+        if not (0 <= listenPort <= 255):
+            raise ValueError("Invalid listen port")
 
-    def cmdTestClient(self, clientAddress):
-        self.sendCMD(
-            self.CMD_TEST_CLIENT,
-            clientAddress,
-            ""
-        )
+        payload = chr(listenPort)
+        self.sendCMD(self.CMD_TEST_SERVER, serverAddress, payload)
+
+    def cmdTestClient(self, clientAddress, serverAddress=4, srcPort=10, destPort=20, transferBytes=1024):
+        if not (0 <= serverAddress <= 65535):
+            raise ValueError("Invalid server address")
+
+        if not (0 <= srcPort <= 255 and 0 <= destPort <= 255):
+            raise ValueError("Invalid port")
+
+        if not (0 <= transferBytes <= 65535):
+            raise ValueError("Invalid transfer length")
+
+        payload = "".join([chr((serverAddress >> 8) & 0xFF), chr(serverAddress & 0xFF), chr(srcPort), chr(destPort), chr((transferBytes >> 8) & 0xFF), chr(transferBytes & 0xFF)])
+        self.sendCMD(self.CMD_TEST_CLIENT, clientAddress, payload)
+
+        
 
     def cmdClientClose(self, clientAddress,serverAddress, srcPort, destPort):
-        payload = "{0}{1}{2}{3}".format(
-            chr((serverAddress >> 8) & 0xFF),
-            chr(serverAddress & 0xFF),
-            chr(srcPort),
-            chr(destPort)
-        )
+        payload = "{0}{1}{2}{3}".format(chr((serverAddress >> 8) & 0xFF), chr(serverAddress & 0xFF), chr(srcPort), chr(destPort))
 
-        self.sendCMD(
-            self.CMD_CLIENT_CLOSE,
-            clientAddress,
-            payload
-        )
+        self.sendCMD(self.CMD_CLIENT_CLOSE, clientAddress, payload)
 
 def main():
     s = TestSim()
