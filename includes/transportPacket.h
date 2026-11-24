@@ -13,8 +13,10 @@ enum{
     TCP_ACK  = 2,
     TCP_FIN  = 4,
     TCP_DATA = 8,
+    TCP_PROBE = 16,
 
     TCP_BUFFER_SIZE = 128,
+    TCP_SEND_WINDOW = 44,
     TCP_MAX_CONNECTIONS = 2,
 
     TCP_TIMER_MS = 250,
