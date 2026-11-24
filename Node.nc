@@ -45,7 +45,14 @@ implementation {
    uint16_t testTransferBytes = 0;
    uint16_t testAccepted = 0;
 
+   uint16_t testConsumed = 0;
+
+   uint16_t receiveRemoteAddress = 0;
+   uint8_t receiveLocalPort = 0;
+   uint8_t receiveRemotePort = 0;
+
    task void produceTestData();
+   task void consumeTestData();
 
    // Prototypes
    void makePack(
@@ -212,7 +219,35 @@ implementation {
       }
    }
 
-   
+   event void MidTransport.dataReady(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
+      receiveRemoteAddress = remoteAddress;
+      receiveLocalPort = localPort;
+      receiveRemotePort = remotePort;
+
+      post consumeTestData();
+   }
+
+   task void consumeTestData(){
+      uint8_t buffer[11];
+      uint8_t count;
+      uint8_t i;
+      uint8_t expected; 
+      count = call MidTransport.read(receiveRemoteAddress, receiveLocalPort, receiveRemotePort, buffer, sizeof(buffer)); 
+      if(count == 0){
+          return;
+      }  
+      for(i = 0; i < count; i++){
+         expected = (uint8_t)(testConsumed % 256); 
+
+         if(buffer[i] != expected){
+            dbg(TRANSPORT_CHANNEL, "node=%u DATA_MISMATCH offset=%u got=%u expected=%u\n", TOS_NODE_ID, testConsumed, buffer[i], expected);
+          } 
+         testConsumed++;
+      }  
+      dbg(TRANSPORT_CHANNEL, "node=%u APP_CONSUMED total=%u\n", TOS_NODE_ID, testConsumed);   
+      post consumeTestData();
+   }
+ 
    task void produceTestData(){
       uint8_t buffer[11];
       uint8_t requested;

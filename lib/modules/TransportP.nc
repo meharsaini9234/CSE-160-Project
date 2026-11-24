@@ -13,7 +13,6 @@ module TransportP{
 }
 
 implementation{
-    uint8_t testConsumeTicks = 0;
     enum{
         ST_FREE = 0,
         ST_SYN_SENT,
@@ -76,7 +75,6 @@ implementation{
     uint8_t timerStarted = 0;
     uint16_t networkPacketId = 0;
 
-    task void consumeTask();
     void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length, uint8_t remember);
     void sendAck(connection_t* c);
     void sendNextData(connection_t* c);
@@ -405,6 +403,48 @@ implementation{
         return accepted;
     }
 
+    command uint8_t MidTransport.read( uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint8_t* buffer, uint8_t maxLength){
+        connection_t* c;
+        uint8_t count;
+        uint8_t i;
+
+        c = findConnection(remoteAddress, localPort, remotePort);
+
+        if(c == NULL || buffer == NULL || maxLength == 0){
+            return 0;
+        }
+        if(c->state != ST_ESTABLISHED && c->state != ST_CLOSE_WAIT && c->state != ST_LAST_ACK && c->state != ST_LINGER){
+            return 0;
+        }
+        if(c->recvLength == 0){
+            return 0;
+        }
+
+        count = c->recvLength;
+
+        if(count > maxLength){
+            count = maxLength;
+        }
+
+        for(i = 0; i < count; i++){
+            buffer[i] = c->recvBuffer[i];
+        }
+
+        for(i = count; i < c->recvLength; i++){
+            c->recvBuffer[i - count] = c->recvBuffer[i];
+        }
+
+        c->recvLength -= count;
+
+        dbg(TRANSPORT_CHANNEL, "node=%u TRANSPORT_READ consumed=%u remaining=%u\n", TOS_NODE_ID, count, c->recvLength);
+
+        if(c->state == ST_ESTABLISHED || c->state == ST_CLOSE_WAIT || c->state == ST_LAST_ACK){
+            sendAck(c);
+        }
+
+        return count;
+    }
+
     command void MidTransport.close(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
         connection_t* c;
         c = findConnection(remoteAddress, localPort, remotePort);
@@ -519,9 +559,7 @@ implementation{
                 c->rcvNext += seg->length;
 
                 dbg(TRANSPORT_CHANNEL, "node=%u DATA_RECEIVED peer=%u seq=%u len=%u nextExpected=%u\n", TOS_NODE_ID, packet->src, seg->seq, seg->length, c->rcvNext);
-                #ifndef TEST_ZERO_WINDOW
-                    post consumeTask();
-                #endif
+                signal MidTransport.dataReady(c->remoteAddress, c->localPort, c->remotePort);
             }
             else{
                 dbg(TRANSPORT_CHANNEL, "node=%u DUPLICATE_OR_OUT_OF_ORDER seq=%u expected=%u\n", TOS_NODE_ID, seg->seq, c->rcvNext);
@@ -630,46 +668,8 @@ implementation{
         handleSegment(&packet, &seg);
     }
 
-    task void consumeTask(){
-        uint8_t i;
-        uint8_t j;
-
-        for(i = 0; i < TCP_MAX_CONNECTIONS; i++){
-            connection_t* c = &connections[i];
-
-            if(!c->used || c->recvLength == 0){
-                continue;
-            }
-
-            for(j = 0; j < c->recvLength; j++){
-                uint8_t expected =(uint8_t)(c->receivedTotal % 256);
-
-                if (c->recvBuffer[j] != expected) {
-                    dbg(TRANSPORT_CHANNEL, "node=%u DATA_MISMATCH offset=%u got=%u expected=%u\n", TOS_NODE_ID, c->receivedTotal, c->recvBuffer[j], expected);
-                }
-                c->receivedTotal++;
-            }
-
-            dbg(TRANSPORT_CHANNEL, "node=%u APP_CONSUMED total=%u\n", TOS_NODE_ID, c->receivedTotal);
-
-            c->recvLength = 0;
-
-            if(c->state == ST_ESTABLISHED){
-                sendAck(c);
-            }
-        }
-    }
-
     event void RetryTimer.fired(){
         uint8_t i;
-        #ifdef TEST_ZERO_WINDOW
-            testConsumeTicks++;
-
-            if(testConsumeTicks >= 80){
-                testConsumeTicks = 0;
-                post consumeTask();
-            }
-        #endif
 
         for(i = 0; i < TCP_MAX_CONNECTIONS; i++){
             connection_t* c = &connections[i];
