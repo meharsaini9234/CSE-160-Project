@@ -378,21 +378,21 @@ implementation{
         dbg(TRANSPORT_CHANNEL, "node=%u LISTEN port=%u\n", TOS_NODE_ID, port);
     }
 
-    command void MidTransport.connect(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint16_t transferBytes){
+    command error_t MidTransport.connect(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint16_t transferBytes){
         connection_t* c;
 
         startTimer();
 
         if(findConnection(remoteAddress, localPort, remotePort) != NULL){
-            return;
+            dbg(TRANSPORT_CHANNEL, "node=%u CONNECT_REJECTED tuple already in use\n", TOS_NODE_ID);
+            return EBUSY;
         }
 
         c = allocateConnection();
 
         if(c == NULL){
             dbg(TRANSPORT_CHANNEL, "node=%u CONNECT_FAILED no sockets\n", TOS_NODE_ID);
-            signal MidTransport.connectionFailed(remoteAddress, localPort, remotePort);
-            return;
+            return FAIL;
         }
 
         c->isClient = TRUE;
@@ -414,6 +414,7 @@ implementation{
         if(c->pendingSent){
             c->sndNext = 101;
         }
+        return SUCCESS;
     }
 
     command uint8_t MidTransport.write(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint8_t* data, uint8_t length){
@@ -525,6 +526,22 @@ implementation{
         connection_t* c;
         uint8_t i;
 
+        if(seg->window > TCP_BUFFER_SIZE){
+            return;
+        }
+
+        if(seg->flags != TCP_DATA && seg->length != 0){
+            return;
+        }
+
+        if(seg->flags == TCP_DATA && seg->length == 0){
+            return;
+        }
+
+        if(seg->flags != TCP_SYN && seg->flags != (TCP_SYN | TCP_ACK) && seg->flags != TCP_ACK && seg->flags != TCP_FIN && seg->flags != TCP_DATA && seg->flags != TCP_PROBE){
+            return;
+        }
+
         c = findConnection(packet->src, seg->destPort, seg->srcPort);
 
         if(c == NULL){
@@ -560,7 +577,7 @@ implementation{
         }
 
         if(seg->flags == (TCP_SYN | TCP_ACK)){
-            if(c->state == ST_SYN_SENT && seg->ack == c->sndNext && seg->length == 0){
+            if(c->state == ST_SYN_SENT && c->pendingSent && seg->ack == c->sndNext && seg->length == 0){
                 c->rcvNext = seg->seq + 1;
                 c->sndUna = seg->ack;
                 c->peerWindow = seg->window;
@@ -572,10 +589,10 @@ implementation{
                 sendAck(c);
                 signal MidTransport.connected(c->remoteAddress, c->localPort, c->remotePort);
             }
-            else if(c->state == ST_ESTABLISHED && seg->seq + 1 == c->rcvNext && seg->ack == c->sndUna){
+            else if(c->state == ST_ESTABLISHED && seg->seq + 1 == c->rcvNext && seg->ack == c->dataStartSeq){
                 sendAck(c);
+                dbg(TRANSPORT_CHANNEL, "node=%u DUPLICATE_SYN_ACK peer=%u\n", TOS_NODE_ID, packet->src);
             }
-
             return;
         }
 
@@ -588,7 +605,7 @@ implementation{
         }
 
         if(c->state == ST_SYN_RCVD){
-            if (seg->flags == TCP_ACK && seg->ack == c->sndNext && seg->length == 0){
+            if(seg->flags == TCP_ACK && c->pendingSent && seg->ack == c->sndNext && seg->length == 0){
                 c->sndUna = seg->ack;
                 c->waiting = FALSE;
                 c->state = ST_ESTABLISHED;
@@ -606,7 +623,12 @@ implementation{
         }
 
         if(seg->flags == TCP_DATA){
-            if(c->state != ST_ESTABLISHED && c->state != ST_CLOSE_WAIT){
+            if(c->peerFinReceived || c->state == ST_CLOSE_WAIT || c->state == ST_LAST_ACK || c->state == ST_LINGER){
+                sendAck(c);
+                return;
+            }
+
+            if(c->state != ST_ESTABLISHED && c->state != ST_FIN_WAIT_1 && c->state != ST_FIN_WAIT_2){
                 return;
             }
 
@@ -666,7 +688,7 @@ implementation{
                 return;
             }
 
-            if(!c->waiting){
+            if(!c->waiting || !c->pendingSent){
                 return;
             }
 
@@ -697,29 +719,47 @@ implementation{
         }
 
         if(seg->flags == TCP_FIN){
-            if(seg->seq == c->rcvNext){
-                c->rcvNext++;
-                sendAck(c);
-                dbg(TRANSPORT_CHANNEL, "node=%u FIN_RECEIVED peer=%u state=%u\n", TOS_NODE_ID, packet->src, c->state);
-
-                if(c->state == ST_ESTABLISHED){
-                    c->state = ST_CLOSE_WAIT;
-                    sendFin(c);
-                }
-                else if(c->state == ST_FIN_WAIT_1){
-                    c->peerFinReceived = TRUE;
-                    dbg(TRANSPORT_CHANNEL, "node=%u SIMULTANEOUS_CLOSE peer=%u\n", TOS_NODE_ID, packet->src);
-                }
-                else if(c->state == ST_FIN_WAIT_2){
-                    enterLinger(c);
-                }
+            if(c->state != ST_ESTABLISHED && c->state != ST_FIN_WAIT_1 && c->state != ST_FIN_WAIT_2 && c->state != ST_CLOSE_WAIT && c->state != ST_LAST_ACK && c->state != ST_LINGER){
+                return;
             }
-            else if(seg->seq < c->rcvNext){
+
+            if(seg->seq < c->rcvNext){
                 sendAck(c);
                 dbg(TRANSPORT_CHANNEL, "node=%u DUPLICATE_FIN peer=%u\n", TOS_NODE_ID, packet->src);
+
                 if(c->state == ST_LINGER){
                     c->lingerTicks = 0;
                 }
+                return;
+            }
+
+            if(seg->seq > c->rcvNext){
+                sendAck(c);
+                dbg(TRANSPORT_CHANNEL, "node=%u OUT_OF_ORDER_FIN seq=%u expected=%u\n", TOS_NODE_ID, seg->seq, c->rcvNext);
+                return;
+            }
+
+            if(c->peerFinReceived || c->state == ST_CLOSE_WAIT || c->state == ST_LAST_ACK || c->state == ST_LINGER){
+                sendAck(c);
+                return;
+            }
+
+            c->rcvNext++;
+            c->peerFinReceived = TRUE;
+
+            sendAck(c);
+
+            dbg(TRANSPORT_CHANNEL, "node=%u FIN_RECEIVED peer=%u state=%u\n", TOS_NODE_ID, packet->src, c->state);
+
+            if(c->state == ST_ESTABLISHED){
+                c->state = ST_CLOSE_WAIT;
+                sendFin(c);
+            }
+            else if(c->state == ST_FIN_WAIT_1){
+                dbg(TRANSPORT_CHANNEL, "node=%u SIMULTANEOUS_CLOSE peer=%u\n", TOS_NODE_ID, packet->src);
+            }
+            else if(c->state == ST_FIN_WAIT_2){
+                enterLinger(c);
             }
             return;
         }
@@ -870,7 +910,7 @@ implementation{
 
             if(c->retries >= TCP_MAX_RETRIES){
                 dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_FAILED peer=%u retry limit reached\n", TOS_NODE_ID, c->remoteAddress);
-                clearConnection(c);
+                failConnection(c);
                 continue;
             }
 
