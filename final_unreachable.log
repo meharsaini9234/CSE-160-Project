@@ -1,0 +1,51 @@
+Creating Topo!
+Number of Motes 4
+  1   2   -54.0
+  2   1   -54.0
+  2   3   -54.0
+  3   2   -54.0
+  3   4   -54.0
+  4   3   -54.0
+Creating noise model for  1
+Creating noise model for  2
+Creating noise model for  3
+Creating noise model for  4
+Adding Channel command
+Adding Channel Project3TGen
+0:10:1.182052722 DEBUG (1): A Command has been Issued.
+0:10:1.182052722 DEBUG (1): Command Type: Test Client
+0:10:1.182052722 DEBUG (1): Node 1 connecting to Node 4 srcPort=15 destPort=25 bytes=1024
+0:10:1.182052722 DEBUG (1): t=615610 node=1 conn=1:15->4:25 CONNECTION_ALLOCATED state=0
+0:10:1.182052722 DEBUG (1): t=615610 node=1 conn=1:15->4:25 STATE_CHANGE old=0 new=1
+0:10:1.182052722 DEBUG (1): node=1 SYN_SENT peer=4
+0:10:1.182052722 DEBUG (1): t=615610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:1.672867224 DEBUG (4): t=616113 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:3.134765768 DEBUG (1): t=617610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=1
+0:10:3.134765768 DEBUG (1): t=617610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:3.858719238 DEBUG (4): t=618351 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:5.087890768 DEBUG (1): t=619610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=2
+0:10:5.087890768 DEBUG (1): t=619610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:5.541809463 DEBUG (4): t=620074 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:7.041015768 DEBUG (1): t=621610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=3
+0:10:7.041015768 DEBUG (1): t=621610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:7.366516514 DEBUG (4): t=621943 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:8.994140768 DEBUG (1): t=623610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=4
+0:10:8.994140768 DEBUG (1): t=623610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:9.497574195 DEBUG (4): t=624125 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:10.947265768 DEBUG (1): t=625610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=5
+0:10:10.947265768 DEBUG (1): t=625610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:11.462067023 DEBUG (4): t=626137 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:12.900390768 DEBUG (1): t=627610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=6
+0:10:12.900390768 DEBUG (1): t=627610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:13.351578144 DEBUG (4): t=628072 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:14.853515768 DEBUG (1): t=629610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=7
+0:10:14.853515768 DEBUG (1): t=629610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:15.532150563 DEBUG (4): t=630304 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:16.806640768 DEBUG (1): t=631610 node=1 RETRANSMIT peer=4 flags=1 seq=100 retry=8
+0:10:16.806640768 DEBUG (1): t=631610 node=1 conn=1:15->4:25 TCP_TX state=1 flags=1 seq=100 ack=0 len=0 wnd=128 peerWnd=128 result=0
+0:10:17.404694004 DEBUG (4): t=632222 node=4 conn=4:25->1:15 TCP_RX state=0 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:18.759765768 DEBUG (1): node=1 CONNECTION_FAILED peer=4 retry limit reached
+0:10:18.759765768 DEBUG (1): node=1 CONNECTION_FAILED peer=4 localPort=15 remotePort=25 accepted=0 acknowledged=0
+0:10:18.759765768 DEBUG (1): t=633610 node=1 conn=1:15->4:25 STATE_CHANGE old=1 new=9
+0:10:18.759765768 DEBUG (1): node=1 APP_TRANSFER_FAILED peer=4 accepted=0 expected=1024
+0:10:38.291015768 DEBUG (1): t=653610 node=1 conn=1:15->4:25 CONNECTION_RELEASED state=9 failed=1 accepted=0 acknowledged=0 received=0 unread=0

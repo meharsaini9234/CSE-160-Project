@@ -16,10 +16,62 @@ implementation{
     uint8_t testSawZeroWindow = FALSE;
     uint8_t testReopenDropped = FALSE;
 
+    uint8_t testSynDropped = FALSE;
+    uint8_t testSynAckDropped = FALSE;
+    uint8_t testHandshakeAckDropped = FALSE;
+    uint8_t testDataAckDropped = FALSE;
+
     error_t forward(pack msg){
         uint16_t nextHop;
         uint8_t cost;
         error_t result;
+
+
+        #ifdef TEST_DROP_SYN
+        if(TOS_NODE_ID == 1 && !testSynDropped &&
+           msg.protocol == PROTOCOL_TCP &&
+           msg.src == 1 && msg.dest == 4 &&
+           msg.payload[2] == TCP_SYN){
+            testSynDropped = TRUE;
+            dbg(TRANSPORT_CHANNEL, "TEST_DROP_SYN\n");
+            return SUCCESS;
+        }
+        #endif
+
+        #ifdef TEST_DROP_SYN_ACK
+        if(TOS_NODE_ID == 4 && !testSynAckDropped &&
+           msg.protocol == PROTOCOL_TCP &&
+           msg.src == 4 && msg.dest == 1 &&
+           msg.payload[2] == (TCP_SYN | TCP_ACK)){
+            testSynAckDropped = TRUE;
+            dbg(TRANSPORT_CHANNEL, "TEST_DROP_SYN_ACK\n");
+            return SUCCESS;
+        }
+        #endif
+
+        #ifdef TEST_DROP_HANDSHAKE_ACK
+        if(TOS_NODE_ID == 1 && !testHandshakeAckDropped &&
+           msg.protocol == PROTOCOL_TCP &&
+           msg.src == 1 && msg.dest == 4 &&
+           msg.payload[2] == TCP_ACK &&
+           msg.payload[5] == 1 && msg.payload[6] == 245){
+            testHandshakeAckDropped = TRUE;
+            dbg(TRANSPORT_CHANNEL, "TEST_DROP_HANDSHAKE_ACK\n");
+            return SUCCESS;
+        }
+        #endif
+
+        #ifdef TEST_DROP_DATA_ACK
+        if(TOS_NODE_ID == 4 && !testDataAckDropped &&
+           msg.protocol == PROTOCOL_TCP &&
+           msg.src == 4 && msg.dest == 1 &&
+           msg.payload[2] == TCP_ACK &&
+           msg.payload[5] == 0 && msg.payload[6] == 112){
+            testDataAckDropped = TRUE;
+            dbg(TRANSPORT_CHANNEL, "TEST_DROP_DATA_ACK\n");
+            return SUCCESS;
+        }
+        #endif
 
         #ifdef TEST_DROP_FINAL_ACK
 
