@@ -105,7 +105,7 @@ implementation{
             dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u CONNECTION_ALLOCATED state=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state);
         }
 
-        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u " "STATE_CHANGE old=%u new=%u\n (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, newState);
+        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u " "STATE_CHANGE old=%u new=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, newState);
         c->state = newState;
     }
 
@@ -202,7 +202,7 @@ implementation{
 
         result = call IP.send(packet);
 
-        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u " "TCP_TX state=%u flags=%u seq=%u ack=%u " "len=%u wnd=%u peerWnd=%u result=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, flags, seq, ack, length, seg.window, c->peerWindow, result);
+        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u " "TCP_TX state=%u flags=%u seq=%u ack=%u " "len=%u wnd=%u peerWnd=%u result=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, flags, seq, ack, length, seg.window, c->peerWindow, result);
 
         if(result != SUCCESS){
             dbg(TRANSPORT_CHANNEL, "node=%u LOCAL_SEND_FAILED peer=%u flags=%u seq=%u error=%u\n", TOS_NODE_ID, c->remoteAddress, flags, seq, result);
@@ -340,7 +340,7 @@ implementation{
             c->sendNextOffset += length;
             c->sndNext += length;
 
-            dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_SENT state=%u seq=%u len=%u outstanding=%u peerWnd=%u queued=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->sndNext - length, length, c->sendNextOffset - c->sendBase, c->peerWindow, c->sendEnd - c->sendBase);
+            dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_SENT state=%u seq=%u len=%u outstanding=%u peerWnd=%u queued=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->sndNext - length, length, c->sendNextOffset - c->sendBase, c->peerWindow, c->sendEnd - c->sendBase);
         }
     }
 
@@ -677,7 +677,7 @@ implementation{
                 signal MidTransport.dataReady(c->remoteAddress, c->localPort, c->remotePort);
             }
             else{
-                dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_DISCARDED state=%u reason=%s seq=%u expected=%u len=%u freeSpace=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->stat seg->seq < c->rcvNext ? "DUPLICATE" : seg->seq > c->rcvNext ? "OUT_OF_ORDER" : seg->length > TCP_BUFFER_SIZE - c->recvLength ?     "BUFFER_FULL" : "SEQUENCE_LIMIT", seg->seq, c->rcvNext, seg->length, TCP_BUFFER_SIZE - c->recvLength);
+                dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_DISCARDED state=%u reason=%s seq=%u expected=%u len=%u freeSpace=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, seg->seq < c->rcvNext ? "DUPLICATE" : seg->seq > c->rcvNext ? "OUT_OF_ORDER" : seg->length > TCP_BUFFER_SIZE - c->recvLength ?     "BUFFER_FULL" : "SEQUENCE_LIMIT", seg->seq, c->rcvNext, seg->length, TCP_BUFFER_SIZE - c->recvLength);
 }
             sendAck(c);
             return;
@@ -714,7 +714,7 @@ implementation{
                 c->dataElapsed = 0;
                 c->dataRetries = 0;
 
-                dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_ACKNOWLEDGED state=%u accepted=%u acknowledged=%u ack=%u outstanding=%u peerWnd=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->sendEnd, c->sendBase, seg->ack, c->sendNextOffset - c->sendBase, c->peerWindow);
+                dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_ACKNOWLEDGED state=%u accepted=%u acknowledged=%u ack=%u outstanding=%u peerWnd=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->sendEnd, c->sendBase, seg->ack, c->sendNextOffset - c->sendBase, c->peerWindow);
                 signal MidTransport.writeReady(c->remoteAddress, c->localPort, c->remotePort);
                 }
 
@@ -934,7 +934,7 @@ implementation{
                     }
 
                     c->dataRetries++;
-                    dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_TIMEOUT state=%u retry=%u oldestUnacked=%u outstanding=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->dataRetries, c->sndUna, c->sendNextOffset - c->sendBase);
+                    dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_TIMEOUT state=%u retry=%u oldestUnacked=%u outstanding=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->dataRetries, c->sndUna, c->sendNextOffset - c->sendBase);
                     retransmitData(c);
                 }
             }

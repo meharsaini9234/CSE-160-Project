@@ -1,0 +1,32 @@
+[34;01m[INFO][0m placing object files in simbuild/micaz
+[34;01m[INFO][0m writing XML schema to app.xml
+[34;01m[INFO][0m compiling NodeC to object file sim.o
+nescc -c -shared -fPIC -o simbuild/micaz/sim.o -g -O0 -gcc=gcc -Wnesc-all -fnesc-include=tos -fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask -fnesc-cfile=simbuild/micaz/app.c -fnesc-separator=__ -DTOSSIM -fnesc-nido-tosnodes=1000 -fnesc-simulate -fnesc-nido-motenumber=sim_node\(\) -fnesc-gcc=gcc -I/opt/tinyos-main/tos/lib/tossim -I/opt/tinyos-main/tos/platforms/micaz/sim -I/opt/tinyos-main/tos/platforms/micaz -I/opt/tinyos-main/tos/platforms/mica/sim -I/opt/tinyos-main/tos/platforms/mica -I/opt/tinyos-main/tos/platforms/micaz/chips/cc2420/sim -I/opt/tinyos-main/tos/platforms/micaz/chips/cc2420 -I/opt/tinyos-main/tos/chips/cc2420/sim -I/opt/tinyos-main/tos/chips/cc2420 -I/opt/tinyos-main/tos/chips/cc2420/alarm -I/opt/tinyos-main/tos/chips/cc2420/control/sim -I/opt/tinyos-main/tos/chips/cc2420/control -I/opt/tinyos-main/tos/chips/cc2420/csma/sim -I/opt/tinyos-main/tos/chips/cc2420/csma -I/opt/tinyos-main/tos/chips/cc2420/interfaces/sim -I/opt/tinyos-main/tos/chips/cc2420/interfaces -I/opt/tinyos-main/tos/chips/cc2420/link/sim -I/opt/tinyos-main/tos/chips/cc2420/link -I/opt/tinyos-main/tos/chips/cc2420/lowpan/sim -I/opt/tinyos-main/tos/chips/cc2420/lowpan -I/opt/tinyos-main/tos/chips/cc2420/lpl -I/opt/tinyos-main/tos/chips/cc2420/packet/sim -I/opt/tinyos-main/tos/chips/cc2420/packet -I/opt/tinyos-main/tos/chips/cc2420/receive/sim -I/opt/tinyos-main/tos/chips/cc2420/receive -I/opt/tinyos-main/tos/chips/cc2420/spi -I/opt/tinyos-main/tos/chips/cc2420/transmit -I/opt/tinyos-main/tos/chips/cc2420/unique/sim -I/opt/tinyos-main/tos/chips/cc2420/unique -I/opt/tinyos-main/tos/platforms/mica2/chips/at45db -I/opt/tinyos-main/tos/platforms/mica/chips/at45db -I/opt/tinyos-main/tos/chips/at45db -I/opt/tinyos-main/tos/chips/atm128/sim -I/opt/tinyos-main/tos/chips/atm128 -I/opt/tinyos-main/tos/chips/atm128/adc -I/opt/tinyos-main/tos/chips/atm128/pins/sim -I/opt/tinyos-main/tos/chips/atm128/pins -I/opt/tinyos-main/tos/chips/atm128/spi/sim -I/opt/tinyos-main/tos/chips/atm128/spi -I/opt/tinyos-main/tos/chips/atm128/timer/sim -I/opt/tinyos-main/tos/chips/atm128/timer -I/opt/tinyos-main/tos/lib/power -I/opt/tinyos-main/tos/lib/timer -I/opt/tinyos-main/tos/lib/serial -fnesc-no-debug -DPLATFORM_MICAZ -Wall -Wshadow -finline-limit=100000 -I/opt/tinyos-main/tos/system -I/opt/tinyos-main/tos/types -I/opt/tinyos-main/tos/interfaces -DTOSH_DATA_LENGTH=28 -IdataStructures -IdataStructures/interfaces/ -IdataStructures/modules -Ilib/interfaces -Ilib/modules -DIDENT_APPNAME=\"NodeC\" -DIDENT_USERNAME=\"root\" -DIDENT_HOSTNAME=\"1c47e1dd41bf\" -DIDENT_USERHASH=0x6f5e1a33L -DIDENT_TIMESTAMP=0x6b068421L -DIDENT_UIDHASH=0xac840bd2L -Wno-nesc-data-race NodeC.nc   -fnesc-dump=components -fnesc-dump=variables -fnesc-dump=constants -fnesc-dump=typedefs -fnesc-dump=interfacedefs -fnesc-dump=tags -fnesc-dumpfile=app.xml
+In file included from Node.nc:26,
+                 from NodeC.nc:18:
+In interface `NeighborDiscovery':
+lib/interfaces/NeighborDiscovery.nc:8: warning: declaration of `index' shadows global declaration
+/usr/include/string.h:489: warning: location of shadowed declaration
+In file included from NodeC.nc:18:
+In component `Node':
+Node.nc: In function `consumeTestData.runTask':
+Node.nc:365: syntax error before `TOS_NODE_ID'
+Node.nc: In function `produceTestData.runTask':
+Node.nc:411: syntax error before `TOS_NODE_ID'
+In file included from lib/modules/NeighborDiscoveryC.nc:7,
+                 from NodeC.nc:34:
+In component `NeighborDiscoveryP':
+lib/modules/NeighborDiscoveryP.nc: In function `updateNeighbor':
+lib/modules/NeighborDiscoveryP.nc:49: warning: declaration of `index' shadows global declaration
+/usr/include/string.h:489: warning: location of shadowed declaration
+lib/modules/NeighborDiscoveryP.nc: In function `NeighborDiscovery.receive':
+lib/modules/NeighborDiscoveryP.nc:160: warning: declaration of `index' shadows global declaration
+/usr/include/string.h:489: warning: location of shadowed declaration
+lib/modules/NeighborDiscoveryP.nc: In function `NeighborDiscovery.isConfirmed':
+lib/modules/NeighborDiscoveryP.nc:258: warning: declaration of `index' shadows global declaration
+/usr/include/string.h:489: warning: location of shadowed declaration
+lib/modules/NeighborDiscoveryP.nc: At top level:
+lib/modules/NeighborDiscoveryP.nc:282: warning: declaration of `index' shadows global declaration
+/usr/include/string.h:489: warning: location of shadowed declaration
+/opt/tinyos-main/support/make/extras/sim.extra:67: recipe for target 'sim-exe' failed
+make: *** [sim-exe] Error 1

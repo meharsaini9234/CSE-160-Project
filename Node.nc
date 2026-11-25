@@ -362,7 +362,7 @@ implementation {
             r->consumed++;
         }
          #if TCP_VERBOSE_APP
-         dbg(TRANSPORT_CHANNEL, "node=%u conn=%u:%u->%u:%u APP_CONSUMED total=%u expected=%u mismatches=%u\n" TOS_NODE_ID, TOS_NODE_ID, r->localPort, r->remoteAddress, r->remotePort, r->consumed, r->expectedBytes, r->mismatches);
+         dbg(TRANSPORT_CHANNEL, "node=%u conn=%u:%u->%u:%u APP_CONSUMED total=%u expected=%u mismatches=%u\n", TOS_NODE_ID, TOS_NODE_ID, r->localPort, r->remoteAddress, r->remotePort, r->consumed, r->expectedBytes, r->mismatches);
          #endif
       }
 
@@ -408,7 +408,7 @@ implementation {
          testAccepted += accepted;
 
          #if TCP_VERBOSE_APP
-            dbg(TRANSPORT_CHANNEL, "node=%u conn=%u:%u->%u:%u APP_WRITE accepted=%u total=%u expected=%u\n" TOS_NODE_ID, TOS_NODE_ID, testLocalPort, testRemoteAddress, testRemotePort, accepted, testAccepted, testTransferBytes);
+            dbg(TRANSPORT_CHANNEL, "node=%u conn=%u:%u->%u:%u APP_WRITE accepted=%u total=%u expected=%u\n", TOS_NODE_ID, TOS_NODE_ID, testLocalPort, testRemoteAddress, testRemotePort, accepted, testAccepted, testTransferBytes);
          #endif
          
          if(accepted < requested){
