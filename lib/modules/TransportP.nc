@@ -406,7 +406,7 @@ implementation{
         c->state = ST_SYN_SENT;
         c->sndUna = TCP_CLIENT_ISN;
         c->sndNext = TCP_CLIENT_ISN;
-        c->dataStartSeq = TCP_CLIENT_ISN + 1
+        c->dataStartSeq = TCP_CLIENT_ISN + 1;
         c->sendBase = 0;
         c->sendEnd = 0;
         c->peerWindow = TCP_BUFFER_SIZE;
