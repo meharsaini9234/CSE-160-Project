@@ -22,7 +22,7 @@ enum{
     TCP_TIMER_MS = 250,
     TCP_RTO_TICKS = 8,
     TCP_MAX_RETRIES = 8,
-    TCP_LINGER_TICKS = 40,
+    TCP_LINGER_TICKS = 80,
 
     TCP_TEST_BYTES = 33
 };

@@ -1,0 +1,1262 @@
+Creating Topo!
+Number of Motes 4
+  1   2   -54.0
+  2   1   -54.0
+  2   3   -54.0
+  3   2   -54.0
+  3   4   -54.0
+  4   3   -54.0
+Creating noise model for  1
+Creating noise model for  2
+Creating noise model for  3
+Creating noise model for  4
+Adding Channel transport
+Adding Channel command
+0:10:3.515625183 DEBUG (4): A Command has been Issued.
+0:10:3.515625183 DEBUG (4): Command Type: Test Server
+0:10:3.515625183 DEBUG (4): Node 4 starting TCP server on port 25
+0:10:3.515625183 DEBUG (4): node=4 LISTEN port=25
+0:10:54.048874439 DEBUG (1): A Command has been Issued.
+0:10:54.048874439 DEBUG (1): Command Type: Test Client
+0:10:54.048874439 DEBUG (1): Node 1 connecting to Node 4 srcPort=15 destPort=25 bytes=1024
+0:10:54.048874439 DEBUG (1): node=1 SYN_SENT peer=4
+0:10:54.048874439 DEBUG (1): t=669746 node=1 TCP_TX peer=4 state=1 flags=1 seq=100 ack=0 len=0 wnd=128
+0:10:54.444351559 DEBUG (4): node=4 TCP_RX peer=1 flags=1 seq=100 ack=0 len=0
+0:10:54.444351559 DEBUG (4): node=4 SYN_RECEIVED peer=1
+0:10:54.444351559 DEBUG (4): t=670151 node=4 TCP_TX peer=1 state=2 flags=3 seq=500 ack=101 len=0 wnd=128
+0:10:54.917831674 DEBUG (1): node=1 TCP_RX peer=4 flags=3 seq=500 ack=101 len=0
+0:10:54.917831674 DEBUG (1): node=1 ESTABLISHED client peer=4
+0:10:54.917831674 DEBUG (1): t=670635 node=1 TCP_TX peer=4 state=3 flags=2 seq=101 ack=501 len=0 wnd=128
+0:10:54.917831674 DEBUG (1): node=1 APP_CONNECTED peer=4
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=11
+0:10:54.917831694 DEBUG (1): t=670635 node=1 TCP_TX peer=4 state=3 flags=8 seq=101 ack=501 len=11 wnd=128
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=11
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=22
+0:10:54.917831694 DEBUG (1): t=670635 node=1 TCP_TX peer=4 state=3 flags=8 seq=112 ack=501 len=11 wnd=128
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=22
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=33
+0:10:54.917831694 DEBUG (1): t=670635 node=1 TCP_TX peer=4 state=3 flags=8 seq=123 ack=501 len=11 wnd=128
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=33
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=44
+0:10:54.917831694 DEBUG (1): t=670635 node=1 TCP_TX peer=4 state=3 flags=8 seq=134 ack=501 len=11 wnd=128
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=44
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=55
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=55
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=66
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=66
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=77
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=77
+0:10:54.917831694 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=88
+0:10:54.917831694 DEBUG (1): node=1 APP_WRITE accepted=11 total=88
+0:10:54.917831704 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=99
+0:10:54.917831704 DEBUG (1): node=1 APP_WRITE accepted=11 total=99
+0:10:54.917831704 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=110
+0:10:54.917831704 DEBUG (1): node=1 APP_WRITE accepted=11 total=110
+0:10:54.917831704 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=121
+0:10:54.917831704 DEBUG (1): node=1 APP_WRITE accepted=11 total=121
+0:10:54.917831704 DEBUG (1): node=1 TRANSPORT_WRITE accepted=7 queuedTotal=128
+0:10:54.917831704 DEBUG (1): node=1 APP_WRITE accepted=7 total=128
+0:10:55.338592933 DEBUG (4): node=4 TCP_RX peer=1 flags=2 seq=101 ack=501 len=0
+0:10:55.338592933 DEBUG (4): node=4 ESTABLISHED server peer=1
+0:10:55.488235865 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=101 ack=501 len=11
+0:10:55.488235865 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=101 len=11 nextExpected=112
+0:10:55.488235865 DEBUG (4): t=671219 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=112 len=0 wnd=117
+0:10:55.488235875 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:55.488235875 DEBUG (4): t=671219 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=112 len=0 wnd=128
+0:10:55.488235875 DEBUG (4): node=4 APP_CONSUMED peer=1 total=11
+0:10:55.679245400 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=112 ack=501 len=11
+0:10:55.679245400 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=112 len=11 nextExpected=123
+0:10:55.679245400 DEBUG (4): t=671415 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=123 len=0 wnd=117
+0:10:55.679245410 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:55.679245410 DEBUG (4): t=671415 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=123 len=0 wnd=128
+0:10:55.679245410 DEBUG (4): node=4 APP_CONSUMED peer=1 total=22
+0:10:55.824219107 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=123 ack=501 len=11
+0:10:55.824219107 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=123 len=11 nextExpected=134
+0:10:55.824219107 DEBUG (4): t=671563 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=134 len=0 wnd=117
+0:10:55.824219117 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:55.824219117 DEBUG (4): t=671563 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=134 len=0 wnd=128
+0:10:55.824219117 DEBUG (4): node=4 APP_CONSUMED peer=1 total=33
+0:10:55.963058850 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=134 ack=501 len=11
+0:10:55.963058850 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=134 len=11 nextExpected=145
+0:10:55.963058850 DEBUG (4): t=671706 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=145 len=0 wnd=117
+0:10:55.963058860 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:55.963058860 DEBUG (4): t=671706 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=145 len=0 wnd=128
+0:10:55.963058860 DEBUG (4): node=4 APP_CONSUMED peer=1 total=44
+0:10:56.259887947 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=112 len=0
+0:10:56.259887947 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=11 ack=112
+0:10:56.259887947 DEBUG (1): t=672010 node=1 TCP_TX peer=4 state=3 flags=8 seq=145 ack=501 len=11 wnd=128
+0:10:56.259887957 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=139
+0:10:56.259887957 DEBUG (1): node=1 APP_WRITE accepted=11 total=139
+0:10:56.598327862 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=112 len=0
+0:10:56.960022224 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=123 len=0
+0:10:56.960022224 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=22 ack=123
+0:10:56.960022224 DEBUG (1): t=672727 node=1 TCP_TX peer=4 state=3 flags=8 seq=156 ack=501 len=11 wnd=128
+0:10:56.960022234 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=150
+0:10:56.960022234 DEBUG (1): node=1 APP_WRITE accepted=11 total=150
+0:10:57.188781909 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=123 len=0
+0:10:57.281128182 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=134 len=0
+0:10:57.281128182 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=33 ack=134
+0:10:57.281128182 DEBUG (1): t=673055 node=1 TCP_TX peer=4 state=3 flags=8 seq=167 ack=501 len=11 wnd=128
+0:10:57.281128192 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=161
+0:10:57.281128192 DEBUG (1): node=1 APP_WRITE accepted=11 total=161
+0:10:57.389847064 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=134 len=0
+0:10:57.563690564 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=145 ack=501 len=11
+0:10:57.563690564 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=145 len=11 nextExpected=156
+0:10:57.563690564 DEBUG (4): t=673345 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=156 len=0 wnd=117
+0:10:57.563690574 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:57.563690574 DEBUG (4): t=673345 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=156 len=0 wnd=128
+0:10:57.563690574 DEBUG (4): node=4 APP_CONSUMED peer=1 total=55
+0:10:57.628143689 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=156 ack=501 len=11
+0:10:57.628143689 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=156 len=11 nextExpected=167
+0:10:57.628143689 DEBUG (4): t=673411 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=167 len=0 wnd=117
+0:10:57.628143699 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:57.628143699 DEBUG (4): t=673411 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=167 len=0 wnd=128
+0:10:57.628143699 DEBUG (4): node=4 APP_CONSUMED peer=1 total=66
+0:10:57.766800189 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=145 len=0
+0:10:57.766800189 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=44 ack=145
+0:10:57.766800189 DEBUG (1): t=673553 node=1 TCP_TX peer=4 state=3 flags=8 seq=178 ack=501 len=11 wnd=128
+0:10:57.766800199 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=172
+0:10:57.766800199 DEBUG (1): node=1 APP_WRITE accepted=11 total=172
+0:10:57.835586935 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=167 ack=501 len=11
+0:10:57.835586935 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=167 len=11 nextExpected=178
+0:10:57.835586935 DEBUG (4): t=673623 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=178 len=0 wnd=117
+0:10:57.835586945 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:57.835586945 DEBUG (4): t=673623 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=178 len=0 wnd=128
+0:10:57.835586945 DEBUG (4): node=4 APP_CONSUMED peer=1 total=77
+0:10:58.000671640 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=145 len=0
+0:10:58.224472276 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=156 len=0
+0:10:58.224472276 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=55 ack=156
+0:10:58.224472276 DEBUG (1): t=674021 node=1 TCP_TX peer=4 state=3 flags=8 seq=189 ack=501 len=11 wnd=128
+0:10:58.224472286 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=183
+0:10:58.224472286 DEBUG (1): node=1 APP_WRITE accepted=11 total=183
+0:10:58.619949605 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=156 len=0
+0:10:58.635025385 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=178 ack=501 len=11
+0:10:58.635025385 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=178 len=11 nextExpected=189
+0:10:58.635025385 DEBUG (4): t=674442 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=189 len=0 wnd=117
+0:10:58.635025395 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:58.635025395 DEBUG (4): t=674442 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=189 len=0 wnd=128
+0:10:58.635025395 DEBUG (4): node=4 APP_CONSUMED peer=1 total=88
+0:10:58.796036006 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=167 len=0
+0:10:58.796036006 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=66 ack=167
+0:10:58.796036006 DEBUG (1): t=674607 node=1 TCP_TX peer=4 state=3 flags=8 seq=200 ack=501 len=11 wnd=128
+0:10:58.796036016 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=194
+0:10:58.796036016 DEBUG (1): node=1 APP_WRITE accepted=11 total=194
+0:10:59.082168813 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=167 len=0
+0:10:59.146530559 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=189 ack=501 len=11
+0:10:59.146530559 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=189 len=11 nextExpected=200
+0:10:59.146530559 DEBUG (4): t=674966 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=200 len=0 wnd=117
+0:10:59.146530569 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:59.146530569 DEBUG (4): t=674966 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=200 len=0 wnd=128
+0:10:59.146530569 DEBUG (4): node=4 APP_CONSUMED peer=1 total=99
+0:10:59.185379293 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=178 len=0
+0:10:59.185379293 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=77 ack=178
+0:10:59.185379293 DEBUG (1): t=675005 node=1 TCP_TX peer=4 state=3 flags=8 seq=211 ack=501 len=11 wnd=128
+0:10:59.185379303 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=205
+0:10:59.185379303 DEBUG (1): node=1 APP_WRITE accepted=11 total=205
+0:10:59.364929464 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=178 len=0
+0:10:59.393402330 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=189 len=0
+0:10:59.393402330 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=88 ack=189
+0:10:59.393402330 DEBUG (1): t=675218 node=1 TCP_TX peer=4 state=3 flags=8 seq=222 ack=501 len=11 wnd=128
+0:10:59.393402340 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=216
+0:10:59.393402340 DEBUG (1): node=1 APP_WRITE accepted=11 total=216
+0:10:59.584381492 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=200 ack=501 len=11
+0:10:59.584381492 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=200 len=11 nextExpected=211
+0:10:59.584381492 DEBUG (4): t=675414 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=211 len=0 wnd=117
+0:10:59.584381502 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:59.584381502 DEBUG (4): t=675414 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=211 len=0 wnd=128
+0:10:59.584381502 DEBUG (4): node=4 APP_CONSUMED peer=1 total=110
+0:10:59.647980008 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=189 len=0
+0:10:59.751984028 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=211 ack=501 len=11
+0:10:59.751984028 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=211 len=11 nextExpected=222
+0:10:59.751984028 DEBUG (4): t=675586 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=222 len=0 wnd=117
+0:10:59.751984038 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:10:59.751984038 DEBUG (4): t=675586 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=222 len=0 wnd=128
+0:10:59.751984038 DEBUG (4): node=4 APP_CONSUMED peer=1 total=121
+0:11:0.021728772 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=200 len=0
+0:11:0.021728772 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=99 ack=200
+0:11:0.021728772 DEBUG (1): t=675862 node=1 TCP_TX peer=4 state=3 flags=8 seq=233 ack=501 len=11 wnd=128
+0:11:0.021728782 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=227
+0:11:0.021728782 DEBUG (1): node=1 APP_WRITE accepted=11 total=227
+0:11:0.114975206 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=200 len=0
+0:11:0.258697873 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=222 ack=501 len=11
+0:11:0.258697873 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=222 len=11 nextExpected=233
+0:11:0.258697873 DEBUG (4): t=676104 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=233 len=0 wnd=117
+0:11:0.258697883 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:0.258697883 DEBUG (4): t=676104 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=233 len=0 wnd=128
+0:11:0.258697883 DEBUG (4): node=4 APP_CONSUMED peer=1 total=132
+0:11:0.573791747 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=211 len=0
+0:11:0.573791747 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=110 ack=211
+0:11:0.573791747 DEBUG (1): t=676427 node=1 TCP_TX peer=4 state=3 flags=8 seq=244 ack=501 len=11 wnd=128
+0:11:0.573791757 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=238
+0:11:0.573791757 DEBUG (1): node=1 APP_WRITE accepted=11 total=238
+0:11:0.756622545 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=222 len=0
+0:11:0.756622545 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=121 ack=222
+0:11:0.756622545 DEBUG (1): t=676614 node=1 TCP_TX peer=4 state=3 flags=8 seq=255 ack=501 len=11 wnd=128
+0:11:0.756622555 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=249
+0:11:0.756622555 DEBUG (1): node=1 APP_WRITE accepted=11 total=249
+0:11:0.821853898 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=222 len=0
+0:11:0.838135144 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=233 ack=501 len=11
+0:11:0.838135144 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=233 len=11 nextExpected=244
+0:11:0.838135144 DEBUG (4): t=676698 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=244 len=0 wnd=117
+0:11:0.838135154 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:0.838135154 DEBUG (4): t=676698 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=244 len=0 wnd=128
+0:11:0.838135154 DEBUG (4): node=4 APP_CONSUMED peer=1 total=143
+0:11:1.028473134 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=233 len=0
+0:11:1.028473134 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=132 ack=233
+0:11:1.028473134 DEBUG (1): t=676893 node=1 TCP_TX peer=4 state=3 flags=8 seq=266 ack=501 len=11 wnd=128
+0:11:1.028473144 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=260
+0:11:1.028473144 DEBUG (1): node=1 APP_WRITE accepted=11 total=260
+0:11:1.249191552 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=233 len=0
+0:11:1.649780657 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=244 ack=501 len=11
+0:11:1.649780657 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=244 len=11 nextExpected=255
+0:11:1.649780657 DEBUG (4): t=677529 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=255 len=0 wnd=117
+0:11:1.649780667 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:1.649780667 DEBUG (4): t=677529 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=255 len=0 wnd=128
+0:11:1.649780667 DEBUG (4): node=4 APP_CONSUMED peer=1 total=154
+0:11:1.741607938 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=244 len=0
+0:11:1.741607938 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=143 ack=244
+0:11:1.741607938 DEBUG (1): t=677623 node=1 TCP_TX peer=4 state=3 flags=8 seq=277 ack=501 len=11 wnd=128
+0:11:1.741607948 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=271
+0:11:1.741607948 DEBUG (1): node=1 APP_WRITE accepted=11 total=271
+0:11:1.836471963 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=255 ack=501 len=11
+0:11:1.836471963 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=255 len=11 nextExpected=266
+0:11:1.836471963 DEBUG (4): t=677720 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=266 len=0 wnd=117
+0:11:1.836471973 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:1.836471973 DEBUG (4): t=677720 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=266 len=0 wnd=128
+0:11:1.836471973 DEBUG (4): node=4 APP_CONSUMED peer=1 total=165
+0:11:2.069870267 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=244 len=0
+0:11:2.161758810 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=266 ack=501 len=11
+0:11:2.161758810 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=266 len=11 nextExpected=277
+0:11:2.161758810 DEBUG (4): t=678053 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=277 len=0 wnd=117
+0:11:2.161758820 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:2.161758820 DEBUG (4): t=678053 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=277 len=0 wnd=128
+0:11:2.161758820 DEBUG (4): node=4 APP_CONSUMED peer=1 total=176
+0:11:2.348083717 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=255 len=0
+0:11:2.348083717 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=154 ack=255
+0:11:2.348083717 DEBUG (1): t=678244 node=1 TCP_TX peer=4 state=3 flags=8 seq=288 ack=501 len=11 wnd=128
+0:11:2.348083727 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=282
+0:11:2.348083727 DEBUG (1): node=1 APP_WRITE accepted=11 total=282
+0:11:2.392013816 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=255 len=0
+0:11:2.625549704 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=277 ack=501 len=11
+0:11:2.625549704 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=277 len=11 nextExpected=288
+0:11:2.625549704 DEBUG (4): t=678528 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=288 len=0 wnd=117
+0:11:2.625549714 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:2.625549714 DEBUG (4): t=678528 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=288 len=0 wnd=128
+0:11:2.625549714 DEBUG (4): node=4 APP_CONSUMED peer=1 total=187
+0:11:2.670624010 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=266 len=0
+0:11:2.670624010 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=165 ack=266
+0:11:2.670624010 DEBUG (1): t=678574 node=1 TCP_TX peer=4 state=3 flags=8 seq=299 ack=501 len=11 wnd=128
+0:11:2.670624020 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=293
+0:11:2.670624020 DEBUG (1): node=1 APP_WRITE accepted=11 total=293
+0:11:2.885223627 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=266 len=0
+0:11:2.914200103 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=277 len=0
+0:11:2.914200103 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=176 ack=277
+0:11:2.914200103 DEBUG (1): t=678824 node=1 TCP_TX peer=4 state=3 flags=8 seq=310 ack=501 len=11 wnd=128
+0:11:2.914200113 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=304
+0:11:2.914200113 DEBUG (1): node=1 APP_WRITE accepted=11 total=304
+0:11:3.134781258 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=288 ack=501 len=11
+0:11:3.134781258 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=288 len=11 nextExpected=299
+0:11:3.134781258 DEBUG (4): t=679050 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=299 len=0 wnd=117
+0:11:3.134781268 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:3.134781268 DEBUG (4): t=679050 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=299 len=0 wnd=128
+0:11:3.134781268 DEBUG (4): node=4 APP_CONSUMED peer=1 total=198
+0:11:3.366821543 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=277 len=0
+0:11:3.575210800 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=288 len=0
+0:11:3.575210800 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=187 ack=288
+0:11:3.575210800 DEBUG (1): t=679501 node=1 TCP_TX peer=4 state=3 flags=8 seq=321 ack=501 len=11 wnd=128
+0:11:3.575210810 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=315
+0:11:3.575210810 DEBUG (1): node=1 APP_WRITE accepted=11 total=315
+0:11:3.611374136 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=288 len=0
+0:11:3.663330439 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=299 ack=501 len=11
+0:11:3.663330439 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=299 len=11 nextExpected=310
+0:11:3.663330439 DEBUG (4): t=679591 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=310 len=0 wnd=117
+0:11:3.663330449 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:3.663330449 DEBUG (4): t=679591 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=310 len=0 wnd=128
+0:11:3.663330449 DEBUG (4): node=4 APP_CONSUMED peer=1 total=209
+0:11:4.039535783 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=299 len=0
+0:11:4.039535783 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=198 ack=299
+0:11:4.039535783 DEBUG (1): t=679976 node=1 TCP_TX peer=4 state=3 flags=8 seq=332 ack=501 len=11 wnd=128
+0:11:4.039535793 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=326
+0:11:4.039535793 DEBUG (1): node=1 APP_WRITE accepted=11 total=326
+0:11:4.091385253 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=310 ack=501 len=11
+0:11:4.091385253 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=310 len=11 nextExpected=321
+0:11:4.091385253 DEBUG (4): t=680029 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=321 len=0 wnd=117
+0:11:4.091385263 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:4.091385263 DEBUG (4): t=680029 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=321 len=0 wnd=128
+0:11:4.091385263 DEBUG (4): node=4 APP_CONSUMED peer=1 total=220
+0:11:4.408310199 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=299 len=0
+0:11:4.481827049 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=310 len=0
+0:11:4.481827049 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=209 ack=310
+0:11:4.481827049 DEBUG (1): t=680429 node=1 TCP_TX peer=4 state=3 flags=8 seq=343 ack=501 len=11 wnd=128
+0:11:4.481827059 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=337
+0:11:4.481827059 DEBUG (1): node=1 APP_WRITE accepted=11 total=337
+0:11:4.710129052 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=310 len=0
+0:11:4.855057122 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=332 ack=501 len=11
+0:11:4.855057122 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=332 expected=321
+0:11:4.855057122 DEBUG (4): t=680811 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=321 len=0 wnd=128
+0:11:5.012649910 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=343 ack=501 len=11
+0:11:5.012649910 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=343 expected=321
+0:11:5.012649910 DEBUG (4): t=680972 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=321 len=0 wnd=128
+0:11:5.031235005 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=321 len=0
+0:11:5.031235005 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=220 ack=321
+0:11:5.031235005 DEBUG (1): t=680991 node=1 TCP_TX peer=4 state=3 flags=8 seq=354 ack=501 len=11 wnd=128
+0:11:5.031235015 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=348
+0:11:5.031235015 DEBUG (1): node=1 APP_WRITE accepted=11 total=348
+0:11:5.273941278 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=321 len=0
+0:11:5.343307761 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=321 len=0
+0:11:5.827499767 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=354 ack=501 len=11
+0:11:5.827499767 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=354 expected=321
+0:11:5.827499767 DEBUG (4): t=681807 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=321 len=0 wnd=128
+0:11:6.246383923 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=321 len=0
+0:11:6.744140768 DEBUG (1): t=682746 node=1 TCP_TX peer=4 state=3 flags=8 seq=321 ack=501 len=11 wnd=128
+0:11:6.744140768 DEBUG (1): node=1 GBN_RETRANSMIT offset=220 len=11
+0:11:6.744140768 DEBUG (1): t=682746 node=1 TCP_TX peer=4 state=3 flags=8 seq=332 ack=501 len=11 wnd=128
+0:11:6.744140768 DEBUG (1): node=1 GBN_RETRANSMIT offset=231 len=11
+0:11:6.744140768 DEBUG (1): t=682746 node=1 TCP_TX peer=4 state=3 flags=8 seq=343 ack=501 len=11 wnd=128
+0:11:6.744140768 DEBUG (1): node=1 GBN_RETRANSMIT offset=242 len=11
+0:11:6.744140768 DEBUG (1): t=682746 node=1 TCP_TX peer=4 state=3 flags=8 seq=354 ack=501 len=11 wnd=128
+0:11:6.744140768 DEBUG (1): node=1 GBN_RETRANSMIT offset=253 len=11
+0:11:7.090378207 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=321 ack=501 len=11
+0:11:7.090378207 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=321 len=11 nextExpected=332
+0:11:7.090378207 DEBUG (4): t=683100 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=332 len=0 wnd=117
+0:11:7.090378217 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:7.090378217 DEBUG (4): t=683100 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=332 len=0 wnd=128
+0:11:7.090378217 DEBUG (4): node=4 APP_CONSUMED peer=1 total=231
+0:11:7.106262593 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=332 ack=501 len=11
+0:11:7.106262593 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=332 len=11 nextExpected=343
+0:11:7.106262593 DEBUG (4): t=683116 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=343 len=0 wnd=117
+0:11:7.106262603 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:7.106262603 DEBUG (4): t=683116 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=343 len=0 wnd=128
+0:11:7.106262603 DEBUG (4): node=4 APP_CONSUMED peer=1 total=242
+0:11:7.393524561 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=343 ack=501 len=11
+0:11:7.393524561 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=343 len=11 nextExpected=354
+0:11:7.393524561 DEBUG (4): t=683410 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=354 len=0 wnd=117
+0:11:7.393524571 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:7.393524571 DEBUG (4): t=683410 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=354 len=0 wnd=128
+0:11:7.393524571 DEBUG (4): node=4 APP_CONSUMED peer=1 total=253
+0:11:7.626510875 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=332 len=0
+0:11:7.626510875 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=231 ack=332
+0:11:7.626510875 DEBUG (1): t=683649 node=1 TCP_TX peer=4 state=3 flags=8 seq=365 ack=501 len=11 wnd=128
+0:11:7.626510885 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=359
+0:11:7.626510885 DEBUG (1): node=1 APP_WRITE accepted=11 total=359
+0:11:7.647369748 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=354 ack=501 len=11
+0:11:7.647369748 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=354 len=11 nextExpected=365
+0:11:7.647369748 DEBUG (4): t=683670 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=365 len=0 wnd=117
+0:11:7.647369758 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:7.647369758 DEBUG (4): t=683670 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=365 len=0 wnd=128
+0:11:7.647369758 DEBUG (4): node=4 APP_CONSUMED peer=1 total=264
+0:11:7.758682515 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=332 len=0
+0:11:8.042053463 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=343 len=0
+0:11:8.042053463 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=242 ack=343
+0:11:8.042053463 DEBUG (1): t=684075 node=1 TCP_TX peer=4 state=3 flags=8 seq=376 ack=501 len=11 wnd=128
+0:11:8.042053473 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=370
+0:11:8.042053473 DEBUG (1): node=1 APP_WRITE accepted=11 total=370
+0:11:8.116867296 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=343 len=0
+0:11:8.246460333 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=365 ack=501 len=11
+0:11:8.246460333 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=365 len=11 nextExpected=376
+0:11:8.246460333 DEBUG (4): t=684284 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=376 len=0 wnd=117
+0:11:8.246460343 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:8.246460343 DEBUG (4): t=684284 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=376 len=0 wnd=128
+0:11:8.246460343 DEBUG (4): node=4 APP_CONSUMED peer=1 total=275
+0:11:8.320892577 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=354 len=0
+0:11:8.320892577 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=253 ack=354
+0:11:8.320892577 DEBUG (1): t=684360 node=1 TCP_TX peer=4 state=3 flags=8 seq=387 ack=501 len=11 wnd=128
+0:11:8.320892587 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=381
+0:11:8.320892587 DEBUG (1): node=1 APP_WRITE accepted=11 total=381
+0:11:8.648376811 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=376 ack=501 len=11
+0:11:8.648376811 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=376 len=11 nextExpected=387
+0:11:8.648376811 DEBUG (4): t=684695 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=387 len=0 wnd=117
+0:11:8.648376821 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:8.648376821 DEBUG (4): t=684695 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=387 len=0 wnd=128
+0:11:8.648376821 DEBUG (4): node=4 APP_CONSUMED peer=1 total=286
+0:11:8.733505517 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=354 len=0
+0:11:9.011078281 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=387 ack=501 len=11
+0:11:9.011078281 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=387 len=11 nextExpected=398
+0:11:9.011078281 DEBUG (4): t=685067 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=398 len=0 wnd=117
+0:11:9.011078291 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:9.011078291 DEBUG (4): t=685067 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=398 len=0 wnd=128
+0:11:9.011078291 DEBUG (4): node=4 APP_CONSUMED peer=1 total=297
+0:11:9.013717909 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=365 len=0
+0:11:9.013717909 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=264 ack=365
+0:11:9.013717909 DEBUG (1): t=685070 node=1 TCP_TX peer=4 state=3 flags=8 seq=398 ack=501 len=11 wnd=128
+0:11:9.013717919 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=392
+0:11:9.013717919 DEBUG (1): node=1 APP_WRITE accepted=11 total=392
+0:11:9.176712300 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=365 len=0
+0:11:9.325912740 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=376 len=0
+0:11:9.325912740 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=275 ack=376
+0:11:9.325912740 DEBUG (1): t=685389 node=1 TCP_TX peer=4 state=3 flags=8 seq=409 ack=501 len=11 wnd=128
+0:11:9.325912750 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=403
+0:11:9.325912750 DEBUG (1): node=1 APP_WRITE accepted=11 total=403
+0:11:9.594635262 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=376 len=0
+0:11:9.820602656 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=387 len=0
+0:11:9.820602656 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=286 ack=387
+0:11:9.820602656 DEBUG (1): t=685896 node=1 TCP_TX peer=4 state=3 flags=8 seq=420 ack=501 len=11 wnd=128
+0:11:9.820602666 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=414
+0:11:9.820602666 DEBUG (1): node=1 APP_WRITE accepted=11 total=414
+0:11:10.167633444 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=398 ack=501 len=11
+0:11:10.167633444 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=398 len=11 nextExpected=409
+0:11:10.167633444 DEBUG (4): t=686251 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=409 len=0 wnd=117
+0:11:10.167633454 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:10.167633454 DEBUG (4): t=686251 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=409 len=0 wnd=128
+0:11:10.167633454 DEBUG (4): node=4 APP_CONSUMED peer=1 total=308
+0:11:10.271606697 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=387 len=0
+0:11:10.277084754 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=409 ack=501 len=11
+0:11:10.277084754 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=409 len=11 nextExpected=420
+0:11:10.277084754 DEBUG (4): t=686363 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=420 len=0 wnd=117
+0:11:10.277084764 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:10.277084764 DEBUG (4): t=686363 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=420 len=0 wnd=128
+0:11:10.277084764 DEBUG (4): node=4 APP_CONSUMED peer=1 total=319
+0:11:10.488937603 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=398 len=0
+0:11:10.488937603 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=297 ack=398
+0:11:10.488937603 DEBUG (1): t=686580 node=1 TCP_TX peer=4 state=3 flags=8 seq=431 ack=501 len=11 wnd=128
+0:11:10.488937613 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=425
+0:11:10.488937613 DEBUG (1): node=1 APP_WRITE accepted=11 total=425
+0:11:10.502563708 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=398 len=0
+0:11:10.703277856 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=409 len=0
+0:11:10.703277856 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=308 ack=409
+0:11:10.703277856 DEBUG (1): t=686800 node=1 TCP_TX peer=4 state=3 flags=8 seq=442 ack=501 len=11 wnd=128
+0:11:10.703277866 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=436
+0:11:10.703277866 DEBUG (1): node=1 APP_WRITE accepted=11 total=436
+0:11:10.798279081 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=409 len=0
+0:11:10.806900402 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=420 ack=501 len=11
+0:11:10.806900402 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=420 len=11 nextExpected=431
+0:11:10.806900402 DEBUG (4): t=686906 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=431 len=0 wnd=117
+0:11:10.806900412 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:10.806900412 DEBUG (4): t=686906 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=431 len=0 wnd=128
+0:11:10.806900412 DEBUG (4): node=4 APP_CONSUMED peer=1 total=330
+0:11:11.153778430 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=431 ack=501 len=11
+0:11:11.153778430 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=431 len=11 nextExpected=442
+0:11:11.153778430 DEBUG (4): t=687261 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=442 len=0 wnd=117
+0:11:11.153778440 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:11.153778440 DEBUG (4): t=687261 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=442 len=0 wnd=128
+0:11:11.153778440 DEBUG (4): node=4 APP_CONSUMED peer=1 total=341
+0:11:11.373550653 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=420 len=0
+0:11:11.373550653 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=319 ack=420
+0:11:11.373550653 DEBUG (1): t=687486 node=1 TCP_TX peer=4 state=3 flags=8 seq=453 ack=501 len=11 wnd=128
+0:11:11.373550663 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=447
+0:11:11.373550663 DEBUG (1): node=1 APP_WRITE accepted=11 total=447
+0:11:11.381729523 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=442 ack=501 len=11
+0:11:11.381729523 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=442 len=11 nextExpected=453
+0:11:11.381729523 DEBUG (4): t=687494 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=453 len=0 wnd=117
+0:11:11.381729533 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:11.381729533 DEBUG (4): t=687494 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=453 len=0 wnd=128
+0:11:11.381729533 DEBUG (4): node=4 APP_CONSUMED peer=1 total=352
+0:11:11.524368516 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=420 len=0
+0:11:11.550491558 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=431 len=0
+0:11:11.550491558 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=330 ack=431
+0:11:11.550491558 DEBUG (1): t=687667 node=1 TCP_TX peer=4 state=3 flags=8 seq=464 ack=501 len=11 wnd=128
+0:11:11.550491568 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=458
+0:11:11.550491568 DEBUG (1): node=1 APP_WRITE accepted=11 total=458
+0:11:11.948745948 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=431 len=0
+0:11:12.431137346 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=442 len=0
+0:11:12.431137346 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=341 ack=442
+0:11:12.431137346 DEBUG (1): t=688569 node=1 TCP_TX peer=4 state=3 flags=8 seq=475 ack=501 len=11 wnd=128
+0:11:12.431137356 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=469
+0:11:12.431137356 DEBUG (1): node=1 APP_WRITE accepted=11 total=469
+0:11:12.485824945 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=453 ack=501 len=11
+0:11:12.485824945 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=453 len=11 nextExpected=464
+0:11:12.485824945 DEBUG (4): t=688625 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=464 len=0 wnd=117
+0:11:12.485824955 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:12.485824955 DEBUG (4): t=688625 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=464 len=0 wnd=128
+0:11:12.485824955 DEBUG (4): node=4 APP_CONSUMED peer=1 total=363
+0:11:12.614624256 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=442 len=0
+0:11:12.711380249 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=453 len=0
+0:11:12.711380249 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=352 ack=453
+0:11:12.711380249 DEBUG (1): t=688856 node=1 TCP_TX peer=4 state=3 flags=8 seq=486 ack=501 len=11 wnd=128
+0:11:12.711380259 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=480
+0:11:12.711380259 DEBUG (1): node=1 APP_WRITE accepted=11 total=480
+0:11:12.728210842 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=464 ack=501 len=11
+0:11:12.728210842 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=464 len=11 nextExpected=475
+0:11:12.728210842 DEBUG (4): t=688873 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=475 len=0 wnd=117
+0:11:12.728210852 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:12.728210852 DEBUG (4): t=688873 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=475 len=0 wnd=128
+0:11:12.728210852 DEBUG (4): node=4 APP_CONSUMED peer=1 total=374
+0:11:12.848053245 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=453 len=0
+0:11:13.007248285 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=475 ack=501 len=11
+0:11:13.007248285 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=475 len=11 nextExpected=486
+0:11:13.007248285 DEBUG (4): t=689159 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=486 len=0 wnd=117
+0:11:13.007248295 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:13.007248295 DEBUG (4): t=689159 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=486 len=0 wnd=128
+0:11:13.007248295 DEBUG (4): node=4 APP_CONSUMED peer=1 total=385
+0:11:13.162689480 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=464 len=0
+0:11:13.162689480 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=363 ack=464
+0:11:13.162689480 DEBUG (1): t=689318 node=1 TCP_TX peer=4 state=3 flags=8 seq=497 ack=501 len=11 wnd=128
+0:11:13.162689490 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=491
+0:11:13.162689490 DEBUG (1): node=1 APP_WRITE accepted=11 total=491
+0:11:13.361191032 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=464 len=0
+0:11:13.808105874 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=486 ack=501 len=11
+0:11:13.808105874 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=486 len=11 nextExpected=497
+0:11:13.808105874 DEBUG (4): t=689979 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=497 len=0 wnd=117
+0:11:13.808105884 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:13.808105884 DEBUG (4): t=689979 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=497 len=0 wnd=128
+0:11:13.808105884 DEBUG (4): node=4 APP_CONSUMED peer=1 total=396
+0:11:13.814575447 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=475 len=0
+0:11:13.814575447 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=374 ack=475
+0:11:13.814575447 DEBUG (1): t=689986 node=1 TCP_TX peer=4 state=3 flags=8 seq=508 ack=501 len=11 wnd=128
+0:11:13.814575457 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=502
+0:11:13.814575457 DEBUG (1): node=1 APP_WRITE accepted=11 total=502
+0:11:13.920151124 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=497 ack=501 len=11
+0:11:13.920151124 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=497 len=11 nextExpected=508
+0:11:13.920151124 DEBUG (4): t=690094 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=508 len=0 wnd=117
+0:11:13.920151134 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:13.920151134 DEBUG (4): t=690094 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=508 len=0 wnd=128
+0:11:13.920151134 DEBUG (4): node=4 APP_CONSUMED peer=1 total=407
+0:11:14.070678955 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=475 len=0
+0:11:14.291092148 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=486 len=0
+0:11:14.291092148 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=385 ack=486
+0:11:14.291092148 DEBUG (1): t=690474 node=1 TCP_TX peer=4 state=3 flags=8 seq=519 ack=501 len=11 wnd=128
+0:11:14.291092158 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=513
+0:11:14.291092158 DEBUG (1): node=1 APP_WRITE accepted=11 total=513
+0:11:14.313568350 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=486 len=0
+0:11:14.686096591 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=508 ack=501 len=11
+0:11:14.686096591 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=508 len=11 nextExpected=519
+0:11:14.686096591 DEBUG (4): t=690878 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=519 len=0 wnd=117
+0:11:14.686096601 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:14.686096601 DEBUG (4): t=690878 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=519 len=0 wnd=128
+0:11:14.686096601 DEBUG (4): node=4 APP_CONSUMED peer=1 total=418
+0:11:14.856186172 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=497 len=0
+0:11:14.856186172 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=396 ack=497
+0:11:14.856186172 DEBUG (1): t=691052 node=1 TCP_TX peer=4 state=3 flags=8 seq=530 ack=501 len=11 wnd=128
+0:11:14.856186182 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=524
+0:11:14.856186182 DEBUG (1): node=1 APP_WRITE accepted=11 total=524
+0:11:15.146194729 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=497 len=0
+0:11:15.233673357 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=508 len=0
+0:11:15.233673357 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=407 ack=508
+0:11:15.233673357 DEBUG (1): t=691439 node=1 TCP_TX peer=4 state=3 flags=8 seq=541 ack=501 len=11 wnd=128
+0:11:15.233673367 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=535
+0:11:15.233673367 DEBUG (1): node=1 APP_WRITE accepted=11 total=535
+0:11:15.457123066 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=508 len=0
+0:11:15.508697878 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=519 ack=501 len=11
+0:11:15.508697878 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=519 len=11 nextExpected=530
+0:11:15.508697878 DEBUG (4): t=691720 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=530 len=0 wnd=117
+0:11:15.508697888 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:15.508697888 DEBUG (4): t=691720 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=530 len=0 wnd=128
+0:11:15.508697888 DEBUG (4): node=4 APP_CONSUMED peer=1 total=429
+0:11:15.692444105 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=519 len=0
+0:11:15.692444105 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=418 ack=519
+0:11:15.692444105 DEBUG (1): t=691909 node=1 TCP_TX peer=4 state=3 flags=8 seq=552 ack=501 len=11 wnd=128
+0:11:15.692444115 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=546
+0:11:15.692444115 DEBUG (1): node=1 APP_WRITE accepted=11 total=546
+0:11:15.911682494 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=530 ack=501 len=11
+0:11:15.911682494 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=530 len=11 nextExpected=541
+0:11:15.911682494 DEBUG (4): t=692133 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=541 len=0 wnd=117
+0:11:15.911682504 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:15.911682504 DEBUG (4): t=692133 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=541 len=0 wnd=128
+0:11:15.911682504 DEBUG (4): node=4 APP_CONSUMED peer=1 total=440
+0:11:15.988739269 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=519 len=0
+0:11:16.293960812 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=530 len=0
+0:11:16.293960812 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=429 ack=530
+0:11:16.293960812 DEBUG (1): t=692525 node=1 TCP_TX peer=4 state=3 flags=8 seq=563 ack=501 len=11 wnd=128
+0:11:16.293960822 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=557
+0:11:16.293960822 DEBUG (1): node=1 APP_WRITE accepted=11 total=557
+0:11:16.332672523 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=541 ack=501 len=11
+0:11:16.332672523 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=541 len=11 nextExpected=552
+0:11:16.332672523 DEBUG (4): t=692564 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=552 len=0 wnd=117
+0:11:16.332672533 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:16.332672533 DEBUG (4): t=692564 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=552 len=0 wnd=128
+0:11:16.332672533 DEBUG (4): node=4 APP_CONSUMED peer=1 total=451
+0:11:16.448501809 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=530 len=0
+0:11:16.476089721 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=541 len=0
+0:11:16.476089721 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=440 ack=541
+0:11:16.476089721 DEBUG (1): t=692711 node=1 TCP_TX peer=4 state=3 flags=8 seq=574 ack=501 len=11 wnd=128
+0:11:16.476089731 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=568
+0:11:16.476089731 DEBUG (1): node=1 APP_WRITE accepted=11 total=568
+0:11:16.518112536 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=552 ack=501 len=11
+0:11:16.518112536 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=552 len=11 nextExpected=563
+0:11:16.518112536 DEBUG (4): t=692754 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=563 len=0 wnd=117
+0:11:16.518112546 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:16.518112546 DEBUG (4): t=692754 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=563 len=0 wnd=128
+0:11:16.518112546 DEBUG (4): node=4 APP_CONSUMED peer=1 total=462
+0:11:16.658813702 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=541 len=0
+0:11:16.950378669 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=552 len=0
+0:11:16.950378669 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=451 ack=552
+0:11:16.950378669 DEBUG (1): t=693197 node=1 TCP_TX peer=4 state=3 flags=8 seq=585 ack=501 len=11 wnd=128
+0:11:16.950378679 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=579
+0:11:16.950378679 DEBUG (1): node=1 APP_WRITE accepted=11 total=579
+0:11:17.101318607 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=552 len=0
+0:11:17.191513469 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=563 ack=501 len=11
+0:11:17.191513469 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=563 len=11 nextExpected=574
+0:11:17.191513469 DEBUG (4): t=693444 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=574 len=0 wnd=117
+0:11:17.191513479 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:17.191513479 DEBUG (4): t=693444 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=574 len=0 wnd=128
+0:11:17.191513479 DEBUG (4): node=4 APP_CONSUMED peer=1 total=473
+0:11:17.370407343 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=563 len=0
+0:11:17.370407343 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=462 ack=563
+0:11:17.370407343 DEBUG (1): t=693627 node=1 TCP_TX peer=4 state=3 flags=8 seq=596 ack=501 len=11 wnd=128
+0:11:17.370407353 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=590
+0:11:17.370407353 DEBUG (1): node=1 APP_WRITE accepted=11 total=590
+0:11:17.409759753 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=563 len=0
+0:11:17.542511369 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=574 ack=501 len=11
+0:11:17.542511369 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=574 len=11 nextExpected=585
+0:11:17.542511369 DEBUG (4): t=693803 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=585 len=0 wnd=117
+0:11:17.542511379 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:17.542511379 DEBUG (4): t=693803 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=585 len=0 wnd=128
+0:11:17.542511379 DEBUG (4): node=4 APP_CONSUMED peer=1 total=484
+0:11:17.980545284 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=585 len=0
+0:11:17.980545284 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=484 ack=585
+0:11:17.980545284 DEBUG (1): t=694252 node=1 TCP_TX peer=4 state=3 flags=8 seq=607 ack=501 len=11 wnd=128
+0:11:17.980545284 DEBUG (1): t=694252 node=1 TCP_TX peer=4 state=3 flags=8 seq=618 ack=501 len=11 wnd=128
+0:11:17.980545294 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=601
+0:11:17.980545294 DEBUG (1): node=1 APP_WRITE accepted=11 total=601
+0:11:17.980545294 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=612
+0:11:17.980545294 DEBUG (1): node=1 APP_WRITE accepted=11 total=612
+0:11:18.133392733 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=596 ack=501 len=11
+0:11:18.133392733 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=596 expected=585
+0:11:18.133392733 DEBUG (4): t=694408 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=585 len=0 wnd=128
+0:11:18.367828595 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=585 len=0
+0:11:18.501343139 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=607 ack=501 len=11
+0:11:18.501343139 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=607 expected=585
+0:11:18.501343139 DEBUG (4): t=694785 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=585 len=0 wnd=128
+0:11:18.760376225 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=585 len=0
+0:11:18.896088017 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=618 ack=501 len=11
+0:11:18.896088017 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=618 expected=585
+0:11:18.896088017 DEBUG (4): t=695189 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=585 len=0 wnd=128
+0:11:19.223419426 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=585 len=0
+0:11:19.307602186 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=585 len=0
+0:11:19.927734518 DEBUG (1): t=696246 node=1 TCP_TX peer=4 state=3 flags=8 seq=585 ack=501 len=11 wnd=128
+0:11:19.927734518 DEBUG (1): node=1 GBN_RETRANSMIT offset=484 len=11
+0:11:19.927734518 DEBUG (1): t=696246 node=1 TCP_TX peer=4 state=3 flags=8 seq=596 ack=501 len=11 wnd=128
+0:11:19.927734518 DEBUG (1): node=1 GBN_RETRANSMIT offset=495 len=11
+0:11:19.927734518 DEBUG (1): t=696246 node=1 TCP_TX peer=4 state=3 flags=8 seq=607 ack=501 len=11 wnd=128
+0:11:19.927734518 DEBUG (1): node=1 GBN_RETRANSMIT offset=506 len=11
+0:11:19.927734518 DEBUG (1): t=696246 node=1 TCP_TX peer=4 state=3 flags=8 seq=618 ack=501 len=11 wnd=128
+0:11:19.927734518 DEBUG (1): node=1 GBN_RETRANSMIT offset=517 len=11
+0:11:20.416839963 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=585 ack=501 len=11
+0:11:20.416839963 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=585 len=11 nextExpected=596
+0:11:20.416839963 DEBUG (4): t=696746 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=596 len=0 wnd=117
+0:11:20.416839973 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:20.416839973 DEBUG (4): t=696746 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=596 len=0 wnd=128
+0:11:20.416839973 DEBUG (4): node=4 APP_CONSUMED peer=1 total=495
+0:11:20.587707894 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=596 ack=501 len=11
+0:11:20.587707894 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=596 len=11 nextExpected=607
+0:11:20.587707894 DEBUG (4): t=696921 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=607 len=0 wnd=117
+0:11:20.587707904 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:20.587707904 DEBUG (4): t=696921 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=607 len=0 wnd=128
+0:11:20.587707904 DEBUG (4): node=4 APP_CONSUMED peer=1 total=506
+0:11:20.917190907 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=607 ack=501 len=11
+0:11:20.917190907 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=607 len=11 nextExpected=618
+0:11:20.917190907 DEBUG (4): t=697259 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=618 len=0 wnd=117
+0:11:20.917190917 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:20.917190917 DEBUG (4): t=697259 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=618 len=0 wnd=128
+0:11:20.917190917 DEBUG (4): node=4 APP_CONSUMED peer=1 total=517
+0:11:21.044510153 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=596 len=0
+0:11:21.044510153 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=495 ack=596
+0:11:21.044510153 DEBUG (1): t=697389 node=1 TCP_TX peer=4 state=3 flags=8 seq=629 ack=501 len=11 wnd=128
+0:11:21.044510163 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=623
+0:11:21.044510163 DEBUG (1): node=1 APP_WRITE accepted=11 total=623
+0:11:21.141250847 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=596 len=0
+0:11:21.348312782 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=618 ack=501 len=11
+0:11:21.348312782 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=618 len=11 nextExpected=629
+0:11:21.348312782 DEBUG (4): t=697700 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=629 len=0 wnd=117
+0:11:21.348312792 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:21.348312792 DEBUG (4): t=697700 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=629 len=0 wnd=128
+0:11:21.348312792 DEBUG (4): node=4 APP_CONSUMED peer=1 total=528
+0:11:21.546219134 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=607 len=0
+0:11:21.546219134 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=506 ack=607
+0:11:21.546219134 DEBUG (1): t=697903 node=1 TCP_TX peer=4 state=3 flags=8 seq=640 ack=501 len=11 wnd=128
+0:11:21.546219144 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=634
+0:11:21.546219144 DEBUG (1): node=1 APP_WRITE accepted=11 total=634
+0:11:21.725937140 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=607 len=0
+0:11:21.845398192 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=618 len=0
+0:11:21.845398192 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=517 ack=618
+0:11:21.845398192 DEBUG (1): t=698209 node=1 TCP_TX peer=4 state=3 flags=8 seq=651 ack=501 len=11 wnd=128
+0:11:21.845398202 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=645
+0:11:21.845398202 DEBUG (1): node=1 APP_WRITE accepted=11 total=645
+0:11:22.099243529 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=629 ack=501 len=11
+0:11:22.099243529 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=629 len=11 nextExpected=640
+0:11:22.099243529 DEBUG (4): t=698469 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=640 len=0 wnd=117
+0:11:22.099243539 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:22.099243539 DEBUG (4): t=698469 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=640 len=0 wnd=128
+0:11:22.099243539 DEBUG (4): node=4 APP_CONSUMED peer=1 total=539
+0:11:22.238342508 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=618 len=0
+0:11:22.430298123 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=629 len=0
+0:11:22.430298123 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=528 ack=629
+0:11:22.430298123 DEBUG (1): t=698808 node=1 TCP_TX peer=4 state=3 flags=8 seq=662 ack=501 len=11 wnd=128
+0:11:22.430298133 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=656
+0:11:22.430298133 DEBUG (1): node=1 APP_WRITE accepted=11 total=656
+0:11:22.784256361 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=640 ack=501 len=11
+0:11:22.784256361 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=640 len=11 nextExpected=651
+0:11:22.784256361 DEBUG (4): t=699171 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=651 len=0 wnd=117
+0:11:22.784256371 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:22.784256371 DEBUG (4): t=699171 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=651 len=0 wnd=128
+0:11:22.784256371 DEBUG (4): node=4 APP_CONSUMED peer=1 total=550
+0:11:22.952453858 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=629 len=0
+0:11:23.137131063 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=651 ack=501 len=11
+0:11:23.137131063 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=651 len=11 nextExpected=662
+0:11:23.137131063 DEBUG (4): t=699532 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=662 len=0 wnd=117
+0:11:23.137131073 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:23.137131073 DEBUG (4): t=699532 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=662 len=0 wnd=128
+0:11:23.137131073 DEBUG (4): node=4 APP_CONSUMED peer=1 total=561
+0:11:23.210830952 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=640 len=0
+0:11:23.210830952 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=539 ack=640
+0:11:23.210830952 DEBUG (1): t=699607 node=1 TCP_TX peer=4 state=3 flags=8 seq=673 ack=501 len=11 wnd=128
+0:11:23.210830962 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=667
+0:11:23.210830962 DEBUG (1): node=1 APP_WRITE accepted=11 total=667
+0:11:23.390900036 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=662 ack=501 len=11
+0:11:23.390900036 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=662 len=11 nextExpected=673
+0:11:23.390900036 DEBUG (4): t=699792 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=673 len=0 wnd=117
+0:11:23.390900046 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:23.390900046 DEBUG (4): t=699792 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=673 len=0 wnd=128
+0:11:23.390900046 DEBUG (4): node=4 APP_CONSUMED peer=1 total=572
+0:11:23.452575922 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=640 len=0
+0:11:23.889953852 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=651 len=0
+0:11:23.889953852 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=550 ack=651
+0:11:23.889953852 DEBUG (1): t=700303 node=1 TCP_TX peer=4 state=3 flags=8 seq=684 ack=501 len=11 wnd=128
+0:11:23.889953862 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=678
+0:11:23.889953862 DEBUG (1): node=1 APP_WRITE accepted=11 total=678
+0:11:24.119400292 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=651 len=0
+0:11:24.287918321 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=662 len=0
+0:11:24.287918321 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=561 ack=662
+0:11:24.287918321 DEBUG (1): t=700710 node=1 TCP_TX peer=4 state=3 flags=8 seq=695 ack=501 len=11 wnd=128
+0:11:24.287918331 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=689
+0:11:24.287918331 DEBUG (1): node=1 APP_WRITE accepted=11 total=689
+0:11:24.404983919 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=673 ack=501 len=11
+0:11:24.404983919 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=673 len=11 nextExpected=684
+0:11:24.404983919 DEBUG (4): t=700830 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=684 len=0 wnd=117
+0:11:24.404983929 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:24.404983929 DEBUG (4): t=700830 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=684 len=0 wnd=128
+0:11:24.404983929 DEBUG (4): node=4 APP_CONSUMED peer=1 total=583
+0:11:24.755279813 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=662 len=0
+0:11:25.093216203 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=673 len=0
+0:11:25.093216203 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=572 ack=673
+0:11:25.093216203 DEBUG (1): t=701535 node=1 TCP_TX peer=4 state=3 flags=8 seq=706 ack=501 len=11 wnd=128
+0:11:25.093216213 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=700
+0:11:25.093216213 DEBUG (1): node=1 APP_WRITE accepted=11 total=700
+0:11:25.119049430 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=684 ack=501 len=11
+0:11:25.119049430 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=684 len=11 nextExpected=695
+0:11:25.119049430 DEBUG (4): t=701561 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=695 len=0 wnd=117
+0:11:25.119049440 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:25.119049440 DEBUG (4): t=701561 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=695 len=0 wnd=128
+0:11:25.119049440 DEBUG (4): node=4 APP_CONSUMED peer=1 total=594
+0:11:25.170135876 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=695 ack=501 len=11
+0:11:25.170135876 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=695 len=11 nextExpected=706
+0:11:25.170135876 DEBUG (4): t=701614 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=706 len=0 wnd=117
+0:11:25.170135886 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:25.170135886 DEBUG (4): t=701614 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=706 len=0 wnd=128
+0:11:25.170135886 DEBUG (4): node=4 APP_CONSUMED peer=1 total=605
+0:11:25.226471217 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=673 len=0
+0:11:25.498367582 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=684 len=0
+0:11:25.498367582 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=583 ack=684
+0:11:25.498367582 DEBUG (1): t=701950 node=1 TCP_TX peer=4 state=3 flags=8 seq=717 ack=501 len=11 wnd=128
+0:11:25.498367592 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=711
+0:11:25.498367592 DEBUG (1): node=1 APP_WRITE accepted=11 total=711
+0:11:25.536422985 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=684 len=0
+0:11:25.870041123 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=695 len=0
+0:11:25.870041123 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=594 ack=695
+0:11:25.870041123 DEBUG (1): t=702330 node=1 TCP_TX peer=4 state=3 flags=8 seq=728 ack=501 len=11 wnd=128
+0:11:25.870041133 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=722
+0:11:25.870041133 DEBUG (1): node=1 APP_WRITE accepted=11 total=722
+0:11:26.043731914 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=695 len=0
+0:11:26.176407219 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=706 ack=501 len=11
+0:11:26.176407219 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=706 len=11 nextExpected=717
+0:11:26.176407219 DEBUG (4): t=702644 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=717 len=0 wnd=117
+0:11:26.176407229 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:26.176407229 DEBUG (4): t=702644 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=717 len=0 wnd=128
+0:11:26.176407229 DEBUG (4): node=4 APP_CONSUMED peer=1 total=616
+0:11:26.274368538 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=706 len=0
+0:11:26.274368538 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=605 ack=706
+0:11:26.274368538 DEBUG (1): t=702744 node=1 TCP_TX peer=4 state=3 flags=8 seq=739 ack=501 len=11 wnd=128
+0:11:26.274368548 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=733
+0:11:26.274368548 DEBUG (1): node=1 APP_WRITE accepted=11 total=733
+0:11:26.405060073 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=706 len=0
+0:11:26.421097192 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=717 ack=501 len=11
+0:11:26.421097192 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=717 len=11 nextExpected=728
+0:11:26.421097192 DEBUG (4): t=702895 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=728 len=0 wnd=117
+0:11:26.421097202 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:26.421097202 DEBUG (4): t=702895 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=728 len=0 wnd=128
+0:11:26.421097202 DEBUG (4): node=4 APP_CONSUMED peer=1 total=627
+0:11:26.769287346 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=717 len=0
+0:11:26.769287346 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=616 ack=717
+0:11:26.769287346 DEBUG (1): t=703251 node=1 TCP_TX peer=4 state=3 flags=8 seq=750 ack=501 len=11 wnd=128
+0:11:26.769287356 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=744
+0:11:26.769287356 DEBUG (1): node=1 APP_WRITE accepted=11 total=744
+0:11:26.984344723 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=717 len=0
+0:11:26.990463629 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=728 ack=501 len=11
+0:11:26.990463629 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=728 len=11 nextExpected=739
+0:11:26.990463629 DEBUG (4): t=703478 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=739 len=0 wnd=117
+0:11:26.990463639 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:26.990463639 DEBUG (4): t=703478 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=739 len=0 wnd=128
+0:11:26.990463639 DEBUG (4): node=4 APP_CONSUMED peer=1 total=638
+0:11:27.437805426 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=728 len=0
+0:11:27.437805426 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=627 ack=728
+0:11:27.437805426 DEBUG (1): t=703936 node=1 TCP_TX peer=4 state=3 flags=8 seq=761 ack=501 len=11 wnd=128
+0:11:27.437805436 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=755
+0:11:27.437805436 DEBUG (1): node=1 APP_WRITE accepted=11 total=755
+0:11:27.547256870 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=739 ack=501 len=11
+0:11:27.547256870 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=739 len=11 nextExpected=750
+0:11:27.547256870 DEBUG (4): t=704048 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=750 len=0 wnd=117
+0:11:27.547256880 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:27.547256880 DEBUG (4): t=704048 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=750 len=0 wnd=128
+0:11:27.547256880 DEBUG (4): node=4 APP_CONSUMED peer=1 total=649
+0:11:27.630096686 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=728 len=0
+0:11:27.916305764 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=739 len=0
+0:11:27.916305764 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=638 ack=739
+0:11:27.916305764 DEBUG (1): t=704426 node=1 TCP_TX peer=4 state=3 flags=8 seq=772 ack=501 len=11 wnd=128
+0:11:27.916305774 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=766
+0:11:27.916305774 DEBUG (1): node=1 APP_WRITE accepted=11 total=766
+0:11:27.954727554 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=750 ack=501 len=11
+0:11:27.954727554 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=750 len=11 nextExpected=761
+0:11:27.954727554 DEBUG (4): t=704465 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=761 len=0 wnd=117
+0:11:27.954727564 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:27.954727564 DEBUG (4): t=704465 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=761 len=0 wnd=128
+0:11:27.954727564 DEBUG (4): node=4 APP_CONSUMED peer=1 total=660
+0:11:27.982315305 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=739 len=0
+0:11:28.125656532 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=761 ack=501 len=11
+0:11:28.125656532 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=761 len=11 nextExpected=772
+0:11:28.125656532 DEBUG (4): t=704640 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=772 len=0 wnd=117
+0:11:28.125656542 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:28.125656542 DEBUG (4): t=704640 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=772 len=0 wnd=128
+0:11:28.125656542 DEBUG (4): node=4 APP_CONSUMED peer=1 total=671
+0:11:28.431198346 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=750 len=0
+0:11:28.431198346 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=649 ack=750
+0:11:28.431198346 DEBUG (1): t=704953 node=1 TCP_TX peer=4 state=3 flags=8 seq=783 ack=501 len=11 wnd=128
+0:11:28.431198356 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=777
+0:11:28.431198356 DEBUG (1): node=1 APP_WRITE accepted=11 total=777
+0:11:28.534561396 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=750 len=0
+0:11:28.694381960 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=761 len=0
+0:11:28.694381960 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=660 ack=761
+0:11:28.694381960 DEBUG (1): t=705223 node=1 TCP_TX peer=4 state=3 flags=8 seq=794 ack=501 len=11 wnd=128
+0:11:28.694381970 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=788
+0:11:28.694381970 DEBUG (1): node=1 APP_WRITE accepted=11 total=788
+0:11:28.737671299 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=772 ack=501 len=11
+0:11:28.737671299 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=772 len=11 nextExpected=783
+0:11:28.737671299 DEBUG (4): t=705267 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=783 len=0 wnd=117
+0:11:28.737671309 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:28.737671309 DEBUG (4): t=705267 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=783 len=0 wnd=128
+0:11:28.737671309 DEBUG (4): node=4 APP_CONSUMED peer=1 total=682
+0:11:28.966018882 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=761 len=0
+0:11:29.302734621 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=772 len=0
+0:11:29.302734621 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=671 ack=772
+0:11:29.302734621 DEBUG (1): t=705846 node=1 TCP_TX peer=4 state=3 flags=8 seq=805 ack=501 len=11 wnd=128
+0:11:29.302734631 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=799
+0:11:29.302734631 DEBUG (1): node=1 APP_WRITE accepted=11 total=799
+0:11:29.371536620 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=783 ack=501 len=11
+0:11:29.371536620 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=783 len=11 nextExpected=794
+0:11:29.371536620 DEBUG (4): t=705916 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=794 len=0 wnd=117
+0:11:29.371536630 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:29.371536630 DEBUG (4): t=705916 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=794 len=0 wnd=128
+0:11:29.371536630 DEBUG (4): node=4 APP_CONSUMED peer=1 total=693
+0:11:29.574737798 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=772 len=0
+0:11:29.831039669 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=783 len=0
+0:11:29.831039669 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=682 ack=783
+0:11:29.831039669 DEBUG (1): t=706386 node=1 TCP_TX peer=4 state=3 flags=8 seq=816 ack=501 len=11 wnd=128
+0:11:29.831039679 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=810
+0:11:29.831039679 DEBUG (1): node=1 APP_WRITE accepted=11 total=810
+0:11:29.845352398 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=783 len=0
+0:11:29.916962072 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=794 ack=501 len=11
+0:11:29.916962072 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=794 len=11 nextExpected=805
+0:11:29.916962072 DEBUG (4): t=706474 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=805 len=0 wnd=117
+0:11:29.916962082 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:29.916962082 DEBUG (4): t=706474 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=805 len=0 wnd=128
+0:11:29.916962082 DEBUG (4): node=4 APP_CONSUMED peer=1 total=704
+0:11:30.142151272 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=805 ack=501 len=11
+0:11:30.142151272 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=805 len=11 nextExpected=816
+0:11:30.142151272 DEBUG (4): t=706705 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=816 len=0 wnd=117
+0:11:30.142151282 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:30.142151282 DEBUG (4): t=706705 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=816 len=0 wnd=128
+0:11:30.142151282 DEBUG (4): node=4 APP_CONSUMED peer=1 total=715
+0:11:30.249847642 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=794 len=0
+0:11:30.249847642 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=693 ack=794
+0:11:30.249847642 DEBUG (1): t=706815 node=1 TCP_TX peer=4 state=3 flags=8 seq=827 ack=501 len=11 wnd=128
+0:11:30.249847652 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=821
+0:11:30.249847652 DEBUG (1): node=1 APP_WRITE accepted=11 total=821
+0:11:30.585083242 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=794 len=0
+0:11:30.596603623 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=805 len=0
+0:11:30.596603623 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=704 ack=805
+0:11:30.596603623 DEBUG (1): t=707170 node=1 TCP_TX peer=4 state=3 flags=8 seq=838 ack=501 len=11 wnd=128
+0:11:30.596603633 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=832
+0:11:30.596603633 DEBUG (1): node=1 APP_WRITE accepted=11 total=832
+0:11:30.621094112 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=816 ack=501 len=11
+0:11:30.621094112 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=816 len=11 nextExpected=827
+0:11:30.621094112 DEBUG (4): t=707195 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=827 len=0 wnd=117
+0:11:30.621094122 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:30.621094122 DEBUG (4): t=707195 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=827 len=0 wnd=128
+0:11:30.621094122 DEBUG (4): node=4 APP_CONSUMED peer=1 total=726
+0:11:31.206665404 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=827 ack=501 len=11
+0:11:31.206665404 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=827 len=11 nextExpected=838
+0:11:31.206665404 DEBUG (4): t=707795 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=838 len=0 wnd=117
+0:11:31.206665414 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:31.206665414 DEBUG (4): t=707795 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=838 len=0 wnd=128
+0:11:31.206665414 DEBUG (4): node=4 APP_CONSUMED peer=1 total=737
+0:11:31.258377335 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=805 len=0
+0:11:31.518692245 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=816 len=0
+0:11:31.518692245 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=715 ack=816
+0:11:31.518692245 DEBUG (1): t=708115 node=1 TCP_TX peer=4 state=3 flags=8 seq=849 ack=501 len=11 wnd=128
+0:11:31.518692255 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=843
+0:11:31.518692255 DEBUG (1): node=1 APP_WRITE accepted=11 total=843
+0:11:31.636886870 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=816 len=0
+0:11:32.004150763 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=838 ack=501 len=11
+0:11:32.004150763 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=838 len=11 nextExpected=849
+0:11:32.004150763 DEBUG (4): t=708612 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=849 len=0 wnd=117
+0:11:32.004150773 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:32.004150773 DEBUG (4): t=708612 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=849 len=0 wnd=128
+0:11:32.004150773 DEBUG (4): node=4 APP_CONSUMED peer=1 total=748
+0:11:32.149933116 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=827 len=0
+0:11:32.149933116 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=726 ack=827
+0:11:32.149933116 DEBUG (1): t=708761 node=1 TCP_TX peer=4 state=3 flags=8 seq=860 ack=501 len=11 wnd=128
+0:11:32.149933126 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=854
+0:11:32.149933126 DEBUG (1): node=1 APP_WRITE accepted=11 total=854
+0:11:32.426361355 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=827 len=0
+0:11:32.431137439 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=849 ack=501 len=11
+0:11:32.431137439 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=849 len=11 nextExpected=860
+0:11:32.431137439 DEBUG (4): t=709049 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=860 len=0 wnd=117
+0:11:32.431137449 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:32.431137449 DEBUG (4): t=709049 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=860 len=0 wnd=128
+0:11:32.431137449 DEBUG (4): node=4 APP_CONSUMED peer=1 total=759
+0:11:32.619842800 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=838 len=0
+0:11:32.619842800 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=737 ack=838
+0:11:32.619842800 DEBUG (1): t=709242 node=1 TCP_TX peer=4 state=3 flags=8 seq=871 ack=501 len=11 wnd=128
+0:11:32.619842810 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=865
+0:11:32.619842810 DEBUG (1): node=1 APP_WRITE accepted=11 total=865
+0:11:33.062439234 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=838 len=0
+0:11:33.091141113 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=860 ack=501 len=11
+0:11:33.091141113 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=860 len=11 nextExpected=871
+0:11:33.091141113 DEBUG (4): t=709725 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=871 len=0 wnd=117
+0:11:33.091141123 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:33.091141123 DEBUG (4): t=709725 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=871 len=0 wnd=128
+0:11:33.091141123 DEBUG (4): node=4 APP_CONSUMED peer=1 total=770
+0:11:33.112777982 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=849 len=0
+0:11:33.112777982 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=748 ack=849
+0:11:33.112777982 DEBUG (1): t=709747 node=1 TCP_TX peer=4 state=3 flags=8 seq=882 ack=501 len=11 wnd=128
+0:11:33.112777992 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=876
+0:11:33.112777992 DEBUG (1): node=1 APP_WRITE accepted=11 total=876
+0:11:33.401459003 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=849 len=0
+0:11:33.455704006 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=860 len=0
+0:11:33.455704006 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=759 ack=860
+0:11:33.455704006 DEBUG (1): t=710098 node=1 TCP_TX peer=4 state=3 flags=8 seq=893 ack=501 len=11 wnd=128
+0:11:33.455704016 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=887
+0:11:33.455704016 DEBUG (1): node=1 APP_WRITE accepted=11 total=887
+0:11:33.587448514 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=871 ack=501 len=11
+0:11:33.587448514 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=871 len=11 nextExpected=882
+0:11:33.587448514 DEBUG (4): t=710233 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=882 len=0 wnd=117
+0:11:33.587448524 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:33.587448524 DEBUG (4): t=710233 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=882 len=0 wnd=128
+0:11:33.587448524 DEBUG (4): node=4 APP_CONSUMED peer=1 total=781
+0:11:33.811996732 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=860 len=0
+0:11:33.951080592 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=871 len=0
+0:11:33.951080592 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=770 ack=871
+0:11:33.951080592 DEBUG (1): t=710605 node=1 TCP_TX peer=4 state=3 flags=8 seq=904 ack=501 len=11 wnd=128
+0:11:33.951080602 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=898
+0:11:33.951080602 DEBUG (1): node=1 APP_WRITE accepted=11 total=898
+0:11:34.182602286 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=882 ack=501 len=11
+0:11:34.182602286 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=882 len=11 nextExpected=893
+0:11:34.182602286 DEBUG (4): t=710842 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=893 len=0 wnd=117
+0:11:34.182602296 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:34.182602296 DEBUG (4): t=710842 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=893 len=0 wnd=128
+0:11:34.182602296 DEBUG (4): node=4 APP_CONSUMED peer=1 total=792
+0:11:34.349167090 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=871 len=0
+0:11:34.565994656 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=893 ack=501 len=11
+0:11:34.565994656 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=893 len=11 nextExpected=904
+0:11:34.565994656 DEBUG (4): t=711235 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=904 len=0 wnd=117
+0:11:34.565994666 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:34.565994666 DEBUG (4): t=711235 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=904 len=0 wnd=128
+0:11:34.565994666 DEBUG (4): node=4 APP_CONSUMED peer=1 total=803
+0:11:34.730224863 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=882 len=0
+0:11:34.730224863 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=781 ack=882
+0:11:34.730224863 DEBUG (1): t=711403 node=1 TCP_TX peer=4 state=3 flags=8 seq=915 ack=501 len=11 wnd=128
+0:11:34.730224873 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=909
+0:11:34.730224873 DEBUG (1): node=1 APP_WRITE accepted=11 total=909
+0:11:34.843185663 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=882 len=0
+0:11:34.872040047 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=893 len=0
+0:11:34.872040047 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=792 ack=893
+0:11:34.872040047 DEBUG (1): t=711548 node=1 TCP_TX peer=4 state=3 flags=8 seq=926 ack=501 len=11 wnd=128
+0:11:34.872040057 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=920
+0:11:34.872040057 DEBUG (1): node=1 APP_WRITE accepted=11 total=920
+0:11:35.269485709 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=893 len=0
+0:11:35.318497100 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=915 ack=501 len=11
+0:11:35.318497100 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=915 expected=904
+0:11:35.318497100 DEBUG (4): t=712006 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=904 len=0 wnd=128
+0:11:35.513656973 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=926 ack=501 len=11
+0:11:35.513656973 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=926 expected=904
+0:11:35.513656973 DEBUG (4): t=712205 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=904 len=0 wnd=128
+0:11:35.691360737 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=904 len=0
+0:11:35.691360737 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=803 ack=904
+0:11:35.691360737 DEBUG (1): t=712387 node=1 TCP_TX peer=4 state=3 flags=8 seq=937 ack=501 len=11 wnd=128
+0:11:35.691360747 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=931
+0:11:35.691360747 DEBUG (1): node=1 APP_WRITE accepted=11 total=931
+0:11:35.705688736 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=904 len=0
+0:11:35.888489040 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=904 len=0
+0:11:35.982651013 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=904 len=0
+0:11:36.020309829 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=937 ack=501 len=11
+0:11:36.020309829 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=937 expected=904
+0:11:36.020309829 DEBUG (4): t=712724 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=904 len=0 wnd=128
+0:11:36.338913216 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=904 len=0
+0:11:37.505859518 DEBUG (1): t=714246 node=1 TCP_TX peer=4 state=3 flags=8 seq=904 ack=501 len=11 wnd=128
+0:11:37.505859518 DEBUG (1): node=1 GBN_RETRANSMIT offset=803 len=11
+0:11:37.505859518 DEBUG (1): t=714246 node=1 TCP_TX peer=4 state=3 flags=8 seq=915 ack=501 len=11 wnd=128
+0:11:37.505859518 DEBUG (1): node=1 GBN_RETRANSMIT offset=814 len=11
+0:11:37.505859518 DEBUG (1): t=714246 node=1 TCP_TX peer=4 state=3 flags=8 seq=926 ack=501 len=11 wnd=128
+0:11:37.505859518 DEBUG (1): node=1 GBN_RETRANSMIT offset=825 len=11
+0:11:37.505859518 DEBUG (1): t=714246 node=1 TCP_TX peer=4 state=3 flags=8 seq=937 ack=501 len=11 wnd=128
+0:11:37.505859518 DEBUG (1): node=1 GBN_RETRANSMIT offset=836 len=11
+0:11:38.040314116 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=904 ack=501 len=11
+0:11:38.040314116 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=904 len=11 nextExpected=915
+0:11:38.040314116 DEBUG (4): t=714793 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=915 len=0 wnd=117
+0:11:38.040314126 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:38.040314126 DEBUG (4): t=714793 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=915 len=0 wnd=128
+0:11:38.040314126 DEBUG (4): node=4 APP_CONSUMED peer=1 total=814
+0:11:38.306198497 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=915 ack=501 len=11
+0:11:38.306198497 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=915 len=11 nextExpected=926
+0:11:38.306198497 DEBUG (4): t=715065 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=926 len=0 wnd=117
+0:11:38.306198507 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:38.306198507 DEBUG (4): t=715065 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=926 len=0 wnd=128
+0:11:38.306198507 DEBUG (4): node=4 APP_CONSUMED peer=1 total=825
+0:11:38.690033185 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=915 len=0
+0:11:38.690033185 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=814 ack=915
+0:11:38.690033185 DEBUG (1): t=715458 node=1 TCP_TX peer=4 state=3 flags=8 seq=948 ack=501 len=11 wnd=128
+0:11:38.690033195 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=942
+0:11:38.690033195 DEBUG (1): node=1 APP_WRITE accepted=11 total=942
+0:11:38.703445673 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=915 len=0
+0:11:38.754516960 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=926 ack=501 len=11
+0:11:38.754516960 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=926 len=11 nextExpected=937
+0:11:38.754516960 DEBUG (4): t=715524 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=937 len=0 wnd=117
+0:11:38.754516970 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:38.754516970 DEBUG (4): t=715524 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=937 len=0 wnd=128
+0:11:38.754516970 DEBUG (4): node=4 APP_CONSUMED peer=1 total=836
+0:11:38.872848741 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=926 len=0
+0:11:38.872848741 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=825 ack=926
+0:11:38.872848741 DEBUG (1): t=715645 node=1 TCP_TX peer=4 state=3 flags=8 seq=959 ack=501 len=11 wnd=128
+0:11:38.872848751 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=953
+0:11:38.872848751 DEBUG (1): node=1 APP_WRITE accepted=11 total=953
+0:11:39.102905674 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=937 ack=501 len=11
+0:11:39.102905674 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=937 len=11 nextExpected=948
+0:11:39.102905674 DEBUG (4): t=715881 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=948 len=0 wnd=117
+0:11:39.102905684 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:39.102905684 DEBUG (4): t=715881 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=948 len=0 wnd=128
+0:11:39.102905684 DEBUG (4): node=4 APP_CONSUMED peer=1 total=847
+0:11:39.381424199 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=926 len=0
+0:11:39.562484976 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=937 len=0
+0:11:39.562484976 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=836 ack=937
+0:11:39.562484976 DEBUG (1): t=716351 node=1 TCP_TX peer=4 state=3 flags=8 seq=970 ack=501 len=11 wnd=128
+0:11:39.562484986 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=964
+0:11:39.562484986 DEBUG (1): node=1 APP_WRITE accepted=11 total=964
+0:11:39.569519433 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=959 ack=501 len=11
+0:11:39.569519433 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=959 expected=948
+0:11:39.569519433 DEBUG (4): t=716359 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=948 len=0 wnd=128
+0:11:40.291015866 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=937 len=0
+0:11:40.316101467 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=970 ack=501 len=11
+0:11:40.316101467 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=970 expected=948
+0:11:40.316101467 DEBUG (4): t=717123 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=948 len=0 wnd=128
+0:11:40.400406153 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=948 len=0
+0:11:40.400406153 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=847 ack=948
+0:11:40.400406153 DEBUG (1): t=717210 node=1 TCP_TX peer=4 state=3 flags=8 seq=981 ack=501 len=11 wnd=128
+0:11:40.400406163 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=975
+0:11:40.400406163 DEBUG (1): node=1 APP_WRITE accepted=11 total=975
+0:11:40.493347402 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=948 len=0
+0:11:40.700973752 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=948 len=0
+0:11:40.811432075 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=948 len=0
+0:11:40.969101313 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=981 ack=501 len=11
+0:11:40.969101313 DEBUG (4): node=4 DUPLICATE_OR_OUT_OF_ORDER seq=981 expected=948
+0:11:40.969101313 DEBUG (4): t=717792 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=948 len=0 wnd=128
+0:11:41.203918727 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=948 len=0
+0:11:42.144531393 DEBUG (1): t=718996 node=1 TCP_TX peer=4 state=3 flags=8 seq=948 ack=501 len=11 wnd=128
+0:11:42.144531393 DEBUG (1): node=1 GBN_RETRANSMIT offset=847 len=11
+0:11:42.144531393 DEBUG (1): t=718996 node=1 TCP_TX peer=4 state=3 flags=8 seq=959 ack=501 len=11 wnd=128
+0:11:42.144531393 DEBUG (1): node=1 GBN_RETRANSMIT offset=858 len=11
+0:11:42.144531393 DEBUG (1): t=718996 node=1 TCP_TX peer=4 state=3 flags=8 seq=970 ack=501 len=11 wnd=128
+0:11:42.144531393 DEBUG (1): node=1 GBN_RETRANSMIT offset=869 len=11
+0:11:42.144531393 DEBUG (1): t=718996 node=1 TCP_TX peer=4 state=3 flags=8 seq=981 ack=501 len=11 wnd=128
+0:11:42.144531393 DEBUG (1): node=1 GBN_RETRANSMIT offset=880 len=11
+0:11:42.553284045 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=948 ack=501 len=11
+0:11:42.553284045 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=948 len=11 nextExpected=959
+0:11:42.553284045 DEBUG (4): t=719414 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=959 len=0 wnd=117
+0:11:42.553284055 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:42.553284055 DEBUG (4): t=719414 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=959 len=0 wnd=128
+0:11:42.553284055 DEBUG (4): node=4 APP_CONSUMED peer=1 total=858
+0:11:43.075928132 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=959 ack=501 len=11
+0:11:43.075928132 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=959 len=11 nextExpected=970
+0:11:43.075928132 DEBUG (4): t=719949 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=970 len=0 wnd=117
+0:11:43.075928142 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:43.075928142 DEBUG (4): t=719949 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=970 len=0 wnd=128
+0:11:43.075928142 DEBUG (4): node=4 APP_CONSUMED peer=1 total=869
+0:11:43.141784942 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=959 len=0
+0:11:43.141784942 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=858 ack=959
+0:11:43.141784942 DEBUG (1): t=720017 node=1 TCP_TX peer=4 state=3 flags=8 seq=992 ack=501 len=11 wnd=128
+0:11:43.141784952 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=986
+0:11:43.141784952 DEBUG (1): node=1 APP_WRITE accepted=11 total=986
+0:11:43.337051787 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=970 ack=501 len=11
+0:11:43.337051787 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=970 len=11 nextExpected=981
+0:11:43.337051787 DEBUG (4): t=720217 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=981 len=0 wnd=117
+0:11:43.337051797 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:43.337051797 DEBUG (4): t=720217 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=981 len=0 wnd=128
+0:11:43.337051797 DEBUG (4): node=4 APP_CONSUMED peer=1 total=880
+0:11:43.540313982 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=959 len=0
+0:11:43.634766005 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=981 ack=501 len=11
+0:11:43.634766005 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=981 len=11 nextExpected=992
+0:11:43.634766005 DEBUG (4): t=720521 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=992 len=0 wnd=117
+0:11:43.634766015 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:43.634766015 DEBUG (4): t=720521 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=992 len=0 wnd=128
+0:11:43.634766015 DEBUG (4): node=4 APP_CONSUMED peer=1 total=891
+0:11:43.679367325 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=970 len=0
+0:11:43.679367325 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=869 ack=970
+0:11:43.679367325 DEBUG (1): t=720567 node=1 TCP_TX peer=4 state=3 flags=8 seq=1003 ack=501 len=11 wnd=128
+0:11:43.679367335 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=997
+0:11:43.679367335 DEBUG (1): node=1 APP_WRITE accepted=11 total=997
+0:11:43.900238307 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=970 len=0
+0:11:43.973099155 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=992 ack=501 len=11
+0:11:43.973099155 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=992 len=11 nextExpected=1003
+0:11:43.973099155 DEBUG (4): t=720868 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1003 len=0 wnd=117
+0:11:43.973099165 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:43.973099165 DEBUG (4): t=720868 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1003 len=0 wnd=128
+0:11:43.973099165 DEBUG (4): node=4 APP_CONSUMED peer=1 total=902
+0:11:44.308120971 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=981 len=0
+0:11:44.308120971 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=880 ack=981
+0:11:44.308120971 DEBUG (1): t=721211 node=1 TCP_TX peer=4 state=3 flags=8 seq=1014 ack=501 len=11 wnd=128
+0:11:44.308120981 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=1008
+0:11:44.308120981 DEBUG (1): node=1 APP_WRITE accepted=11 total=1008
+0:11:44.539963004 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=981 len=0
+0:11:44.556610476 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1003 ack=501 len=11
+0:11:44.556610476 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1003 len=11 nextExpected=1014
+0:11:44.556610476 DEBUG (4): t=721465 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1014 len=0 wnd=117
+0:11:44.556610486 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:44.556610486 DEBUG (4): t=721465 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1014 len=0 wnd=128
+0:11:44.556610486 DEBUG (4): node=4 APP_CONSUMED peer=1 total=913
+0:11:44.824020610 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=992 len=0
+0:11:44.824020610 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=891 ack=992
+0:11:44.824020610 DEBUG (1): t=721739 node=1 TCP_TX peer=4 state=3 flags=8 seq=1025 ack=501 len=11 wnd=128
+0:11:44.824020620 DEBUG (1): node=1 TRANSPORT_WRITE accepted=11 queuedTotal=1019
+0:11:44.824020620 DEBUG (1): node=1 APP_WRITE accepted=11 total=1019
+0:11:44.971008568 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=992 len=0
+0:11:45.240097415 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1014 ack=501 len=11
+0:11:45.240097415 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1014 len=11 nextExpected=1025
+0:11:45.240097415 DEBUG (4): t=722165 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1025 len=0 wnd=117
+0:11:45.240097425 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:45.240097425 DEBUG (4): t=722165 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1025 len=0 wnd=128
+0:11:45.240097425 DEBUG (4): node=4 APP_CONSUMED peer=1 total=924
+0:11:45.252044941 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1003 len=0
+0:11:45.252044941 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=902 ack=1003
+0:11:45.252044941 DEBUG (1): t=722178 node=1 TCP_TX peer=4 state=3 flags=8 seq=1036 ack=501 len=11 wnd=128
+0:11:45.252044951 DEBUG (1): node=1 TRANSPORT_WRITE accepted=5 queuedTotal=1024
+0:11:45.252044951 DEBUG (1): node=1 APP_WRITE accepted=5 total=1024
+0:11:45.252044951 DEBUG (1): node=1 APP_ALL_BYTES_ACCEPTED total=1024
+0:11:45.580368304 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1003 len=0
+0:11:45.609009165 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1025 ack=501 len=11
+0:11:45.609009165 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1025 len=11 nextExpected=1036
+0:11:45.609009165 DEBUG (4): t=722543 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1036 len=0 wnd=117
+0:11:45.609009175 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:45.609009175 DEBUG (4): t=722543 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1036 len=0 wnd=128
+0:11:45.609009175 DEBUG (4): node=4 APP_CONSUMED peer=1 total=935
+0:11:45.869125595 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1014 len=0
+0:11:45.869125595 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=913 ack=1014
+0:11:45.869125595 DEBUG (1): t=722809 node=1 TCP_TX peer=4 state=3 flags=8 seq=1047 ack=501 len=11 wnd=128
+0:11:45.955719265 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1014 len=0
+0:11:46.033417155 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1036 ack=501 len=11
+0:11:46.033417155 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1036 len=11 nextExpected=1047
+0:11:46.033417155 DEBUG (4): t=722978 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1047 len=0 wnd=117
+0:11:46.033417165 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:46.033417165 DEBUG (4): t=722978 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1047 len=0 wnd=128
+0:11:46.033417165 DEBUG (4): node=4 APP_CONSUMED peer=1 total=946
+0:11:46.041046389 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1025 len=0
+0:11:46.041046389 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=924 ack=1025
+0:11:46.041046389 DEBUG (1): t=722986 node=1 TCP_TX peer=4 state=3 flags=8 seq=1058 ack=501 len=11 wnd=128
+0:11:46.293762443 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1025 len=0
+0:11:46.341751339 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1036 len=0
+0:11:46.341751339 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=935 ack=1036
+0:11:46.341751339 DEBUG (1): t=723293 node=1 TCP_TX peer=4 state=3 flags=8 seq=1069 ack=501 len=11 wnd=128
+0:11:46.409103779 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1047 ack=501 len=11
+0:11:46.409103779 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1047 len=11 nextExpected=1058
+0:11:46.409103779 DEBUG (4): t=723362 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1058 len=0 wnd=117
+0:11:46.409103789 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:46.409103789 DEBUG (4): t=723362 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1058 len=0 wnd=128
+0:11:46.409103789 DEBUG (4): node=4 APP_CONSUMED peer=1 total=957
+0:11:46.701645158 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1036 len=0
+0:11:46.715881721 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1058 ack=501 len=11
+0:11:46.715881721 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1058 len=11 nextExpected=1069
+0:11:46.715881721 DEBUG (4): t=723677 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1069 len=0 wnd=117
+0:11:46.715881731 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:46.715881731 DEBUG (4): t=723677 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1069 len=0 wnd=128
+0:11:46.715881731 DEBUG (4): node=4 APP_CONSUMED peer=1 total=968
+0:11:46.936874600 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1047 len=0
+0:11:46.936874600 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=946 ack=1047
+0:11:46.936874600 DEBUG (1): t=723903 node=1 TCP_TX peer=4 state=3 flags=8 seq=1080 ack=501 len=11 wnd=128
+0:11:47.111114749 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1047 len=0
+0:11:47.375610606 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1058 len=0
+0:11:47.375610606 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=957 ack=1058
+0:11:47.375610606 DEBUG (1): t=724352 node=1 TCP_TX peer=4 state=3 flags=8 seq=1091 ack=501 len=11 wnd=128
+0:11:47.463760756 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1069 ack=501 len=11
+0:11:47.463760756 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1069 len=11 nextExpected=1080
+0:11:47.463760756 DEBUG (4): t=724442 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1080 len=0 wnd=117
+0:11:47.463760766 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:47.463760766 DEBUG (4): t=724442 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1080 len=0 wnd=128
+0:11:47.463760766 DEBUG (4): node=4 APP_CONSUMED peer=1 total=979
+0:11:47.546585331 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1058 len=0
+0:11:47.791488880 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1069 len=0
+0:11:47.791488880 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=968 ack=1069
+0:11:47.791488880 DEBUG (1): t=724778 node=1 TCP_TX peer=4 state=3 flags=8 seq=1102 ack=501 len=11 wnd=128
+0:11:48.089996705 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1080 ack=501 len=11
+0:11:48.089996705 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1080 len=11 nextExpected=1091
+0:11:48.089996705 DEBUG (4): t=725084 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1091 len=0 wnd=117
+0:11:48.089996715 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:48.089996715 DEBUG (4): t=725084 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1091 len=0 wnd=128
+0:11:48.089996715 DEBUG (4): node=4 APP_CONSUMED peer=1 total=990
+0:11:48.104660308 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1069 len=0
+0:11:48.440628413 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1091 ack=501 len=11
+0:11:48.440628413 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1091 len=11 nextExpected=1102
+0:11:48.440628413 DEBUG (4): t=725443 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1102 len=0 wnd=117
+0:11:48.440628423 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:48.440628423 DEBUG (4): t=725443 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1102 len=0 wnd=128
+0:11:48.440628423 DEBUG (4): node=4 APP_CONSUMED peer=1 total=1001
+0:11:48.659927593 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1080 len=0
+0:11:48.659927593 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=979 ack=1080
+0:11:48.659927593 DEBUG (1): t=725667 node=1 TCP_TX peer=4 state=3 flags=8 seq=1113 ack=501 len=11 wnd=128
+0:11:48.689392464 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1102 ack=501 len=11
+0:11:48.689392464 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1102 len=11 nextExpected=1113
+0:11:48.689392464 DEBUG (4): t=725697 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1113 len=0 wnd=117
+0:11:48.689392474 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:48.689392474 DEBUG (4): t=725697 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1113 len=0 wnd=128
+0:11:48.689392474 DEBUG (4): node=4 APP_CONSUMED peer=1 total=1012
+0:11:48.856582893 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1080 len=0
+0:11:48.884414933 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1091 len=0
+0:11:48.884414933 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=990 ack=1091
+0:11:48.884414933 DEBUG (1): t=725897 node=1 TCP_TX peer=4 state=3 flags=8 seq=1124 ack=501 len=1 wnd=128
+0:11:48.991699491 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1091 len=0
+0:11:49.059524703 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1102 len=0
+0:11:49.059524703 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=1001 ack=1102
+0:11:49.146484749 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1113 ack=501 len=11
+0:11:49.146484749 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1113 len=11 nextExpected=1124
+0:11:49.146484749 DEBUG (4): t=726165 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1124 len=0 wnd=117
+0:11:49.146484759 DEBUG (4): node=4 TRANSPORT_READ consumed=11 remaining=0
+0:11:49.146484759 DEBUG (4): t=726165 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1124 len=0 wnd=128
+0:11:49.146484759 DEBUG (4): node=4 APP_CONSUMED peer=1 total=1023
+0:11:49.149948369 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1102 len=0
+0:11:49.436828886 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1113 len=0
+0:11:49.436828886 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=1012 ack=1113
+0:11:49.641586561 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1113 len=0
+0:11:49.836182047 DEBUG (4): node=4 TCP_RX peer=1 flags=8 seq=1124 ack=501 len=1
+0:11:49.836182047 DEBUG (4): node=4 DATA_RECEIVED peer=1 seq=1124 len=1 nextExpected=1125
+0:11:49.836182047 DEBUG (4): t=726872 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1125 len=0 wnd=127
+0:11:49.836182057 DEBUG (4): node=4 TRANSPORT_READ consumed=1 remaining=0
+0:11:49.836182057 DEBUG (4): t=726872 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1125 len=0 wnd=128
+0:11:49.836182057 DEBUG (4): node=4 APP_CONSUMED peer=1 total=1024
+0:11:49.923019677 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1124 len=0
+0:11:49.923019677 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=1023 ack=1124
+0:11:50.394973976 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1125 len=0
+0:11:50.394973976 DEBUG (1): node=1 DATA_ACKNOWLEDGED bytes=1024 ack=1125
+0:11:50.591186785 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1125 len=0
+0:47:24.885742484 DEBUG (1): A Command has been Issued.
+0:47:24.885742484 DEBUG (1): Command Type: Client Close
+0:47:24.885742484 DEBUG (1): Node 1 requesting TCP close with Node 4
+0:47:24.885742484 DEBUG (1): node=1 CLOSE_REQUESTED peer=4
+0:47:24.885742484 DEBUG (1): t=2913163 node=1 TCP_TX peer=4 state=4 flags=4 seq=1125 ack=501 len=0 wnd=128
+0:47:24.885742484 DEBUG (1): node=1 FIN_SENT peer=4 state=4
+0:47:25.307251330 DEBUG (4): node=4 TCP_RX peer=1 flags=4 seq=1125 ack=501 len=0
+0:47:25.307251330 DEBUG (4): t=2913594 node=4 TCP_TX peer=1 state=3 flags=2 seq=501 ack=1126 len=0 wnd=128
+0:47:25.307251330 DEBUG (4): node=4 FIN_RECEIVED peer=1 state=3
+0:47:25.307251330 DEBUG (4): t=2913594 node=4 TCP_TX peer=1 state=7 flags=4 seq=501 ack=1126 len=0 wnd=128
+0:47:25.307251330 DEBUG (4): node=4 FIN_SENT peer=1 state=7
+0:47:25.684128068 DEBUG (1): node=1 TCP_RX peer=4 flags=2 seq=501 ack=1126 len=0
+0:47:25.684128068 DEBUG (1): node=1 FIN_WAIT_2 peer=4
+0:47:26.165787002 DEBUG (1): node=1 TCP_RX peer=4 flags=4 seq=501 ack=1126 len=0
+0:47:26.165787002 DEBUG (1): t=2914473 node=1 TCP_TX peer=4 state=5 flags=2 seq=1126 ack=502 len=0 wnd=128
+0:47:26.165787002 DEBUG (1): node=1 TEST_DROP_FINAL_ACK ack=502
+0:47:26.165787002 DEBUG (1): node=1 FIN_RECEIVED peer=4 state=5
+0:47:26.165787002 DEBUG (1): node=1 CONNECTION_CLOSING peer=4
+0:47:27.166992730 DEBUG (4): t=2915499 node=4 RETRANSMIT peer=1 flags=4 seq=501 retry=1
+0:47:27.166992730 DEBUG (4): t=2915499 node=4 TCP_TX peer=1 state=7 flags=4 seq=501 ack=1126 len=0 wnd=128
+0:47:27.798172264 DEBUG (1): node=1 TCP_RX peer=4 flags=4 seq=501 ack=1126 len=0
+0:47:27.798172264 DEBUG (1): t=2916145 node=1 TCP_TX peer=4 state=8 flags=2 seq=1126 ack=502 len=0 wnd=128
+0:47:27.798172264 DEBUG (1): node=1 DUPLICATE_FIN peer=4
+0:47:28.431457877 DEBUG (4): node=4 TCP_RX peer=1 flags=2 seq=1126 ack=502 len=0
+0:47:28.431457877 DEBUG (4): node=4 CONNECTION_CLOSING peer=1
+0:47:47.183593893 DEBUG (1): node=1 CONNECTION_CLOSED peer=4
+0:47:47.918945855 DEBUG (4): node=4 CONNECTION_CLOSED peer=1

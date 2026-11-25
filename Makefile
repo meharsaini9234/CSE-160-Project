@@ -12,6 +12,10 @@ CFLAGS+=$(INCLUDE)
 
 #########Flow control test#############
 #CFLAGS += -DTEST_ZERO_WINDOW
+#CFLAGS += -DTEST_DROP_WINDOW_REOPEN
+
+#########Connection close loss test#######
+CFLAGS += -DTEST_DROP_FINAL_ACK
 
 include $(TINYOS_ROOT_DIR)/Makefile.include
 

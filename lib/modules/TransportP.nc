@@ -59,6 +59,7 @@ implementation{
         uint8_t pendingLength;
         uint8_t pendingData[TCP_MAX_DATA];
         uint8_t closeRequested;
+        uint8_t peerFinReceived;
 
         uint8_t retries;
         uint8_t elapsed;
@@ -237,7 +238,7 @@ implementation{
             return;
         }
 
-        if(c->closeRequested && c->sendEnd == c->transferBytes && c->sendBase == c->sendEnd && c->sendNextOffset == c->sendEnd){
+        if(c->closeRequested && c->sendBase == c->sendEnd && c->sendNextOffset == c->sendEnd){
             sendFin(c);
             return;
         }
@@ -533,7 +534,7 @@ implementation{
             }
             return;
         }
-            // Respond to a window probe with the current receive window
+
         if(seg->flags == TCP_PROBE){
             if(c->state == ST_ESTABLISHED){
                 dbg(TRANSPORT_CHANNEL,"node=%u WINDOW_PROBE_RECEIVED wnd=%u\n", TOS_NODE_ID,TCP_BUFFER_SIZE - c->recvLength);
@@ -571,7 +572,6 @@ implementation{
         if(seg->flags == TCP_ACK){
             uint16_t ackedOffset;
 
-            // DATA ACK and advertised window handling
             if(c->state == ST_ESTABLISHED){
                 // Reject ACKs outside the transmitted range
                 if(seg->ack < c->sndUna || seg->ack > c->sndNext){
@@ -586,7 +586,6 @@ implementation{
 
                 c->peerWindow = seg->window;
 
-                // Advance the sliding window
                 if(ackedOffset > c->sendBase){
 
                 c->sendBase = ackedOffset;
@@ -600,14 +599,10 @@ implementation{
                 signal MidTransport.writeReady(c->remoteAddress, c->localPort, c->remotePort);
                 }
 
-                // Resume sending even if the ACK number
-                // has not changed but the window has reopened
                 sendNextData(c);
-
                 return;
             }
 
-            // Existing control-packet ACK handling (FIN)
             if(!c->waiting){
                 return;
             }
@@ -621,9 +616,15 @@ implementation{
                 c->waiting = FALSE;
 
                 if(c->state == ST_FIN_WAIT_1){
-                    c->state = ST_FIN_WAIT_2;
-                    dbg(TRANSPORT_CHANNEL, "node=%u FIN_WAIT_2 peer=%u\n", TOS_NODE_ID, packet->src);
-                }
+
+                    if(c->peerFinReceived){
+                        enterLinger(c);
+                    }
+                    else{
+                        c->state = ST_FIN_WAIT_2;
+                        dbg(TRANSPORT_CHANNEL, "node=%u FIN_WAIT_2 peer=%u\n", TOS_NODE_ID, packet->src);
+                    }
+                }           
                 else if(c->state == ST_LAST_ACK){
                     enterLinger(c);
                 }
@@ -635,18 +636,26 @@ implementation{
             if(seg->seq == c->rcvNext){
                 c->rcvNext++;
                 sendAck(c);
-                dbg(TRANSPORT_CHANNEL, "node=%u FIN_RECEIVED peer=%u\n", TOS_NODE_ID, packet->src);
+                dbg(TRANSPORT_CHANNEL, "node=%u FIN_RECEIVED peer=%u state=%u\n", TOS_NODE_ID, packet->src, c->state);
 
                 if(c->state == ST_ESTABLISHED){
                     c->state = ST_CLOSE_WAIT;
                     sendFin(c);
                 }
+                else if(c->state == ST_FIN_WAIT_1){
+                    c->peerFinReceived = TRUE;
+                    dbg(TRANSPORT_CHANNEL, "node=%u SIMULTANEOUS_CLOSE peer=%u\n", TOS_NODE_ID, packet->src);
+                }
                 else if(c->state == ST_FIN_WAIT_2){
                     enterLinger(c);
                 }
             }
-            else{
+            else if(seg->seq < c->rcvNext){
                 sendAck(c);
+                dbg(TRANSPORT_CHANNEL, "node=%u DUPLICATE_FIN peer=%u\n", TOS_NODE_ID, packet->src);
+                if(c->state == ST_LINGER){
+                    c->lingerTicks = 0;
+                }
             }
             return;
         }

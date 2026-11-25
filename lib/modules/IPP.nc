@@ -12,31 +12,49 @@ module IPP{
 
 implementation{
     uint8_t testDataDropped = FALSE;
+    uint8_t testCloseAckDropped = FALSE;
+    uint8_t testSawZeroWindow = FALSE;
+    uint8_t testReopenDropped = FALSE;
+
     void forward(pack msg){
         uint16_t nextHop;
         uint8_t cost;
         error_t result;
 
+        #ifdef TEST_DROP_FINAL_ACK
+
+            if(TOS_NODE_ID == 1 && !testCloseAckDropped && msg.protocol == PROTOCOL_TCP && msg.src == 1 && msg.dest == 4 && msg.payload[0] == 15 && msg.payload[1] == 25 && msg.payload[2] == TCP_ACK && msg.payload[5] == 1 && msg.payload[6] == 246){
+                testCloseAckDropped = TRUE;
+                dbg(TRANSPORT_CHANNEL, "node=%u TEST_DROP_FINAL_ACK ack=502\n", TOS_NODE_ID);
+                return;
+            }
+        #endif
+
+        #ifdef TEST_DROP_WINDOW_REOPEN
+
+            if(TOS_NODE_ID == 4 && msg.protocol == PROTOCOL_TCP && msg.src == 4 && msg.dest == 1 && msg.payload[0] == 25 && msg.payload[1] == 15 && msg.payload[2] == TCP_ACK){
+                uint8_t window = msg.payload[7];
+                if(window == 0){
+                    testSawZeroWindow = TRUE;
+                }
+
+                if(testSawZeroWindow && !testReopenDropped && window > 0){
+                    testReopenDropped = TRUE;
+
+                    dbg(TRANSPORT_CHANNEL, "node=%u TEST_DROP_WINDOW_REOPEN wnd=%u\n", TOS_NODE_ID, window);
+                    return;
+                }
+            }
+        #endif
+
         #ifdef TEST_DROP_TCP_DATA
-    // Drop the second DATA segment from Node 1 to Node 4
-    if(TOS_NODE_ID == 1 &&
-       !testDataDropped &&
-       msg.protocol == PROTOCOL_TCP &&
-       msg.src == 1 &&
-       msg.dest == 4 &&
-       msg.payload[2] == TCP_DATA &&
-       msg.payload[3] == 0 &&
-       msg.payload[4] == 112){
+            if(TOS_NODE_ID == 1 && !testDataDropped && msg.protocol == PROTOCOL_TCP && msg.src == 1 && msg.dest == 4 && msg.payload[2] == TCP_DATA && msg.payload[3] == 0 && msg.payload[4] == 112){
+                testDataDropped = TRUE;
 
-        testDataDropped = TRUE;
-
-        dbg(TRANSPORT_CHANNEL,
-            "node=%u TEST_DROP_DATA seq=112\n",
-            TOS_NODE_ID);
-
-        return;
-    }
-#endif
+                dbg(TRANSPORT_CHANNEL, "node=%u TEST_DROP_DATA seq=112\n", TOS_NODE_ID);
+                return;
+            }
+        #endif
 
         if(!call Routing.getRoute(msg.dest, &nextHop, &cost) || cost >= 16 || nextHop == AM_BROADCAST_ADDR || nextHop == TOS_NODE_ID){
             dbg(ROUTING_CHANNEL, "Node %u dropping packet src=%u dest=%u seq=%u: no valid route\n", TOS_NODE_ID, msg.src, msg.dest, msg.seq);
