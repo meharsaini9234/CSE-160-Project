@@ -27,9 +27,7 @@ sent to this function, and based on the parameters passed, an event is fired.
 included is a basic queuing mechanism and some small delays to prevent collisions. Do
 not change the delays. You can duplicate SimpleSendC to use a different AM type or
 possibly rewire it.
-* **Transport** - There is only the interface of Transport included. The actual
-implementation of the Transport layer is left to the student as an exercise. For
-CSE160 this will be Project 3 so don't worry about it now.
+* **Transport** - Project 3 implements reliable transport, connection management, sliding-window transmission, Go-Back-N retransmission, receiver flow control, and graceful connection termination.
 * **NeighborDiscovery** - Identifies directly connected neighbors using a HELLO, ACK, and CONFIRM handshake.
 * **RoutingTable** - Maintains routing information, including destinations, next hops, costs, and route validity.
 * **Routing** - Provides routing information to the IP module for forwarding packets.
@@ -135,3 +133,274 @@ python tests/test6_ttl.py
 * **Test 4** - Includes poison reverse testing with advertised route costs.
 * **Test 5** - Includes routing table capacity and multi-packet advertisement testing.
 * **Test 6** - The packet-loss simulation recorded packet-loss events, and all three ping requests successfully received replies. The TTL simulation sent a ping from node 1 to node 4 with TTL 2 on a three-hop path; node 2 forwarded it with TTL 1 and node 3 dropped it as expired, so no reply was returned and the packet did not circulate.
+
+---
+
+# Project 3 - Reliable Transport
+
+## Overview
+
+Project 3 extends the Project 2 Distance Vector routing implementation with a reliable, connection-oriented transport protocol.
+
+The implementation supports:
+
+* Three-way connection establishment.
+* Reliable multi-hop data transfer.
+* Sliding-window transmission and cumulative acknowledgments.
+* Go-Back-N retransmission.
+* Receiver-advertised flow control.
+* Zero-window probing and window reopening.
+* Multiple independent connection records.
+* Graceful connection termination.
+* Retry limits and failed connection cleanup.
+* Incremental data generation and application consumption.
+
+## Main Implementation Files
+
+* `lib/modules/TransportP.nc` - Transport protocol implementation.
+* `lib/modules/IPP.nc` - IP forwarding and intentional packet-loss testing.
+* `lib/interfaces/MidTransport.nc` - Transport interface.
+* `includes/transportPacket.h` - Packet format and transport constants.
+* `Node.nc` - Application commands and transport integration.
+* `TestSim.py` - Simulation command helpers.
+
+## Build Instructions
+
+Run from the project root inside the TinyOS Docker environment.
+
+```bash
+make clean
+make micaz sim
+```
+
+The normal build does not enable intentional packet dropping.
+
+## Simulation Commands
+
+```python
+cmdTestServer(serverAddress, listenPort=20)
+
+cmdTestClient(clientAddress, serverAddress=4,
+              srcPort=10, destPort=20, transferBytes=1024)
+
+cmdClientClose(clientAddress, serverAddress,
+               srcPort, destPort)
+
+cmdPauseReceiver(receiverAddress, clientAddress,
+                 clientPort, serverPort)
+
+cmdResumeReceiver(receiverAddress, clientAddress,
+                  clientPort, serverPort)
+```
+
+The server command starts a listener on the specified port.
+
+The client command establishes a connection and transfers the
+specified number of bytes. Byte k contains k modulo 256.
+
+The close command requests graceful connection termination.
+
+The pause and resume commands control application consumption
+for a specific receiver connection to test flow control.
+
+## Transport Packet Format
+
+| Field | Size |
+|---|---:|
+| Source port | 1 byte |
+| Destination port | 1 byte |
+| Flags | 1 byte |
+| Sequence number | 2 bytes |
+| Acknowledgment number | 2 bytes |
+| Advertised window | 1 byte |
+| Data length | 1 byte |
+| Total transport header | 9 bytes |
+| Maximum application data | 11 bytes |
+
+The network packet has an 8-byte network header and a 20-byte
+payload. The 9-byte transport header leaves 11 bytes for
+application data within the 28-byte packet.
+
+## Transport Constants
+
+| Parameter | Value |
+|---|---:|
+| Send buffer | 128 bytes |
+| Receive buffer | 128 bytes |
+| Maximum sender window | 44 bytes |
+| Maximum connection records | 2 |
+| Maximum sequence number | 65535 |
+| Client initial sequence number | 100 |
+| Server initial sequence number | 500 |
+| Maximum supported transfer | 65033 bytes |
+| Transport timer interval | 250 ms |
+| Retransmission timeout | 2000 ms |
+| Maximum retransmission retries | 8 |
+| Connection linger interval | 20000 ms |
+| FIN wait interval | 40000 ms |
+| Maximum probe retries | 8 |
+
+The implementation uses bounded buffers rather than allocating
+an array equal to the requested transfer size.
+
+## Test Environment
+
+Most transport tests use `dv_line4.topo`, a four-node line
+topology. Communication from node 1 to node 4 crosses three hops.
+
+* `no_noise.txt` - Standard low-loss test environment.
+* `lossy_noise.txt` - Noisy network test environment.
+
+## Standard Transport Tests
+
+Compile using the normal build before running these tests.
+
+```bash
+python tests/test3_midreview.py
+python tests/test3_parameters.py
+python tests/test3_close.py
+python tests/test3_flow_control.py
+python tests/test3_multiple.py
+python tests/test3_unreachable.py
+python tests/test3_noisy.py
+```
+
+## Intentional Packet-Loss Tests
+
+The following helper rebuilds the simulator with a selected
+packet-loss test flag.
+
+```bash
+build_loss() {
+    make clean
+    make micaz sim CFLAGS="-DTOSH_DATA_LENGTH=28 -D$1 -IdataStructures -IdataStructures/interfaces/ -IdataStructures/modules -Ilib/interfaces -Ilib/modules"
+}
+```
+
+Run each scenario separately:
+
+### DATA Packet Loss
+
+```bash
+build_loss TEST_DROP_TCP_DATA
+python tests/test3_packet_loss.py
+```
+
+### SYN Loss
+
+```bash
+build_loss TEST_DROP_SYN
+python tests/test3_close.py
+```
+
+### SYN-ACK Loss
+
+```bash
+build_loss TEST_DROP_SYN_ACK
+python tests/test3_close.py
+```
+
+### Handshake ACK Loss
+
+```bash
+build_loss TEST_DROP_HANDSHAKE_ACK
+python tests/test3_close.py
+```
+
+### DATA ACK Loss
+
+```bash
+build_loss TEST_DROP_DATA_ACK
+python tests/test3_close.py
+```
+
+### Closing ACK Loss
+
+```bash
+build_loss TEST_DROP_FINAL_ACK
+python tests/test3_close_loss.py
+```
+
+### Lost Window Reopening Update
+
+```bash
+build_loss TEST_DROP_WINDOW_REOPEN
+python tests/test3_flow_control.py
+```
+
+After packet-loss testing, restore the normal build:
+
+```bash
+make clean
+make micaz sim
+```
+
+## Project 3 Validation Results
+
+| Scenario | Result |
+|---|---|
+| Normal transfer | PASS - 1024 bytes, zero mismatches |
+| Configurable addresses and ports | PASS - 1024 bytes, zero mismatches |
+| Graceful connection close | PASS - both endpoints released |
+| DATA packet loss | PASS - Go-Back-N recovery |
+| SYN loss | PASS - handshake recovered |
+| SYN-ACK loss | PASS - handshake recovered |
+| Handshake ACK loss | PASS - transfer completed |
+| DATA ACK loss | PASS - transfer completed |
+| Closing ACK loss | PASS - connection cleanup completed |
+| Zero-window flow control | PASS - zero window and probes observed |
+| Lost window reopening update | PASS - window recovered through probing |
+| Multiple connections | PASS - two independent 1024-byte transfers |
+| Unreachable server | PASS - retry limit and failure cleanup |
+| Noisy network | PASS - 1024 bytes, zero mismatches |
+
+All successful transfer scenarios delivered 1024 bytes without
+data mismatches.
+
+The multiple-connection test delivered 1024 bytes from each
+client to the same server, using different connection records.
+All four endpoint records were successfully released.
+
+The unreachable-server test attempted to connect to a node
+without an active listener. After eight SYN retransmissions,
+the client reported failure and released its connection record.
+No application bytes were accepted.
+
+The noisy-network test recorded 12 Go-Back-N segment
+retransmissions and successfully delivered all 1024 bytes.
+Both endpoints were released without failure.
+
+## Example Validation Output
+
+Successful transfer:
+
+```text
+APP_CONSUMED total=1024 expected=1024 mismatches=0
+```
+
+Successful client cleanup:
+
+```text
+CONNECTION_RELEASED state=8 failed=0 accepted=1024 acknowledged=1024 received=0 unread=0
+```
+
+Successful server cleanup:
+
+```text
+CONNECTION_RELEASED state=8 failed=0 accepted=0 acknowledged=0 received=1024 unread=0
+```
+
+Expected failure when no server is listening:
+
+```text
+CONNECTION_FAILED peer=4 retry limit reached
+APP_TRANSFER_FAILED peer=4 accepted=0 expected=1024
+CONNECTION_RELEASED state=9 failed=1 accepted=0 acknowledged=0 received=0 unread=0
+```
+
+## Limitations
+
+The implementation uses fixed-size buffers, a maximum of two
+connection records per node, and a bounded 16-bit sequence
+number range. It uses a fixed sender window rather than
+dynamic congestion-window adjustment.
