@@ -20,6 +20,7 @@ class TestSim:
     CMD_PAUSE_RECEIVER = 10
     CMD_RESUME_RECEIVER = 11
     CMD_EXPECT_TRANSFER = 12
+    TCP_MAX_TRANSFER = 65033
 
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
@@ -154,7 +155,7 @@ class TestSim:
         if not (0 <= srcPort <= 255 and 0 <= destPort <= 255):
             raise ValueError("Invalid port")
 
-        if not (0 <= transferBytes <= 65535):
+        if not (0 <= transferBytes <= self.TCP_MAX_TRANSFER):
             raise ValueError("Invalid transfer length")
 
         payload = "".join([chr((serverAddress >> 8) & 0xFF), chr(serverAddress & 0xFF), chr(srcPort), chr(destPort), chr((transferBytes >> 8) & 0xFF), chr(transferBytes & 0xFF)])
@@ -175,7 +176,7 @@ class TestSim:
         self.sendCMD(self.CMD_RESUME_RECEIVER, receiverAddress, payload)
 
     def cmdExpectTransfer(self, receiverAddress, clientAddress, clientPort, serverPort, expectedBytes):
-        if not (0 <= expectedBytes <= 65535):
+        if not (0 <= expectedBytes <= self.TCP_MAX_TRANSFER):
             raise ValueError("Invalid expected transfer length")
         payload = "".join([chr((clientAddress >> 8) & 0xFF), chr(clientAddress & 0xFF), chr(serverPort), chr(clientPort), chr((expectedBytes >> 8) & 0xFF), chr(expectedBytes & 0xFF)])
         self.sendCMD(self.CMD_EXPECT_TRANSFER, receiverAddress, payload)

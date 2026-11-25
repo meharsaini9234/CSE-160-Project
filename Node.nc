@@ -12,6 +12,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
+#include "includes/transportPacket.h"
 
 module Node {
    uses interface Boot;
@@ -228,6 +229,11 @@ implementation {
    }
 
    event void CommandHandler.setTestClient(uint16_t serverAddress, uint8_t srcPort, uint8_t destPort, uint16_t transferBytes){
+      if(transferBytes > TCP_MAX_TRANSFER){
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_INVALID_TRANSFER_LENGTH bytes=%u max=%u\n", TOS_NODE_ID, transferBytes, TCP_MAX_TRANSFER);
+         return;
+      }
+
       if(testActive) {
          dbg(TRANSPORT_CHANNEL, "node=%u APP_BUSY\n", TOS_NODE_ID);
          return;
@@ -443,7 +449,13 @@ implementation {
    }
 
    event void CommandHandler.setExpectTransfer(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint16_t expectedBytes){
-      test_receiver_t* r = getTestReceiver(remoteAddress, localPort, remotePort);
+      test_receiver_t* r;
+      if(expectedBytes > TCP_MAX_TRANSFER){
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_INVALID_EXPECTED_LENGTH bytes=%u max=%u\n", TOS_NODE_ID, expectedBytes, TCP_MAX_TRANSFER);
+         return;
+      }
+
+      r = getTestReceiver(remoteAddress, localPort, remotePort);
 
       if(r == NULL){
          dbg(TRANSPORT_CHANNEL, "node=%u APP_EXPECT_FAILED no receiver slot\n", TOS_NODE_ID);

@@ -340,6 +340,11 @@ implementation{
             return;
         }
 
+        if(c->sndNext >= TCP_MAX_SEQUENCE){
+            failConnection(c);
+            return;
+        }
+
         seq = c->sndNext;
 
         if(c->state == ST_ESTABLISHED){
@@ -399,18 +404,18 @@ implementation{
         c->localPort = localPort;
         c->remotePort = remotePort;
         c->state = ST_SYN_SENT;
-        c->sndUna = 100;
-        c->sndNext = 100;
-        c->dataStartSeq = 101;
+        c->sndUna = TCP_CLIENT_ISN;
+        c->sndNext = TCP_CLIENT_ISN;
+        c->dataStartSeq = TCP_CLIENT_ISN + 1
         c->sendBase = 0;
         c->sendEnd = 0;
         c->peerWindow = TCP_BUFFER_SIZE;
         c->sendNextOffset = 0;
 
         dbg(TRANSPORT_CHANNEL, "node=%u SYN_SENT peer=%u\n", TOS_NODE_ID, remoteAddress);
-        transmit(c, TCP_SYN, 100, 0, NULL, 0, TRUE);
+        transmit(c, TCP_SYN, TCP_CLIENT_ISN, 0, NULL, 0, TRUE);
         if(c->pendingSent){
-            c->sndNext = 101;
+            c->sndNext = TCP_CLIENT_ISN + 1;
         }
         return SUCCESS;
     }
@@ -418,6 +423,7 @@ implementation{
     command uint8_t MidTransport.write(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint8_t* data, uint8_t length){
         connection_t* c;
         uint16_t available;
+        uint16_t sequenceRemaining;
         uint8_t accepted;
         uint8_t i;
 
@@ -427,7 +433,17 @@ implementation{
             return 0;
         }
 
+        if(c->sendEnd >= TCP_MAX_TRANSFER){
+            return 0;
+        }
+
+        sequenceRemaining = TCP_MAX_TRANSFER - c->sendEnd;
+
         available = TCP_BUFFER_SIZE - (c->sendEnd - c->sendBase);
+
+        if(available > sequenceRemaining){
+            available = sequenceRemaining;
+        }
 
         accepted = length;
 
@@ -531,6 +547,14 @@ implementation{
             return;
         }
 
+        if(seg->flags == TCP_SYN && seg->seq != TCP_CLIENT_ISN){
+            return;
+        }
+
+        if(seg->flags == (TCP_SYN | TCP_ACK) && seg->seq != TCP_SERVER_ISN){
+            return;
+        }
+
         c = findConnection(packet->src, seg->destPort, seg->srcPort);
 
         if(c == NULL){
@@ -549,9 +573,9 @@ implementation{
             c->remotePort = seg->srcPort;
             c->state = ST_SYN_RCVD;
             c->rcvNext = seg->seq + 1;
-            c->sndUna = 500;
-            c->sndNext = 500;
-            c->dataStartSeq = 501;
+            c->sndUna = TCP_SERVER_ISN;
+            c->sndNext = TCP_SERVER_ISN;
+            c->dataStartSeq = TCP_SERVER_ISN + 1;
             c->peerWindow = seg->window;
             c->sendBase = 0;
             c->sendEnd = 0;
@@ -559,9 +583,9 @@ implementation{
 
             dbg(TRANSPORT_CHANNEL, "node=%u SYN_RECEIVED peer=%u\n", TOS_NODE_ID, packet->src);
 
-            transmit(c, TCP_SYN | TCP_ACK, 500, c->rcvNext, NULL, 0, TRUE);
+            transmit(c, TCP_SYN | TCP_ACK, TCP_SERVER_ISN, c->rcvNext, NULL, 0, TRUE);
             if(c->pendingSent){
-                c->sndNext = 501;
+                c->sndNext = TCP_SERVER_ISN + 1;
             }
             return;
         }
@@ -631,12 +655,13 @@ implementation{
                 return;
             }
 
-            if(seg->seq == c->rcvNext && seg->length <= TCP_BUFFER_SIZE - c->recvLength){
+            if(seg->seq == c->rcvNext && seg->length <= TCP_BUFFER_SIZE - c->recvLength && (uint32_t)c->rcvNext + seg->length < TCP_MAX_SEQUENCE && (uint32_t)c->receivedTotal + seg->length <= TCP_MAX_TRANSFER){
                 for (i = 0; i < seg->length; i++){
                     c->recvBuffer[c->recvLength + i] = seg->data[i];
                 }
                 c->recvLength += seg->length;
                 c->rcvNext += seg->length;
+                c->receivedTotal += seg->length;
 
                 dbg(TRANSPORT_CHANNEL, "node=%u DATA_RECEIVED peer=%u seq=%u len=%u nextExpected=%u\n", TOS_NODE_ID, packet->src, seg->seq, seg->length, c->rcvNext);
                 signal MidTransport.dataReady(c->remoteAddress, c->localPort, c->remotePort);
@@ -735,6 +760,11 @@ implementation{
             }
 
             if(c->peerFinReceived || c->state == ST_CLOSE_WAIT || c->state == ST_LAST_ACK || c->state == ST_LINGER){
+                sendAck(c);
+                return;
+            }
+
+            if(c->rcvNext >= TCP_MAX_SEQUENCE){
                 sendAck(c);
                 return;
             }
