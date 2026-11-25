@@ -32,6 +32,8 @@ module Node {
 }
 
 implementation {
+   #define TCP_VERBOSE_APP 1
+
    pack sendPackage;
    uint16_t pingSequence = 0;
 
@@ -359,8 +361,11 @@ implementation {
             }
             r->consumed++;
         }
-        dbg(TRANSPORT_CHANNEL, "node=%u APP_CONSUMED peer=%u total=%u mismatches=%u\n", TOS_NODE_ID, r->remoteAddress, r->consumed, r->mismatches);
+         #if TCP_VERBOSE_APP
+         dbg(TRANSPORT_CHANNEL, "node=%u conn=%u:%u->%u:%u APP_CONSUMED total=%u expected=%u mismatches=%u\n" TOS_NODE_ID, TOS_NODE_ID, r->localPort, r->remoteAddress, r->remotePort, r->consumed, r->expectedBytes, r->mismatches);
+         #endif
       }
+
 
       if(readSomething){
          post consumeTestData();
@@ -402,8 +407,10 @@ implementation {
 
          testAccepted += accepted;
 
-         dbg(TRANSPORT_CHANNEL,"node=%u APP_WRITE accepted=%u total=%u\n", TOS_NODE_ID, accepted, testAccepted);
-
+         #if TCP_VERBOSE_APP
+            dbg(TRANSPORT_CHANNEL, "node=%u conn=%u:%u->%u:%u APP_WRITE accepted=%u total=%u expected=%u\n" TOS_NODE_ID, TOS_NODE_ID, testLocalPort, testRemoteAddress, testRemotePort, accepted, testAccepted, testTransferBytes);
+         #endif
+         
          if(accepted < requested){
             bufferFull = TRUE;
             break;

@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include "packet.h"
-#include <stdbool.h>
 
 enum{
     TCP_HEADER_SIZE = 9,

@@ -100,6 +100,15 @@ implementation{
         c->state = ST_FREE;
     }
 
+    void changeState(connection_t* c, uint8_t newState){
+        if(c->state == ST_FREE){
+            dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u CONNECTION_ALLOCATED state=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state);
+        }
+
+        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u " "STATE_CHANGE old=%u new=%u\n (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, newState);
+        c->state = newState;
+    }
+
     void failConnection(connection_t* c){
         if(!c->used || c->state == ST_FAILED){
             return;
@@ -107,7 +116,7 @@ implementation{
 
         dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_FAILED peer=%u localPort=%u remotePort=%u accepted=%u acknowledged=%u\n", TOS_NODE_ID, c->remoteAddress, c->localPort, c->remotePort, c->sendEnd, c->sendBase);
 
-        c->state = ST_FAILED;
+        changeState(c, ST_FAILED);
         c->waiting = FALSE;
         c->closeRequested = TRUE;
 
@@ -124,7 +133,7 @@ implementation{
         uint8_t remotePort = c->remotePort;
         uint8_t failed = c->state == ST_FAILED;
 
-        dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_RELEASED peer=%u " "localPort=%u remotePort=%u failed=%u\n", TOS_NODE_ID, remoteAddress, localPort, remotePort, failed);
+        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u CONNECTION_RELEASED state=%u failed=%u accepted=%u acknowledged=%u received=%u unread=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, localPort, remoteAddress, remotePort, c->state, failed, c->sendEnd, c->sendBase, c->receivedTotal, c->recvLength);
         clearConnection(c);
 
         if(!failed){
@@ -191,9 +200,9 @@ implementation{
 
         tcpEncode(&packet, &seg);
 
-        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u TCP_TX peer=%u state=%u flags=%u seq=%u ack=%u len=%u wnd=%u\n", (unsigned long) call RetryTimer.getNow(), TOS_NODE_ID, c->remoteAddress, c->state, flags, seq, ack, length, seg.window);
-
         result = call IP.send(packet);
+
+        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u " "TCP_TX state=%u flags=%u seq=%u ack=%u " "len=%u wnd=%u peerWnd=%u result=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, flags, seq, ack, length, seg.window, c->peerWindow, result);
 
         if(result != SUCCESS){
             dbg(TRANSPORT_CHANNEL, "node=%u LOCAL_SEND_FAILED peer=%u flags=%u seq=%u error=%u\n", TOS_NODE_ID, c->remoteAddress, flags, seq, result);
@@ -330,6 +339,8 @@ implementation{
 
             c->sendNextOffset += length;
             c->sndNext += length;
+
+            dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_SENT state=%u seq=%u len=%u outstanding=%u peerWnd=%u queued=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->sndNext - length, length, c->sendNextOffset - c->sendBase, c->peerWindow, c->sendEnd - c->sendBase);
         }
     }
 
@@ -348,10 +359,10 @@ implementation{
         seq = c->sndNext;
 
         if(c->state == ST_ESTABLISHED){
-            c->state = ST_FIN_WAIT_1;
+            changeState(c, ST_FIN_WAIT_1);
         }
         else if(c->state == ST_CLOSE_WAIT){
-            c->state = ST_LAST_ACK;
+            changeState(c, ST_LAST_ACK);
         }
         else{
             return;
@@ -367,7 +378,7 @@ implementation{
     }
 
     void enterLinger(connection_t* c){
-        c->state = ST_LINGER;
+        changeState(c, ST_LINGER);
         c->waiting = FALSE;
         c->lingerTicks = 0;
         dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_CLOSING peer=%u\n", TOS_NODE_ID, c->remoteAddress);
@@ -403,8 +414,7 @@ implementation{
         c->remoteAddress = remoteAddress;
         c->localPort = localPort;
         c->remotePort = remotePort;
-        c->state = ST_SYN_SENT;
-        c->sndUna = TCP_CLIENT_ISN;
+        changeState(c, ST_SYN_SENT);        c->sndUna = TCP_CLIENT_ISN;
         c->sndNext = TCP_CLIENT_ISN;
         c->dataStartSeq = TCP_CLIENT_ISN + 1;
         c->sendBase = 0;
@@ -571,7 +581,7 @@ implementation{
             c->remoteAddress = packet->src;
             c->localPort = seg->destPort;
             c->remotePort = seg->srcPort;
-            c->state = ST_SYN_RCVD;
+            changeState(c, ST_SYN_RCVD);
             c->rcvNext = seg->seq + 1;
             c->sndUna = TCP_SERVER_ISN;
             c->sndNext = TCP_SERVER_ISN;
@@ -600,7 +610,7 @@ implementation{
                 c->sndUna = seg->ack;
                 c->peerWindow = seg->window;
                 c->waiting = FALSE;
-                c->state = ST_ESTABLISHED;
+                changeState(c, ST_ESTABLISHED);
 
                 dbg(TRANSPORT_CHANNEL, "node=%u ESTABLISHED client peer=%u\n", TOS_NODE_ID, packet->src);
 
@@ -627,7 +637,7 @@ implementation{
                 c->sndUna = seg->ack;
                 c->peerWindow = seg->window;
                 c->waiting = FALSE;
-                c->state = ST_ESTABLISHED;
+                changeState(c, ST_ESTABLISHED);
                 dbg(TRANSPORT_CHANNEL, "node=%u ESTABLISHED server peer=%u\n", TOS_NODE_ID, packet->src);
             }
             return;
@@ -667,8 +677,8 @@ implementation{
                 signal MidTransport.dataReady(c->remoteAddress, c->localPort, c->remotePort);
             }
             else{
-                dbg(TRANSPORT_CHANNEL, "node=%u DUPLICATE_OR_OUT_OF_ORDER seq=%u expected=%u\n", TOS_NODE_ID, seg->seq, c->rcvNext);
-            }
+                dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_DISCARDED state=%u reason=%s seq=%u expected=%u len=%u freeSpace=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->stat seg->seq < c->rcvNext ? "DUPLICATE" : seg->seq > c->rcvNext ? "OUT_OF_ORDER" : seg->length > TCP_BUFFER_SIZE - c->recvLength ?     "BUFFER_FULL" : "SEQUENCE_LIMIT", seg->seq, c->rcvNext, seg->length, TCP_BUFFER_SIZE - c->recvLength);
+}
             sendAck(c);
             return;
         }
@@ -691,6 +701,10 @@ implementation{
                 c->peerWindow = seg->window;
                 c->probeRetries = 0;
 
+                if(c->peerWindow != seg->window){
+                    dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u WINDOW_UPDATE state=%u oldWnd=%u newWnd=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->peerWindow, seg->window);
+                }
+
                 if(ackedOffset > c->sendBase){
 
                 c->sendBase = ackedOffset;
@@ -700,7 +714,7 @@ implementation{
                 c->dataElapsed = 0;
                 c->dataRetries = 0;
 
-                dbg(TRANSPORT_CHANNEL,"node=%u DATA_ACKNOWLEDGED bytes=%u ack=%u\n", TOS_NODE_ID, c->dataOffset, seg->ack);
+                dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_ACKNOWLEDGED state=%u accepted=%u acknowledged=%u ack=%u outstanding=%u peerWnd=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->sendEnd, c->sendBase, seg->ack, c->sendNextOffset - c->sendBase, c->peerWindow);
                 signal MidTransport.writeReady(c->remoteAddress, c->localPort, c->remotePort);
                 }
 
@@ -726,7 +740,7 @@ implementation{
                         enterLinger(c);
                     }
                     else{
-                        c->state = ST_FIN_WAIT_2;
+                        changeState(c, ST_FIN_WAIT_2);
                         c->finWaitTicks = 0;
                         dbg(TRANSPORT_CHANNEL, "node=%u FIN_WAIT_2 peer=%u\n", TOS_NODE_ID, packet->src);
                     }
@@ -777,7 +791,7 @@ implementation{
             dbg(TRANSPORT_CHANNEL, "node=%u FIN_RECEIVED peer=%u state=%u\n", TOS_NODE_ID, packet->src, c->state);
 
             if(c->state == ST_ESTABLISHED){
-                c->state = ST_CLOSE_WAIT;
+                changeState(c, ST_CLOSE_WAIT);
                 c->closeRequested = TRUE;
                 sendNextData(c);
             }
@@ -793,19 +807,22 @@ implementation{
 
     event void IP.delivered(pack packet){
         tcp_segment_t seg;
+        connection_t* c;
 
         if(packet.protocol != PROTOCOL_TCP){
             return;
         }
 
         if(!tcpDecode(&packet, &seg)){
-            dbg(TRANSPORT_CHANNEL, "node=%u MALFORMED_TCP_PACKET\n", TOS_NODE_ID);
+            dbg(TRANSPORT_CHANNEL, "t=%lu node=%u MALFORMED_TCP_PACKET peer=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, packet.src);
             return;
         }
+        c = findConnection(packet.src, seg.destPort, seg.srcPort);
 
-        dbg(TRANSPORT_CHANNEL, "node=%u TCP_RX peer=%u flags=%u seq=%u ack=%u len=%u\n", TOS_NODE_ID, packet.src, seg.flags, seg.seq, seg.ack, seg.length);
+        dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u TCP_RX state=%u flags=%u seq=%u ack=%u len=%u wnd=%u\n", (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, seg.destPort, packet.src, seg.srcPort, c == NULL ? ST_FREE : c->state, seg.flags, seg.seq, seg.ack, seg.length, seg.window);
+
         handleSegment(&packet, &seg);
-    }
+    }      
 
     event void RetryTimer.fired(){
         uint8_t i;
@@ -917,6 +934,7 @@ implementation{
                     }
 
                     c->dataRetries++;
+                    dbg(TRANSPORT_CHANNEL, "t=%lu node=%u conn=%u:%u->%u:%u DATA_TIMEOUT state=%u retry=%u oldestUnacked=%u outstanding=%u\n" (unsigned long)call RetryTimer.getNow(), TOS_NODE_ID, TOS_NODE_ID, c->localPort, c->remoteAddress, c->remotePort, c->state, c->dataRetries, c->sndUna, c->sendNextOffset - c->sendBase);
                     retransmitData(c);
                 }
             }

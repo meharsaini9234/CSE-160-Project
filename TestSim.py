@@ -34,7 +34,7 @@ class TestSim:
     ROUTING_CHANNEL="routing";
 
     # Project 3
-    TRANSPORT_CHANNEL="transport";
+    TRANSPORT_CHANNEL="Project3TGen";
 
     # Personal Debuggin Channels for some of the additional models implemented.
     HASHMAP_CHANNEL="hashmap";
