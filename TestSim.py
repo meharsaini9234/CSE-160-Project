@@ -19,6 +19,7 @@ class TestSim:
     CMD_CLIENT_CLOSE = 8
     CMD_PAUSE_RECEIVER = 10
     CMD_RESUME_RECEIVER = 11
+    CMD_EXPECT_TRANSFER = 12
 
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
@@ -172,6 +173,12 @@ class TestSim:
     def cmdResumeReceiver(self, receiverAddress, clientAddress, clientPort, serverPort):
         payload = "".join([chr((clientAddress >> 8) & 0xFF), chr(clientAddress & 0xFF), chr(serverPort), chr(clientPort)])
         self.sendCMD(self.CMD_RESUME_RECEIVER, receiverAddress, payload)
+
+    def cmdExpectTransfer(self, receiverAddress, clientAddress, clientPort, serverPort, expectedBytes):
+        if not (0 <= expectedBytes <= 65535):
+            raise ValueError("Invalid expected transfer length")
+        payload = "".join([chr((clientAddress >> 8) & 0xFF), chr(clientAddress & 0xFF), chr(serverPort), chr(clientPort), chr((expectedBytes >> 8) & 0xFF), chr(expectedBytes & 0xFF)])
+        self.sendCMD(self.CMD_EXPECT_TRANSFER, receiverAddress, payload)
 
     
 

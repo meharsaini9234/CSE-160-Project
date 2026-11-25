@@ -98,6 +98,11 @@ implementation{
                 signal CommandHandler.setResumeReceiver(((uint16_t)buff[0] << 8) | buff[1], buff[2], buff[3]);
                 break;
 
+            case CMD_EXPECT_TRANSFER:
+                dbg(COMMAND_CHANNEL, "Command Type: Expect Transfer\n");
+                signal CommandHandler.setExpectTransfer(((uint16_t)buff[0] << 8) | buff[1], buff[2], buff[3], ((uint16_t)buff[4] << 8) | buff[5]);
+                break;
+
             default:
                 dbg(COMMAND_CHANNEL, "CMD_ERROR: \"%d\" does not match any known commands.\n", msg->id);
                 break;

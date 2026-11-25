@@ -27,8 +27,12 @@ def main():
     s.cmdTestServer(4)
     s.runTime(10)
 
-    # Connect node 1 to node 4
-    s.cmdTestClient(1)
+    # Tell receiver to expect 1024 bytes
+    s.cmdExpectTransfer(4, 1, 10, 20, 1024)
+    s.runTime(5)
+
+    # Start client
+    s.cmdTestClient(1, 4, 10, 20, 1024)
 
     # Allow transfer to progress
     s.runTime(500)

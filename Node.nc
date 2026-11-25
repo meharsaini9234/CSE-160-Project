@@ -55,6 +55,9 @@ implementation {
       uint8_t paused;
       uint16_t consumed;
       uint8_t failed;
+      uint16_t expectedBytes;
+      uint16_t mismatches;   
+      uint8_t expectedSet;    
    }test_receiver_t;
 
    test_receiver_t testReceivers[2];
@@ -76,11 +79,22 @@ implementation {
             testReceivers[i].paused = FALSE;
             testReceivers[i].consumed = 0; 
             testReceivers[i].failed = FALSE;
+            testReceivers[i].expectedBytes = 0;
+            testReceivers[i].mismatches = 0;
+            testReceivers[i].expectedSet = FALSE;
 
             return &testReceivers[i];
          }
       }  
       return NULL;
+   }
+
+   void reportTestResult(test_receiver_t* r){
+      uint8_t passed;
+
+      passed = r->expectedSet && !r->failed && r->consumed == r->expectedBytes && r->mismatches == 0;
+
+      dbg(TRANSPORT_CHANNEL, "node=%u APP_TRANSFER_RESULT peer=%u " "localPort=%u remotePort=%u " "expectedSet=%u expected=%u consumed=%u " "mismatches=%u result=%s\n", TOS_NODE_ID, r->remoteAddress, r->localPort, r->remotePort, r->expectedSet, r->expectedBytes, r->consumed, r->mismatches, passed ? "PASS" : "FAIL");
    }
 
    // Prototypes
@@ -296,6 +310,7 @@ implementation {
       for(i = 0; i < 2; i++){
          if(testReceivers[i].used && testReceivers[i].remoteAddress == remoteAddress && testReceivers[i].localPort == localPort && testReceivers[i].remotePort == remotePort){
             dbg(TRANSPORT_CHANNEL, "node=%u APP_RECEIVER_CLOSED consumed=%u\n", TOS_NODE_ID, testReceivers[i].consumed);
+            reportTestResult(&testReceivers[i]);
             testReceivers[i].used = FALSE;
          }
       }
@@ -321,6 +336,7 @@ implementation {
          if(count == 0){
             if(r->failed){
                dbg(TRANSPORT_CHANNEL, "node=%u APP_RECEIVER_RELEASED consumed=%u\n", TOS_NODE_ID, r->consumed);
+               reportTestResult(r);
                r->used = FALSE;
             }
             continue;
@@ -332,11 +348,12 @@ implementation {
             expected = (uint8_t)(r->consumed % 256);
 
             if(buffer[i] != expected){
+               r->mismatches++;
                dbg(TRANSPORT_CHANNEL, "node=%u DATA_MISMATCH peer=%u offset=%u got=%u expected=%u\n", TOS_NODE_ID, r->remoteAddress, r->consumed, buffer[i], expected);
             }
             r->consumed++;
         }
-        dbg(TRANSPORT_CHANNEL, "node=%u APP_CONSUMED peer=%u total=%u\n", TOS_NODE_ID, r->remoteAddress, r->consumed);
+        dbg(TRANSPORT_CHANNEL, "node=%u APP_CONSUMED peer=%u total=%u mismatches=%u\n", TOS_NODE_ID, r->remoteAddress, r->consumed, r->mismatches);
       }
 
       if(readSomething){
@@ -423,6 +440,25 @@ implementation {
       r->paused = FALSE;
       dbg(TRANSPORT_CHANNEL, "node=%u APP_RESUMED peer=%u localPort=%u remotePort=%u\n", TOS_NODE_ID, remoteAddress, localPort, remotePort);
       post consumeTestData();
+   }
+
+   event void CommandHandler.setExpectTransfer(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint16_t expectedBytes){
+      test_receiver_t* r = getTestReceiver(remoteAddress, localPort, remotePort);
+
+      if(r == NULL){
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_EXPECT_FAILED no receiver slot\n", TOS_NODE_ID);
+         return;
+      }
+
+      if(r->expectedSet || r->consumed != 0 || r->failed){
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_EXPECT_REJECTED\n", TOS_NODE_ID);
+         return;
+      }
+
+      r->expectedBytes = expectedBytes;
+      r->expectedSet = TRUE;
+
+      dbg(TRANSPORT_CHANNEL, "node=%u APP_EXPECT_TRANSFER peer=%u expected=%u\n", TOS_NODE_ID, remoteAddress, expectedBytes);
    }
 
    event void CommandHandler.setAppServer() {}

@@ -13,4 +13,5 @@ interface CommandHandler{
    event void pingTTL(uint16_t destination, uint8_t ttl, uint8_t * payload);
    event void setPauseReceiver(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort);
    event void setResumeReceiver(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort);
+   event void setExpectTransfer(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint16_t expectedBytes);
 }
