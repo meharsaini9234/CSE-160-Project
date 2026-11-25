@@ -54,6 +54,7 @@ implementation {
       uint8_t remotePort;
       uint8_t paused;
       uint16_t consumed;
+      uint8_t failed;
    }test_receiver_t;
 
    test_receiver_t testReceivers[2];
@@ -74,6 +75,8 @@ implementation {
             testReceivers[i].remotePort = remotePort;
             testReceivers[i].paused = FALSE;
             testReceivers[i].consumed = 0; 
+            testReceivers[i].failed = FALSE;
+
             return &testReceivers[i];
          }
       }  
@@ -245,6 +248,25 @@ implementation {
       }
    }
 
+   event void MidTransport.connectionFailed(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
+      uint8_t i;
+
+      if(remoteAddress == testRemoteAddress && localPort == testLocalPort && remotePort == testRemotePort){
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_TRANSFER_FAILED peer=%u accepted=%u expected=%u\n", TOS_NODE_ID, remoteAddress, testAccepted, testTransferBytes);
+         testActive = FALSE;
+         testEstablished = FALSE;
+      }
+
+      for(i = 0; i < 2; i++){
+         if(testReceivers[i].used && testReceivers[i].remoteAddress == remoteAddress && testReceivers[i].localPort == localPort && testReceivers[i].remotePort == remotePort){
+            testReceivers[i].failed = TRUE;
+            dbg(TRANSPORT_CHANNEL, "node=%u APP_RECEIVER_FAILED consumed=%u\n", TOS_NODE_ID, testReceivers[i].consumed);
+         }
+      }
+
+      post consumeTestData();
+   }
+
    event void MidTransport.dataReady(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
       test_receiver_t* r = getTestReceiver(remoteAddress, localPort, remotePort);
 
@@ -259,6 +281,21 @@ implementation {
       post consumeTestData();
    }
 
+   event void MidTransport.connectionClosed(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
+      uint8_t i;
+
+      if(remoteAddress == testRemoteAddress && localPort == testLocalPort && remotePort == testRemotePort){
+         testActive = FALSE;
+         testEstablished = FALSE;
+      }
+
+      for(i = 0; i < 2; i++){
+         if(testReceivers[i].used && testReceivers[i].remoteAddress == remoteAddress && testReceivers[i].localPort == localPort && testReceivers[i].remotePort == remotePort){
+            dbg(TRANSPORT_CHANNEL, "node=%u APP_RECEIVER_CLOSED consumed=%u\n", TOS_NODE_ID, testReceivers[i].consumed);
+            testReceivers[i].used = FALSE;
+         }
+      }
+   }
    
    task void consumeTestData(){
       uint8_t slot;
@@ -278,6 +315,10 @@ implementation {
          count = call MidTransport.read(r->remoteAddress, r->localPort, r->remotePort, buffer, sizeof(buffer));
 
          if(count == 0){
+            if(r->failed){
+               dbg(TRANSPORT_CHANNEL, "node=%u APP_RECEIVER_RELEASED consumed=%u\n", TOS_NODE_ID, r->consumed);
+               r->used = FALSE;
+            }
             continue;
          }
 

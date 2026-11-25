@@ -22,7 +22,8 @@ implementation{
         ST_FIN_WAIT_2,
         ST_CLOSE_WAIT,
         ST_LAST_ACK,
-        ST_LINGER
+        ST_LINGER,
+        ST_FAILED
     };
 
     typedef struct connection{
@@ -60,12 +61,17 @@ implementation{
         uint8_t pendingData[TCP_MAX_DATA];
         uint8_t closeRequested;
         uint8_t peerFinReceived;
+        uint8_t pendingSent;
 
         uint8_t retries;
         uint8_t elapsed;
         uint8_t dataElapsed;
         uint8_t dataRetries;
         uint8_t lingerTicks;
+        uint8_t probeRetries;
+        uint16_t finWaitTicks;
+        uint8_t localSendElapsed;
+        uint8_t localSendRetries;
     }connection_t;
 
     connection_t connections[TCP_MAX_CONNECTIONS];
@@ -76,7 +82,7 @@ implementation{
     uint8_t timerStarted = 0;
     uint16_t networkPacketId = 0;
 
-    void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length, uint8_t remember);
+    error_t transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length, uint8_t remember);
     void sendAck(connection_t* c);
     void sendNextData(connection_t* c);
     void retransmitData(connection_t* c);
@@ -93,6 +99,38 @@ implementation{
     void clearConnection(connection_t* c){
         memset(c, 0, sizeof(connection_t));
         c->state = ST_FREE;
+    }
+
+    void failConnection(connection_t* c){
+        if(!c->used || c->state == ST_FAILED){
+            return;
+        }
+
+        dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_FAILED peer=%u localPort=%u remotePort=%u accepted=%u acknowledged=%u\n", TOS_NODE_ID, c->remoteAddress, c->localPort, c->remotePort, c->sendEnd, c->sendBase);
+
+        c->state = ST_FAILED;
+        c->waiting = FALSE;
+        c->closeRequested = TRUE;
+
+        c->elapsed = 0;
+        c->dataElapsed = 0;
+        c->lingerTicks = 0;
+
+        signal MidTransport.connectionFailed(c->remoteAddress, c->localPort, c->remotePort);
+    }
+
+    void releaseConnection(connection_t* c){
+        uint16_t remoteAddress = c->remoteAddress;
+        uint8_t localPort = c->localPort;
+        uint8_t remotePort = c->remotePort;
+        uint8_t failed = c->state == ST_FAILED;
+
+        dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_RELEASED peer=%u " "localPort=%u remotePort=%u failed=%u\n", TOS_NODE_ID, remoteAddress, localPort, remotePort, failed);
+        clearConnection(c);
+
+        if(!failed){
+            signal MidTransport.connectionClosed(remoteAddress, localPort, remotePort);
+        }
     }
 
     connection_t* allocateConnection(){
@@ -120,13 +158,14 @@ implementation{
         return NULL;
     }
 
-    void transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length,uint8_t remember){
+    error_t transmit(connection_t* c, uint8_t flags, uint16_t seq, uint16_t ack, uint8_t* data, uint8_t length,uint8_t remember){
         pack packet;
         tcp_segment_t seg;
         uint8_t i;
+        error_t result;
 
         if(length > TCP_MAX_DATA){
-            return;
+            return FAIL;
         }
 
         memset(&packet, 0, sizeof(packet));
@@ -155,10 +194,15 @@ implementation{
 
         dbg(TRANSPORT_CHANNEL, "t=%lu node=%u TCP_TX peer=%u state=%u flags=%u seq=%u ack=%u len=%u wnd=%u\n", (unsigned long) call RetryTimer.getNow(), TOS_NODE_ID, c->remoteAddress, c->state, flags, seq, ack, length, seg.window);
 
-        call IP.send(packet);
+        result = call IP.send(packet);
+
+        if(result != SUCCESS){
+            dbg(TRANSPORT_CHANNEL, "node=%u LOCAL_SEND_FAILED peer=%u flags=%u seq=%u error=%u\n", TOS_NODE_ID, c->remoteAddress, flags, seq, result);
+        }
 
         if(remember){
             c->waiting = TRUE;
+            c->pendingSent = (result == SUCCESS);
             c->pendingFlags = flags;
             c->pendingSeq = seq;
             c->pendingAck = ack;
@@ -171,6 +215,7 @@ implementation{
             c->retries = 0;
             c->elapsed = 0;
         }
+        return result;
     }
 
     void resendPending(connection_t* c){
@@ -180,7 +225,15 @@ implementation{
 
         dbg(TRANSPORT_CHANNEL, "t=%lu node=%u RETRANSMIT peer=%u flags=%u seq=%u retry=%u\n", (unsigned long) call RetryTimer.getNow(), TOS_NODE_ID,c->remoteAddress, c->pendingFlags, c->pendingSeq, c->retries);
 
-        transmit(c, c->pendingFlags, c->pendingSeq, c->pendingAck, c->pendingData, c->pendingLength, FALSE);
+        if(transmit(c, c->pendingFlags, c->pendingSeq, c->pendingAck, c->pendingData, c->pendingLength, FALSE) == SUCCESS){
+            if(!c->pendingSent){
+                c->pendingSent = TRUE;
+
+                if(c->pendingFlags & (TCP_SYN | TCP_FIN)){
+                    c->sndNext = c->pendingSeq + 1;
+                }
+            }
+        }
     }
 
     void sendAck(connection_t* c){
@@ -209,14 +262,11 @@ implementation{
                 ];
             }
 
-            transmit(c, TCP_DATA,
-                     (uint16_t)(c->dataStartSeq + offset),
-                     c->rcvNext,
-                     buffer, length, FALSE);
+            if(transmit(c, TCP_DATA, (uint16_t)(c->dataStartSeq + offset), c->rcvNext, buffer, length, FALSE) != SUCCESS){
+                break;
+            }
 
-            dbg(TRANSPORT_CHANNEL,
-                "node=%u GBN_RETRANSMIT offset=%u len=%u\n",
-                TOS_NODE_ID, offset, length);
+            dbg(TRANSPORT_CHANNEL, "node=%u GBN_RETRANSMIT offset=%u len=%u\n", TOS_NODE_ID, offset, length);
 
             offset += length;
         }
@@ -275,10 +325,9 @@ implementation{
                 ];
             }
 
-            transmit(c, TCP_DATA,
-                     (uint16_t)(c->dataStartSeq + c->sendNextOffset),
-                     c->rcvNext,
-                     buffer, length, FALSE);
+            if(transmit(c, TCP_DATA, (uint16_t)(c->dataStartSeq + c->sendNextOffset), c->rcvNext, buffer, length, FALSE) != SUCCESS){
+                break;
+            }
 
             c->sendNextOffset += length;
             c->sndNext += length;
@@ -306,7 +355,9 @@ implementation{
 
         transmit(c, TCP_FIN, seq, c->rcvNext, NULL, 0, TRUE);
 
-        c->sndNext++;
+        if(c->pendingSent){
+            c->sndNext++;
+        }
 
         dbg(TRANSPORT_CHANNEL, "node=%u FIN_SENT peer=%u state=%u\n", TOS_NODE_ID, c->remoteAddress, c->state);
     }
@@ -340,6 +391,7 @@ implementation{
 
         if(c == NULL){
             dbg(TRANSPORT_CHANNEL, "node=%u CONNECT_FAILED no sockets\n", TOS_NODE_ID);
+            signal MidTransport.connectionFailed(remoteAddress, localPort, remotePort);
             return;
         }
 
@@ -349,8 +401,8 @@ implementation{
         c->remotePort = remotePort;
         c->state = ST_SYN_SENT;
         c->sndUna = 100;
-        c->sndNext = 101;
-        c->dataStartSeq = c->sndNext;
+        c->sndNext = 100;
+        c->dataStartSeq = 101;
         c->transferBytes = transferBytes;
         c->sendBase = 0;
         c->sendEnd = 0;
@@ -359,6 +411,9 @@ implementation{
 
         dbg(TRANSPORT_CHANNEL, "node=%u SYN_SENT peer=%u\n", TOS_NODE_ID, remoteAddress);
         transmit(c, TCP_SYN, 100, 0, NULL, 0, TRUE);
+        if(c->pendingSent){
+            c->sndNext = 101;
+        }
     }
 
     command uint8_t MidTransport.write(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint8_t* data, uint8_t length){
@@ -414,7 +469,7 @@ implementation{
         if(c == NULL || buffer == NULL || maxLength == 0){
             return 0;
         }
-        if(c->state != ST_ESTABLISHED && c->state != ST_CLOSE_WAIT && c->state != ST_LAST_ACK && c->state != ST_LINGER){
+        if(c->state != ST_ESTABLISHED && c->state != ST_CLOSE_WAIT && c->state != ST_LAST_ACK && c->state != ST_FIN_WAIT_1 && c->state != ST_FIN_WAIT_2 && c->state != ST_LINGER && c->state != ST_FAILED){
             return 0;
         }
         if(c->recvLength == 0){
@@ -489,11 +544,18 @@ implementation{
             c->state = ST_SYN_RCVD;
             c->rcvNext = seg->seq + 1;
             c->sndUna = 500;
-            c->sndNext = 501;
+            c->sndNext = 500;
 
             dbg(TRANSPORT_CHANNEL, "node=%u SYN_RECEIVED peer=%u\n", TOS_NODE_ID, packet->src);
 
             transmit(c, TCP_SYN | TCP_ACK, 500, c->rcvNext, NULL, 0, TRUE);
+            if(c->pendingSent){
+                c->sndNext = 501;
+            }
+            return;
+        }
+
+        if(c->state == ST_FAILED){
             return;
         }
 
@@ -585,6 +647,7 @@ implementation{
                 }
 
                 c->peerWindow = seg->window;
+                c->probeRetries = 0;
 
                 if(ackedOffset > c->sendBase){
 
@@ -622,6 +685,7 @@ implementation{
                     }
                     else{
                         c->state = ST_FIN_WAIT_2;
+                        c->finWaitTicks = 0;
                         dbg(TRANSPORT_CHANNEL, "node=%u FIN_WAIT_2 peer=%u\n", TOS_NODE_ID, packet->src);
                     }
                 }           
@@ -687,28 +751,90 @@ implementation{
                 continue;
             }
 
-            // Keep existing connection cleanup behavior
-            if(c->state == ST_LINGER){
-                c->lingerTicks++;
+            if(c->state == ST_FAILED){
+                if(c->lingerTicks < TCP_LINGER_TICKS){
+                    c->lingerTicks++;
+                }
+
                 if(c->lingerTicks >= TCP_LINGER_TICKS && c->recvLength == 0){
-                    dbg(TRANSPORT_CHANNEL, "node=%u CONNECTION_CLOSED peer=%u\n", TOS_NODE_ID, c->remoteAddress);
-                    clearConnection(c);
+                    releaseConnection(c);
                 }
                 continue;
             }
 
+            if(c->state == ST_LINGER){
+                if(c->lingerTicks < TCP_LINGER_TICKS){
+                    c->lingerTicks++;
+                }
+
+                if(c->lingerTicks >= TCP_LINGER_TICKS && c->recvLength == 0){
+                    releaseConnection(c);
+                }
+                continue;
+            }
+
+            if(c->state == ST_FIN_WAIT_2){
+                c->finWaitTicks++;
+                if(c->finWaitTicks >= TCP_FIN_WAIT_TICKS){
+                    dbg(TRANSPORT_CHANNEL, "node=%u FIN_WAIT_TIMEOUT peer=%u\n", TOS_NODE_ID, c->remoteAddress);
+                    failConnection(c);
+                    continue;
+                }
+            }
+
             // Recover from a lost window reopening update
-            if(c->state == ST_ESTABLISHED && c->peerWindow == 0 && c->sendBase < c->transferBytes && c->sendNextOffset == c->sendBase){
+            if(c->state == ST_ESTABLISHED && c->peerWindow == 0 && c->sendBase < c->sendEnd && c->sendNextOffset == c->sendBase){
                 c->dataElapsed++;
 
                 if(c->dataElapsed >= TCP_RTO_TICKS){
                     c->dataElapsed = 0;
-                    dbg(TRANSPORT_CHANNEL, "node=%u WINDOW_PROBE_SENT peer=%u\n", TOS_NODE_ID, c->remoteAddress);
+
+                    if(c->probeRetries >= TCP_MAX_PROBE_RETRIES){
+                        dbg(TRANSPORT_CHANNEL, "node=%u WINDOW_PROBE_TIMEOUT peer=%u\n", TOS_NODE_ID, c->remoteAddress);
+                        failConnection(c);
+                        continue;
+                    }
+
+                    c->probeRetries++;
+
+                    dbg(TRANSPORT_CHANNEL, "node=%u WINDOW_PROBE_SENT peer=%u retry=%u\n", TOS_NODE_ID, c->remoteAddress, c->probeRetries);
                     transmit(c, TCP_PROBE, c->sndNext, c->rcvNext, NULL, 0, FALSE);
                 }
             }
 
             // DATA retransmission using Go-Back-N
+
+            if(c->state == ST_ESTABLISHED && c->peerWindow > 0 && c->sendNextOffset < c->sendEnd && c->sendNextOffset == c->sendBase){
+                uint16_t previousOffset;
+
+                c->localSendElapsed++;
+
+                if(c->localSendElapsed >= TCP_RTO_TICKS){
+                    c->localSendElapsed = 0;
+
+                    if(c->localSendRetries >= TCP_MAX_RETRIES){
+                        dbg(TRANSPORT_CHANNEL, "node=%u LOCAL_SEND_RETRY_LIMIT peer=%u\n", TOS_NODE_ID, c->remoteAddress);
+                        failConnection(c);
+                        continue;
+                    }
+
+                    previousOffset = c->sendNextOffset;
+
+                    sendNextData(c);
+
+                    if(c->sendNextOffset == previousOffset){
+                        c->localSendRetries++;
+                    }
+                    else{
+                        c->localSendRetries = 0;
+                    }
+                }
+            }
+            else{
+                c->localSendElapsed = 0;
+                c->localSendRetries = 0;
+            }
+
             if(c->state == ST_ESTABLISHED && c->sendNextOffset > c->sendBase){
                 c->dataElapsed++;
 
@@ -720,7 +846,7 @@ implementation{
                             "node=%u CONNECTION_FAILED peer=%u DATA retry limit reached\n",
                             TOS_NODE_ID, c->remoteAddress);
 
-                        clearConnection(c);
+                        failConnection(c);
                         continue;
                     }
 

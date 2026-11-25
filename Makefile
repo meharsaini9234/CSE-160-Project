@@ -15,7 +15,7 @@ CFLAGS+=$(INCLUDE)
 #CFLAGS += -DTEST_DROP_WINDOW_REOPEN
 
 #########Connection close loss test#######
-CFLAGS += -DTEST_DROP_FINAL_ACK
+#CFLAGS += -DTEST_DROP_FINAL_ACK
 
 include $(TINYOS_ROOT_DIR)/Makefile.include
 

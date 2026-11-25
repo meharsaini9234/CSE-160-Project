@@ -16,7 +16,7 @@ implementation{
     uint8_t testSawZeroWindow = FALSE;
     uint8_t testReopenDropped = FALSE;
 
-    void forward(pack msg){
+    error_t forward(pack msg){
         uint16_t nextHop;
         uint8_t cost;
         error_t result;
@@ -26,7 +26,7 @@ implementation{
             if(TOS_NODE_ID == 1 && !testCloseAckDropped && msg.protocol == PROTOCOL_TCP && msg.src == 1 && msg.dest == 4 && msg.payload[0] == 15 && msg.payload[1] == 25 && msg.payload[2] == TCP_ACK && msg.payload[5] == 1 && msg.payload[6] == 246){
                 testCloseAckDropped = TRUE;
                 dbg(TRANSPORT_CHANNEL, "node=%u TEST_DROP_FINAL_ACK ack=502\n", TOS_NODE_ID);
-                return;
+                return SUCCESS;
             }
         #endif
 
@@ -42,7 +42,7 @@ implementation{
                     testReopenDropped = TRUE;
 
                     dbg(TRANSPORT_CHANNEL, "node=%u TEST_DROP_WINDOW_REOPEN wnd=%u\n", TOS_NODE_ID, window);
-                    return;
+                    return SUCCESS;
                 }
             }
         #endif
@@ -52,13 +52,13 @@ implementation{
                 testDataDropped = TRUE;
 
                 dbg(TRANSPORT_CHANNEL, "node=%u TEST_DROP_DATA seq=112\n", TOS_NODE_ID);
-                return;
+                return SUCCESS;
             }
         #endif
 
         if(!call Routing.getRoute(msg.dest, &nextHop, &cost) || cost >= 16 || nextHop == AM_BROADCAST_ADDR || nextHop == TOS_NODE_ID){
             dbg(ROUTING_CHANNEL, "Node %u dropping packet src=%u dest=%u seq=%u: no valid route\n", TOS_NODE_ID, msg.src, msg.dest, msg.seq);
-            return;
+            return FAIL;
         }
 
         result = call Sender.send(msg, nextHop);
@@ -69,6 +69,7 @@ implementation{
         else{
             dbg(ROUTING_CHANNEL, "Node %u dropping packet src=%u dest=%u seq=%u: send error=%u\n", TOS_NODE_ID, msg.src, msg.dest, msg.seq, result);
         }
+        return result;
     }
 
     void deliver(pack msg){
@@ -107,18 +108,17 @@ implementation{
         signal IP.delivered(msg);
     }
 
-    command void IP.send(pack msg){
+    command error_t IP.send(pack msg){
         if(msg.src != TOS_NODE_ID || msg.TTL == 0){
             dbg(ROUTING_CHANNEL, "Node %u refusing invalid IP packet\n", TOS_NODE_ID);
-            return;
+            return FAIL;
         }
 
         if(msg.dest == TOS_NODE_ID){
             deliver(msg);
-            return;
+            return SUCCESS;
         }
-
-        forward(msg);
+        return forward(msg);
     }
 
     command void IP.receive(pack msg){

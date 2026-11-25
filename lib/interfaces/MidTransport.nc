@@ -7,4 +7,6 @@ interface MidTransport{
     event void writeReady(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort);
     command uint8_t read(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint8_t* buffer, uint8_t maxLength);
     event void dataReady(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort);
+    event void connectionFailed(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort);
+    event void connectionClosed(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort);
 }
