@@ -226,7 +226,7 @@ implementation {
       testTransferBytes = transferBytes;
       testAccepted = 0; 
       dbg(TRANSPORT_CHANNEL, "Node %u connecting to Node %u srcPort=%u destPort=%u bytes=%u\n", TOS_NODE_ID, serverAddress, srcPort, destPort, transferBytes); 
-      if(call MidTransport.connect(serverAddress, srcPort, destPort, transferBytes) != SUCCESS){
+      if(call MidTransport.connect(serverAddress, srcPort, destPort) != SUCCESS){
          testActive = FALSE;
          testEstablished = FALSE;
          dbg(TRANSPORT_CHANNEL, "node=%u APP_CONNECT_REJECTED peer=%u\n",TOS_NODE_ID, serverAddress);

@@ -40,7 +40,6 @@ implementation{
         uint16_t rcvNext;
 
         uint16_t dataOffset;
-        uint16_t transferBytes;
         uint16_t receivedTotal;
 
         uint8_t sendBuffer[TCP_BUFFER_SIZE];
@@ -280,7 +279,7 @@ implementation{
         uint16_t bytesInFlight;
         uint16_t allowedWindow;
 
-        if(c->state != ST_ESTABLISHED || !c->isClient){
+        if(c->state != ST_ESTABLISHED && c->state != ST_CLOSE_WAIT){
             return;
         }
 
@@ -378,7 +377,7 @@ implementation{
         dbg(TRANSPORT_CHANNEL, "node=%u LISTEN port=%u\n", TOS_NODE_ID, port);
     }
 
-    command error_t MidTransport.connect(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint16_t transferBytes){
+    command error_t MidTransport.connect(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort){
         connection_t* c;
 
         startTimer();
@@ -403,7 +402,6 @@ implementation{
         c->sndUna = 100;
         c->sndNext = 100;
         c->dataStartSeq = 101;
-        c->transferBytes = transferBytes;
         c->sendBase = 0;
         c->sendEnd = 0;
         c->peerWindow = TCP_BUFFER_SIZE;
@@ -420,33 +418,24 @@ implementation{
     command uint8_t MidTransport.write(uint16_t remoteAddress, uint8_t localPort, uint8_t remotePort, uint8_t* data, uint8_t length){
         connection_t* c;
         uint16_t available;
-        uint16_t remaining;
         uint8_t accepted;
         uint8_t i;
 
         c = findConnection(remoteAddress, localPort, remotePort);
 
-        if(c == NULL || c->state != ST_ESTABLISHED || !c->isClient || c->closeRequested || data == NULL || length == 0){
-            return 0;
-        }
-
-        if(c->sendEnd >= c->transferBytes) {
+        if(c == NULL || c->state != ST_ESTABLISHED || c->closeRequested || data == NULL || length == 0){
             return 0;
         }
 
         available = TCP_BUFFER_SIZE - (c->sendEnd - c->sendBase);
-        remaining = c->transferBytes - c->sendEnd;
+
         accepted = length;
 
         if(accepted > available){
             accepted = (uint8_t)available;
         }
 
-        if(accepted > remaining){
-            accepted = (uint8_t)remaining;
-        }
-
-        for(i = 0; i < accepted; i++){ 
+        for(i = 0; i < accepted; i++){
             c->sendBuffer[(c->sendEnd + i) % TCP_BUFFER_SIZE] = data[i];
         }
 
@@ -495,7 +484,7 @@ implementation{
 
         dbg(TRANSPORT_CHANNEL, "node=%u TRANSPORT_READ consumed=%u remaining=%u\n", TOS_NODE_ID, count, c->recvLength);
 
-        if(c->state == ST_ESTABLISHED || c->state == ST_CLOSE_WAIT || c->state == ST_LAST_ACK){
+        if(c->state == ST_ESTABLISHED || c->state == ST_CLOSE_WAIT || c->state == ST_LAST_ACK || c->state == ST_FIN_WAIT_1 || c->state == ST_FIN_WAIT_2){
             sendAck(c);
         }
 
@@ -562,6 +551,11 @@ implementation{
             c->rcvNext = seg->seq + 1;
             c->sndUna = 500;
             c->sndNext = 500;
+            c->dataStartSeq = 501;
+            c->peerWindow = seg->window;
+            c->sendBase = 0;
+            c->sendEnd = 0;
+            c->sendNextOffset = 0;
 
             dbg(TRANSPORT_CHANNEL, "node=%u SYN_RECEIVED peer=%u\n", TOS_NODE_ID, packet->src);
 
@@ -589,7 +583,7 @@ implementation{
                 sendAck(c);
                 signal MidTransport.connected(c->remoteAddress, c->localPort, c->remotePort);
             }
-            else if(c->state == ST_ESTABLISHED && seg->seq + 1 == c->rcvNext && seg->ack == c->dataStartSeq){
+            else if(c->isClient && c->state == ST_ESTABLISHED && seg->seq + 1 == c->rcvNext && seg->ack == c->dataStartSeq){
                 sendAck(c);
                 dbg(TRANSPORT_CHANNEL, "node=%u DUPLICATE_SYN_ACK peer=%u\n", TOS_NODE_ID, packet->src);
             }
@@ -607,6 +601,7 @@ implementation{
         if(c->state == ST_SYN_RCVD){
             if(seg->flags == TCP_ACK && c->pendingSent && seg->ack == c->sndNext && seg->length == 0){
                 c->sndUna = seg->ack;
+                c->peerWindow = seg->window;
                 c->waiting = FALSE;
                 c->state = ST_ESTABLISHED;
                 dbg(TRANSPORT_CHANNEL, "node=%u ESTABLISHED server peer=%u\n", TOS_NODE_ID, packet->src);
@@ -615,7 +610,7 @@ implementation{
         }
 
         if(seg->flags == TCP_PROBE){
-            if(c->state == ST_ESTABLISHED){
+             if(c->state == ST_ESTABLISHED || c->state == ST_FIN_WAIT_1 || c->state == ST_FIN_WAIT_2 || c->state == ST_CLOSE_WAIT){
                 dbg(TRANSPORT_CHANNEL,"node=%u WINDOW_PROBE_RECEIVED wnd=%u\n", TOS_NODE_ID,TCP_BUFFER_SIZE - c->recvLength);
                 sendAck(c);
             }
@@ -656,7 +651,7 @@ implementation{
         if(seg->flags == TCP_ACK){
             uint16_t ackedOffset;
 
-            if(c->state == ST_ESTABLISHED){
+            if(c->state == ST_ESTABLISHED || c->state == ST_CLOSE_WAIT){
                 // Reject ACKs outside the transmitted range
                 if(seg->ack < c->sndUna || seg->ack > c->sndNext){
                     return;
@@ -753,7 +748,8 @@ implementation{
 
             if(c->state == ST_ESTABLISHED){
                 c->state = ST_CLOSE_WAIT;
-                sendFin(c);
+                c->closeRequested = TRUE;
+                sendNextData(c);
             }
             else if(c->state == ST_FIN_WAIT_1){
                 dbg(TRANSPORT_CHANNEL, "node=%u SIMULTANEOUS_CLOSE peer=%u\n", TOS_NODE_ID, packet->src);
@@ -823,7 +819,7 @@ implementation{
             }
 
             // Recover from a lost window reopening update
-            if(c->state == ST_ESTABLISHED && c->peerWindow == 0 && c->sendBase < c->sendEnd && c->sendNextOffset == c->sendBase){
+            if((c->state == ST_ESTABLISHED || c->state == ST_CLOSE_WAIT) && c->peerWindow == 0 && c->sendBase < c->sendEnd && c->sendNextOffset == c->sendBase){
                 c->dataElapsed++;
 
                 if(c->dataElapsed >= TCP_RTO_TICKS){
@@ -844,7 +840,7 @@ implementation{
 
             // DATA retransmission using Go-Back-N
 
-            if(c->state == ST_ESTABLISHED && c->peerWindow > 0 && c->sendNextOffset < c->sendEnd && c->sendNextOffset == c->sendBase){
+            if((c->state == ST_ESTABLISHED || c->state == ST_CLOSE_WAIT) && c->peerWindow > 0 && c->sendBase < c->sendEnd && c->sendNextOffset == c->sendBase){
                 uint16_t previousOffset;
 
                 c->localSendElapsed++;
@@ -875,7 +871,7 @@ implementation{
                 c->localSendRetries = 0;
             }
 
-            if(c->state == ST_ESTABLISHED && c->sendNextOffset > c->sendBase){
+            if((c->state == ST_ESTABLISHED || c->state == ST_CLOSE_WAIT) && c->sendNextOffset > c->sendBase){
                 c->dataElapsed++;
 
                 if(c->dataElapsed >= TCP_RTO_TICKS){
