@@ -88,6 +88,16 @@ implementation{
                 signal CommandHandler.pingTTL(buff[0], buff[1], &buff[2]);
                 break;
 
+            case CMD_PAUSE_RECEIVER:
+                dbg(COMMAND_CHANNEL, "Command Type: Pause Receiver\n");
+                signal CommandHandler.setPauseReceiver(((uint16_t)buff[0] << 8) | buff[1], buff[2], buff[3]);
+                break;
+
+            case CMD_RESUME_RECEIVER:
+                dbg(COMMAND_CHANNEL, "Command Type: Resume Receiver\n");
+                signal CommandHandler.setResumeReceiver(((uint16_t)buff[0] << 8) | buff[1], buff[2], buff[3]);
+                break;
+
             default:
                 dbg(COMMAND_CHANNEL, "CMD_ERROR: \"%d\" does not match any known commands.\n", msg->id);
                 break;

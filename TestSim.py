@@ -17,6 +17,8 @@ class TestSim:
     CMD_TEST_CLIENT = 4
     CMD_TEST_SERVER = 5
     CMD_CLIENT_CLOSE = 8
+    CMD_PAUSE_RECEIVER = 10
+    CMD_RESUME_RECEIVER = 11
 
     # CHANNELS - see includes/channels.h
     COMMAND_CHANNEL="command";
@@ -157,12 +159,21 @@ class TestSim:
         payload = "".join([chr((serverAddress >> 8) & 0xFF), chr(serverAddress & 0xFF), chr(srcPort), chr(destPort), chr((transferBytes >> 8) & 0xFF), chr(transferBytes & 0xFF)])
         self.sendCMD(self.CMD_TEST_CLIENT, clientAddress, payload)
 
-        
-
     def cmdClientClose(self, clientAddress,serverAddress, srcPort, destPort):
         payload = "{0}{1}{2}{3}".format(chr((serverAddress >> 8) & 0xFF), chr(serverAddress & 0xFF), chr(srcPort), chr(destPort))
 
         self.sendCMD(self.CMD_CLIENT_CLOSE, clientAddress, payload)
+
+    def cmdPauseReceiver(self, receiverAddress, clientAddress, clientPort, serverPort):
+        payload = "".join([chr((clientAddress >> 8) & 0xFF), chr(clientAddress & 0xFF), chr(serverPort), chr(clientPort)])
+        self.sendCMD(self.CMD_PAUSE_RECEIVER, receiverAddress, payload)
+
+
+    def cmdResumeReceiver(self, receiverAddress, clientAddress, clientPort, serverPort):
+        payload = "".join([chr((clientAddress >> 8) & 0xFF), chr(clientAddress & 0xFF), chr(serverPort), chr(clientPort)])
+        self.sendCMD(self.CMD_RESUME_RECEIVER, receiverAddress, payload)
+
+    
 
 def main():
     s = TestSim()
