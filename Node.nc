@@ -362,7 +362,7 @@ implementation {
       test_receiver_t* r = getTestReceiver(remoteAddress, localPort, remotePort);
 
       if(r == NULL){
-         dbg(TRANSPORT_CHANNEL, node=%u APP_PAUSE_FAILED no receiver slot\n", TOS_NODE_ID);
+         dbg(TRANSPORT_CHANNEL, "node=%u APP_PAUSE_FAILED no receiver slot\n", TOS_NODE_ID);
          return;
       }
       r->paused = TRUE;
